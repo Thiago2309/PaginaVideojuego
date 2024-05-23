@@ -1,6 +1,15 @@
 .App {
   text-align: center;
+  background-image: url('../src/img/fondo2.png'); /* Ruta a tu imagen de fondo */
+  background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-position: center; /* Centra la imagen */
+  min-height: 100vh; /* Asegura que cubra toda la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+  color: white; /* Si la imagen de fondo es oscura, esto asegura que el texto siga siendo legible */
 }
+
 
 .App-logo {
   height: 40vmin;
