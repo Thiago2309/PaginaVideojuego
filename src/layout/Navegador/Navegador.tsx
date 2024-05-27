@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Logo1 from '../../img/logo.png';
 
 const pages = ['Populares', 'Novedades', 'Ofertas'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
 
 function Navegador() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);

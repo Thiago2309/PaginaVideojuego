@@ -17,6 +17,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
+    "@types/react-slick": "^0.23.13",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "globals": "^15.1.0"
