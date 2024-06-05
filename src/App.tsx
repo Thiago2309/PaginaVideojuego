@@ -10,6 +10,7 @@ import HeaderSection from './layout/Header/HeaderSection';
 import SliderSection from './layout/SliderImg/SliderSection';
 import NewsSection from './layout/Body/NewsSection';
 import NewGameSection from './layout/Body/NewGameSection';
+// import Api from './layout/ExampleApi/tabla';
 
 // import { Box } from '@mui/material';
 
@@ -22,6 +23,7 @@ const App = () => {
         <SliderSection />
         <NewsSection />
         <NewGameSection />
+        {/* <Api /> */}
       </div>
     </div>
   );
