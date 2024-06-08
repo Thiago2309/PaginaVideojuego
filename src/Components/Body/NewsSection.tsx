@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import imgNews from '../../img/GTA.png'; // Asegúrate de ajustar la ruta de la imagen
+import imgNews from '../../img/GTA.png'; 
 
 const NewsSection = () => {
     return (
