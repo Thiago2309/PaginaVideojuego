@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import imgNews from '../../img/GTA.png'; 
+import imgNews from '../../assets/images/GTA.png'; 
 
 const NewsSection = () => {
     return (
