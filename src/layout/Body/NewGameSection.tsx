@@ -9,6 +9,7 @@ import img1 from '../../img/juego1.png';
 import img2 from '../../img/juego2.png';
 import img3 from '../../img/img2.png';
 import img4 from '../../img/img4.png';
+import FooterView from '../../layout/Footer/FooterView';
 
 interface Game {
     image: string;
@@ -74,10 +75,9 @@ const NewGameSection: React.FC = () => {
                     </Grid>
                 ))}
             </Grid>
-            <br />
-            <Typography variant="body2" color="inherit" align="center" sx={{ mt: 4 }}>
-                © 2024 Destiny. Thiago Ramirez Soberano.
-            </Typography>
+            <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'center' }}>
+                {FooterView()}
+            </Box>
         </Box>
 
     );
