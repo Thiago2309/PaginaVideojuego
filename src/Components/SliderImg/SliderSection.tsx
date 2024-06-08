@@ -1,11 +1,11 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { Box, Typography } from '@mui/material';
-import img1 from '../../img/img1.png';
-import img2 from '../../img/img2.png';
-import img3 from '../../img/img3.png';
-import img4 from '../../img/img4.png';
-import img5 from '../../img/img5.png';
+import img1 from '../../assets/images/img1.png';
+import img2 from '../../assets/images/img2.png';
+import img3 from '../../assets/images/img3.png';
+import img4 from '../../assets/images/img4.png';
+import img5 from '../../assets/images/img5.png';
 
 const SliderSection = () => {
     const settings = {

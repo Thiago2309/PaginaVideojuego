@@ -5,10 +5,10 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';
-import img1 from '../../img/juego1.png';
-import img2 from '../../img/juego2.png';
-import img3 from '../../img/img2.png';
-import img4 from '../../img/img4.png';
+import img1 from '../../assets/images/juego1.png';
+import img2 from '../../assets/images/juego2.png';
+import img3 from '../../assets/images/img2.png';
+import img4 from '../../assets/images/img4.png';
 import FooterView from '../../layout/Footer/FooterView';
 
 interface Game {
