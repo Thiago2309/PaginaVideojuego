@@ -38,9 +38,13 @@ const Register: React.FC = () => {
         .oneOf([Yup.ref("password")], "Passwords must match")
         .required("Required"),
     }),
-    onSubmit: (values) => {
-      auth.login();
-      navigate("/");
+    onSubmit: async (values) => {
+      try {
+        await auth.register();  
+        navigate("/");
+      } catch (error) {
+        console.error("Error durante el registro:", error);
+      }
     },
   });
 

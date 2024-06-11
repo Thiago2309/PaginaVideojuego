@@ -34,9 +34,13 @@ const Login: React.FC = () => {
         .required("Requerido"),
       password: Yup.string().required("Requerido"),
     }),
-    onSubmit: (values) => {
-      auth.login();
-      navigate("/");
+    onSubmit: async (values) => {
+      try {
+        await auth.login();  
+        navigate("/");
+      } catch (error) {
+        console.error("Error durante el inicio de sesión:", error);
+      }
     },
   });
 
