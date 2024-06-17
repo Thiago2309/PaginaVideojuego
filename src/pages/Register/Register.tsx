@@ -30,13 +30,13 @@ const Register: React.FC = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required("Required"),
-      username: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
+      fullName: Yup.string().required("Nombre completo Requerido"),
+      username: Yup.string().required("Nombre de Usuario Requerido"),
+      email: Yup.string().email("Invalid email address").required("Correo requerido"),
+      password: Yup.string().required("Contraseña requerida"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords must match")
-        .required("Required"),
+        .required("Confirmar contraseña requerida"),
     }),
     onSubmit: async (values) => {
       try {
