@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Navegador from "../../layout/Navegador/Navegador";
 import Comments from "../../Components/Comments/Comments";
 import Games from "../../Components/Comments/Game";
-import GameApprobation from "../../Components/Comments/GameApprobation ";
+import GameApprobation from "../../Components/Comments/GameApprobation";
 
 const GameDetails: React.FC = () => {
   const navigate = useNavigate();
