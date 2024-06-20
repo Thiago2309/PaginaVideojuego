@@ -1,15 +1,72 @@
-import React from 'react';
-import { Card, CardContent, Grid, Typography, Button, Box, Chip } from '@mui/material';
-import Battlefield_banner from '../../assets/images/GameDetails/Banner/Battlefield_banner.jpg'; 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Card, CardContent, Grid, Typography, Button, Box, Chip, Skeleton } from '@mui/material';
+import { useParams } from 'react-router-dom'; 
 
-const Games: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) => {
+interface GamesProps {
+  handleBackClick: () => void;
+  gameSlug?: string;
+}
+
+const GameDetailsSkeleton = () => (
+  <Card sx={{ backgroundColor: "#1C172B", width: "100%" }}>
+    <CardContent sx={{ padding: 4 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Skeleton variant="text" width={200} height={40} />
+        </Grid>
+        <Grid item xs={12}>
+          <Skeleton variant="text" width={300} height={20} />
+        </Grid>
+        <Grid item xs={12}>
+          <Skeleton variant="rectangular" width="100%" height={200} />
+        </Grid>
+        <Grid item xs={12}>
+          <Skeleton variant="text" width="100%" height={100} />
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+);
+
+const Games: React.FC<GamesProps> = ({ handleBackClick, gameSlug: initialGameSlug = "red-dead-redemption-2" }) => {
+  const [gameData, setGameData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const apiKey = "f440cc6f53ef461793a6427f1abc6020";
+  const { gameSlug: dynamicGameSlug } = useParams<{ gameSlug: string }>(); 
+
+  const gameSlug = dynamicGameSlug || initialGameSlug;
+
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`https://api.rawg.io/api/games/${gameSlug}?key=${apiKey}`);
+        setGameData(response.data);
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGameData();
+  }, [gameSlug]);
+
+  if (isLoading) {
+    return <GameDetailsSkeleton />;
+  }
+
+  if (!gameData) {
+    return <Typography variant="h6">No se encontraron datos del juego.</Typography>;
+  }
+
   return (
     <Card sx={{ backgroundColor: "#1C172B", width: "100%" }}>
       <CardContent sx={{ padding: 4 }}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             <Typography variant="h4" component="div" sx={{ fontWeight: "bold", color: "#ffffff" }}>
-              Battlefield
+              {gameData.name} 
             </Typography>
           </Grid>
           <Grid item>
@@ -19,32 +76,30 @@ const Games: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) =
           </Grid>
         </Grid>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}>
-          Publicado el 01 de Enero, 2024 por Admin01
+          Publicado el {new Date(gameData.released).toLocaleDateString()} 
         </Typography>
+
         <Box sx={{ mt: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Chip
-              label="Acción"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-                mr: 1,
-              }}
-            />
-            <Chip
-              label="Disparos"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-              }}
-            />
+            {gameData.genres.map((genre: any) => (
+              <Chip
+                key={genre.id}
+                label={genre.name}
+                sx={{
+                  backgroundColor: "#2C2839",
+                  color: "#ffffff",
+                  borderRadius: 3,
+                  mr: 1,
+                }}
+              />
+            ))}
           </Box>
         </Box>
+
         <Box sx={{ mt: 2, borderRadius: 3, overflow: "hidden" }}>
-          <img src={Battlefield_banner} alt="Banner Battlefield" style={{ width: "100%" }} />
+          <img src={gameData.background_image} alt={`Banner ${gameData.name}`} style={{ width: "100%" }} />
         </Box>
+
         <Typography
           variant="body2"
           color="text.secondary"
@@ -55,7 +110,7 @@ const Games: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) =
             fontSize: "1.2rem",
           }}
         >
-          Battlefield es una aclamada serie de videojuegos de disparos en primera persona desarrollada por DICE y publicada por Electronic Arts. Con un enfoque en batallas multijugador masivas, Battlefield se distingue por su énfasis en la cooperación entre jugadores y la intensidad de las batallas en entornos destructibles. En Battlefield, los jugadores se sumergen en escenarios de guerra moderna o histórica, desde las trincheras de la Primera Guerra Mundial hasta los campos de batalla futuristas. La serie se destaca por su enfoque en vehículos militares, mapas expansivos y la capacidad de alterar el terreno y los edificios mediante el uso de armamento pesado.
+          {gameData.description_raw} 
         </Typography>
       </CardContent>
     </Card>
