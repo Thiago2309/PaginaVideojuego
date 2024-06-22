@@ -23,20 +23,22 @@ const Register: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      fullName: "",
-      username: "",
+      name: "",
+      lastname: "",
+      userName: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required("Required"),
-      username: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
+      name: Yup.string().required("Nombre Requerido"),
+      lastname: Yup.string().required("Apellido Requerido"),
+      userName: Yup.string().required("Nombre de Usuario Requerido"),
+      email: Yup.string().email("Invalid email address").required("Correo requerido"),
+      password: Yup.string().required("Contraseña requerida"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords must match")
-        .required("Required"),
+        .required("Confirmar contraseña requerida"),
     }),
     onSubmit: async (values) => {
       try {
@@ -93,17 +95,47 @@ const Register: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="fullName"
-                label="Nombre completo"
-                name="fullName"
-                autoComplete="fullName"
+                id="name"
+                label="Nombre"
+                name="name"
+                autoComplete="name"
                 autoFocus
-                value={formik.values.fullName}
+                value={formik.values.name}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.fullName && Boolean(formik.errors.fullName)
+                  formik.touched.name && Boolean(formik.errors.name)
                 }
-                helperText={formik.touched.fullName && formik.errors.fullName}
+                helperText={formik.touched.name && formik.errors.name}
+                sx={{
+                  "& label": {
+                    color: "#ffffff",
+                  },
+                  "& input": {
+                    color: "#ffffff",
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#ffffff",
+                      boxShadow: "0px 0px 10px 2px rgba(224, 10, 171, 0.4)",
+                    },
+                  },
+                }}
+              />
+                            <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="lastname"
+                label="Apellidos"
+                name="lastname"
+                autoComplete="lastname"
+                autoFocus
+                value={formik.values.lastname}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.lastname && Boolean(formik.errors.lastname)
+                }
+                helperText={formik.touched.lastname && formik.errors.lastname}
                 sx={{
                   "& label": {
                     color: "#ffffff",
@@ -123,16 +155,16 @@ const Register: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="username"
+                id="userName"
                 label="Nombre de Usuario"
-                name="username"
-                autoComplete="username"
-                value={formik.values.username}
+                name="userName"
+                autoComplete="userName"
+                value={formik.values.userName}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.username && Boolean(formik.errors.username)
+                  formik.touched.userName && Boolean(formik.errors.userName)
                 }
-                helperText={formik.touched.username && formik.errors.username}
+                helperText={formik.touched.userName && formik.errors.userName}
                 sx={{
                   "& label": {
                     color: "#ffffff",
