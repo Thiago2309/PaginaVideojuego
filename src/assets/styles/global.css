@@ -1,0 +1,25 @@
+/* styles.css */
+.ql-toolbar .ql-stroke {
+    fill: none;
+    stroke: #fff; /* Color de los íconos */
+  }
+  /* styles.css */
+.ql-editor {
+    color: #fff; /* Color del texto dentro del editor */
+  }
+  
+  .ql-toolbar .ql-fill {
+    fill: #fff; /* Color de los íconos */
+    stroke: none;
+  }
+  
+  .ql-toolbar .ql-picker-label {
+    color: #fff; /* Color del texto inicial de los pickers */
+  }
+  
+  /* Estilo adicional para ajustes específicos */
+  .ql-toolbar .ql-picker-options {
+    background-color: #fff; /* Fondo del menú */
+    color: #333; /* Color de texto del menú abierto */
+  }
+  
