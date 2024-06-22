@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import img1 from '../../assets/images/controlL.png';
 import ContactSection from '../Contact/ContactSection';
+import { Link as RouterLink } from "react-router-dom";
 
 const HeaderSectionLeft = () => {
   return (
@@ -32,10 +33,10 @@ const HeaderSectionLeft = () => {
             </Typography>
             <br />
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: { xs: 'center', sm: 'flex-start', md: 'flex-start' } }}>
-              <Button variant="contained" style={{ backgroundColor: '#1AA197', color: 'white' }}>
+              <Button component={RouterLink} to="/register" variant="contained" style={{ backgroundColor: '#1AA197', color: 'white' }}>
                 Regístrate
               </Button>
-              <Button variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
+              <Button href="https://discord.com/" target="_blank" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
                 Discord
               </Button>
             </Box>

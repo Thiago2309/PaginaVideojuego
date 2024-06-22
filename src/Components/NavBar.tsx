@@ -14,6 +14,12 @@ const NavBar: React.FC = () => {
         <li>
           <Link to="/register">Register</Link>
         </li>
+        <li>
+          <Link to="/gamedetails">GameDetails</Link>
+        </li>
+        <li>
+          <Link to="/gameofferts">GameOfferts</Link>
+        </li>
       </ul>
     </nav>
   );
