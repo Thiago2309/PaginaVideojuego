@@ -1,18 +1,10 @@
-// import React, { useState } from 'react';
-// import logo from './logo.svg';
-import './App.css';
-// import { Button, Typography, Box } from '@mui/material';
-// import Alert from '@mui/material/Alert';
-import Navegador from '../src/layout/Navegador/Navegador';
-import HeaderSection from './layout/Header/HeaderSection';
+import React from 'react';
+import Routes from './routes/routes';
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <div className="App">
-      <div>
-        <Navegador />
-        <HeaderSection />
-      </div>
+      <Routes />
     </div>
   );
 }
