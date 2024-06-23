@@ -7,6 +7,7 @@ import HeaderSection from '../../Components/Header/HeaderSection';
 import SliderSection from '../../Components/SliderImg/SliderSection';
 import NewsSection from '../../Components/Body/NewsSection';
 import NewGameSection from '../../Components/Body/NewGameSection';
+import Footer from '../../layout/Footer/FooterView'
 // import Api from './layout/ExampleApi/tabla';
 
 // import { Box } from '@mui/material';
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
         <SliderSection />
         <NewsSection />
         <NewGameSection />
+        <Footer />
         {/* <Api /> */}
       </div>
     </div>
