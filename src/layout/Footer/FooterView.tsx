@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, Link, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { FaInstagram, FaDiscord, FaFacebook } from 'react-icons/fa';
-import logo from "../../assets/images/logo.png"; 
+import logo from "../../assets/images/logo.png";
 
 const FooterView = () => {
   return (
@@ -23,6 +23,77 @@ const FooterView = () => {
       }}
     >
       <Grid container justifyContent="center" alignItems="center" spacing={2}>
+        <Grid
+          item
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            textAlign: 'center'
+          }}
+        >
+          <Link
+            component={RouterLink}
+            to="#"
+            sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
+          >
+            Populares
+          </Link>
+            |
+        </Grid>
+        <Grid
+          item
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            textAlign: 'center'
+          }}
+        >
+          <Link
+            component={RouterLink}
+            to="#"
+            sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
+          >
+            Ofertas
+          </Link>
+            |
+        </Grid>
+        <Grid item xs={12} md="auto">
+          <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
+            <img src={logo} alt="Logo" style={{ maxWidth: 120, margin: '10px 0' }} />
+          </Link>
+        </Grid>
+        <Grid
+          item
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            textAlign: 'center'
+          }}
+        >
+          <Link
+            component={RouterLink}
+            to="#"
+            sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
+          >
+            Novedades
+          </Link>
+            |
+        </Grid>
+        <Grid
+          item
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            textAlign: 'center'
+          }}
+        >
+          <Link
+            component={RouterLink}
+            to="#"
+            sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
+          >
+            Nosotros
+          </Link>
+            |
+        </Grid>
+      </Grid>
+      <Grid container justifyContent="center" alignItems="center" spacing={1} sx={{ textAlign: 'center', display: { xs: 'flex', md: 'none' }, flexDirection: 'column' }}>
         <Grid item>
           <Link
             component={RouterLink}
@@ -31,8 +102,7 @@ const FooterView = () => {
           >
             Populares
           </Link>
-        </Grid>
-        <Grid item>
+          {' | '}
           <Link
             component={RouterLink}
             to="#"
@@ -40,11 +110,7 @@ const FooterView = () => {
           >
             Ofertas
           </Link>
-        </Grid>
-        <Grid item>
-          <img src={logo} alt="Logo" style={{ maxWidth: 120 }} /> 
-        </Grid>
-        <Grid item>
+          {' | '}
           <Link
             component={RouterLink}
             to="#"
@@ -52,8 +118,7 @@ const FooterView = () => {
           >
             Novedades
           </Link>
-        </Grid>
-        <Grid item>
+          {' | '}
           <Link
             component={RouterLink}
             to="#"
@@ -63,13 +128,10 @@ const FooterView = () => {
           </Link>
         </Grid>
       </Grid>
-      <Typography variant="body2" sx={{ mt: 3 }}>
-        © 2024 Derechos reservados BitPlay UT Cancún
-      </Typography>
       <Grid container justifyContent="center" spacing={2} sx={{ mt: 2 }}>
         <Grid item>
           <Link
-            href="https://instagram.com" 
+            href="https://instagram.com"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             <FaInstagram size={24} />
@@ -77,7 +139,7 @@ const FooterView = () => {
         </Grid>
         <Grid item>
           <Link
-            href="https://discord.com" 
+            href="https://discord.com"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             <FaDiscord size={24} />
@@ -85,13 +147,16 @@ const FooterView = () => {
         </Grid>
         <Grid item>
           <Link
-            href="https://facebook.com" 
+            href="https://facebook.com"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             <FaFacebook size={24} />
           </Link>
         </Grid>
       </Grid>
+      <Typography variant="body2" sx={{ mt: 3 }}>
+        © 2024 Derechos reservados BitPlay UT Cancún
+      </Typography>
     </Box>
   );
 };

@@ -12,11 +12,11 @@ const Games: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) =
               Battlefield
             </Typography>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }} onClick={handleBackClick}>
               Volver
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}>
           Publicado el 01 de Enero, 2024 por Admin01
