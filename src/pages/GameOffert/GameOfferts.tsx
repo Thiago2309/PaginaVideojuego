@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navegador from "../../layout/Navegador/Navegador";
 import GameOffert from "../../Components/Offerts/GameOff";
 import CommentsOff from "../../Components/Offerts/CommentsOff";
+import FooterView from "../../layout/Footer/FooterView";
 
 const GameOfferts: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ const GameOfferts: React.FC = () => {
             <CommentsOff />
           </Grid>
         </Grid>
+      </Box>
+      <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'center' }}>
+        {FooterView()}
       </Box>
     </div>
   );

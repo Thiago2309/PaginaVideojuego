@@ -31,15 +31,54 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
   return (
     <Card sx={{ backgroundColor: "#1C172B", width: "100%" }}>
       <CardContent sx={{ padding: 4 }}>
-        <Grid container alignItems="center" justifyContent="flex-end">
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }}
-            onClick={handleBackClick}
-          >
-            Volver
-          </Button>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography
+              variant="h4"
+              component="div"
+              sx={{ fontWeight: "bold", color: "#ffffff" }}
+            >
+              Battlefield
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#69BE28",
+                  color: "#ffffff",
+                  textTransform: "none",
+                  "& .MuiButton-endIcon": {
+                    marginLeft: 1,
+                  },
+                }}
+                endIcon={<IconOferta />}
+                onClick={handleBackClick}
+              >
+                Ir a la oferta
+              </Button>
+          </Grid>
         </Grid>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}
+        >
+          Publicado el 01 de Enero, 2024 por Admin01
+        </Typography>
+        <Box sx={{ mt: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Chip
+              label="Oferta Especial"
+              sx={{
+                backgroundColor: "#2C2839",
+                color: "#ffffff",
+                borderRadius: 3,
+                mr: 1,
+              }}
+            />
+          </Box>
+        </Box>
         <Box sx={{ mt: 2, borderRadius: 3, overflow: "hidden" }}>
           <Swiper
             modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
@@ -101,53 +140,7 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
           justifyContent="space-between"
           sx={{ mt: 2 }}
         >
-          <Grid item>
-            <Typography
-              variant="h4"
-              component="div"
-              sx={{ fontWeight: "bold", color: "#ffffff" }}
-            >
-              Battlefield
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#69BE28",
-                color: "#ffffff",
-                textTransform: "none",
-                "& .MuiButton-endIcon": {
-                  marginLeft: 1,
-                },
-              }}
-              endIcon={<IconOferta />}
-              onClick={handleBackClick}
-            >
-              Ir a la oferta
-            </Button>
-          </Grid>
         </Grid>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}
-        >
-          Publicado el 01 de Enero, 2024 por Admin01
-        </Typography>
-        <Box sx={{ mt: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Chip
-              label="Oferta Especial"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-                mr: 1,
-              }}
-            />
-          </Box>
-        </Box>
         <Typography
           variant="body2"
           color="text.secondary"
