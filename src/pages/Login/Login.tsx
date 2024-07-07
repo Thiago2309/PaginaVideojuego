@@ -1,4 +1,7 @@
-import * as React from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -10,39 +13,44 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Image_Login from "../../assets/images/Login_and_Register/Image_Login.jpeg";
-
+import { useDispatch } from 'react-redux'; 
+import { loginUser } from '../../store/reducers/userReducer'
 const defaultTheme = createTheme();
 
-const Login: React.FC = () => {
-  const auth = useAuth();
+const Login = () => {
+  const [loginError, setLoginError] = useState(null);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch(); 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      correo: "",
+      contraseña: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
+      correo: Yup.string()
         .email("Correo electrónico inválido")
         .required("Requerido"),
-      password: Yup.string().required("Requerido"),
+      contraseña: Yup.string().required("Requerido"),
     }),
     onSubmit: async (values) => {
       try {
-        await auth.login();  
-        navigate("/");
+        const response = await axios.post('https://localhost:7029/Usuarios/Login', {
+          correo: values.correo,
+          contraseña: values.contraseña,
+        });
+        dispatch(loginUser(response.data.result)); 
+        console.log('Respuesta del backend:', response.data);
+        alert("Inicio de sesión exitoso");
+        
+        navigate('/');
       } catch (error) {
         console.error("Error durante el inicio de sesión:", error);
       }
     },
   });
+ 
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -89,15 +97,15 @@ const Login: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="correo"
                 label="Correo Electrónico"
-                name="email"
+                name="correo"
                 autoComplete="email"
                 autoFocus
-                value={formik.values.email}
+                value={formik.values.correo}
                 onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
+                error={formik.touched.correo && Boolean(formik.errors.correo)}
+                helperText={formik.touched.correo && formik.errors.correo}
                 sx={{
                   "& label": {
                     color: "#ffffff",
@@ -117,17 +125,17 @@ const Login: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                name="password"
+                name="contraseña"
                 label="Contraseña"
                 type="password"
-                id="password"
+                id="contraseña"
                 autoComplete="current-password"
-                value={formik.values.password}
+                value={formik.values.contraseña}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.password && Boolean(formik.errors.password)
+                  formik.touched.contraseña && Boolean(formik.errors.contraseña)
                 }
-                helperText={formik.touched.password && formik.errors.password}
+                helperText={formik.touched.contraseña && formik.errors.contraseña}
                 sx={{
                   "& label": {
                     color: "#ffffff",
@@ -174,6 +182,11 @@ const Login: React.FC = () => {
               >
                 Iniciar Sesión
               </Button>
+              {loginError && (
+                <Typography variant="body2" color="error" align="center">
+                  {loginError}
+                </Typography>
+              )}
               <Grid container justifyContent="center">
                 <Grid container justifyContent="center">
                   <Grid item>
