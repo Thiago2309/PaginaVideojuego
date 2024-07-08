@@ -6,6 +6,7 @@ import Register from "../pages/Register/Register";
 import GameDetails from "../pages/GameDetails/GameDetails";
 import GameOfferts from "../pages/GameOffert/GameOfferts";
 import PrivateRoute from "./PrivateRoute";
+import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
 
 const AppRoutes: React.FC = () => {
@@ -18,6 +19,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </AuthProvider>
     </Router>
