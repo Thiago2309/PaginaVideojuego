@@ -13,6 +13,7 @@ import Navegador from "../../layout/Navegador/Navegador";
 import Comments from "../../Components/Comments/Comments";
 import Games from "../../Components/Comments/Game";
 import GameApprobation from "../../Components/Comments/GameApprobation";
+import FooterView from "../../layout/Footer/FooterView";
 
 const GameDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -37,6 +38,9 @@ const GameDetails: React.FC = () => {
             <GameApprobation />
           </Grid>
         </Grid>
+      </Box>
+      <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'center' }}>
+        {FooterView()}
       </Box>
     </div>
   );

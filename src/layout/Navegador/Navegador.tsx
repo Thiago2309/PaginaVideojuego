@@ -1,9 +1,7 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
@@ -16,6 +14,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/reducers/userReducer';
+import { Box, Typography, Link, Grid } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 const pages = ['Populares', 'Novedades', 'Ofertas'];
 const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
@@ -51,7 +51,9 @@ function Navegador() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-            <img src={Logo1} alt="logo"style={{ height: '40px' }} />
+            <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
+              <img src={Logo1} alt="logo"style={{ height: '40px' }} />
+            </Link>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

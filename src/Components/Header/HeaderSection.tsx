@@ -27,9 +27,9 @@ const HeaderSectionLeft = () => {
               de los Videojuegos!
             </Typography>
             <Typography variant="body1" gutterBottom sx={{ textAlign: 'left', justifyContent: { xs: 'none', sm: 'none', md: 'flex-start' } }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante faucibus orci 
-              luctus et ultrices posuere cubilia Curae; Integer nec metus eget nisi hendrerit feugiat,
-              luctus et ultrices posuere cubilia Curae.
+              Sumérgete en el universo de los videojuegos con las últimas noticias, reseñas y lanzamientos. 
+              Explora mundos increíbles, descubre nuevas aventuras y mantente al día con las tendencias más recientes de la industria. 
+              Ya seas un jugador casual o un gamer experimentado, aquí encontrarás todo lo que necesitas para llevar tu pasión al siguiente nivel.
             </Typography>
             <br />
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: { xs: 'center', sm: 'flex-start', md: 'flex-start' } }}>
