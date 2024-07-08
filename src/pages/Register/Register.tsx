@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from 'react';
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Alert, Link } from "@mui/material";
+import { Link } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +15,29 @@ import { useFormik } from "formik";
 import { Link as RouterLink } from "react-router-dom";
 import Image_Register from "../../assets/images/Login_and_Register/Image_Login.jpeg";
 import axios from "axios";
-
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Snackbar from '@mui/material/Snackbar';
 const defaultTheme = createTheme();
+
+type AlertType = 'success' | 'error' | 'info' | 'warning';
+
+interface AlertState {
+  type: AlertType;
+  message: string;
+}
+
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  const [alert, setAlert] = useState<AlertState | null>(null);
+  const [open, setOpen] = useState(false);
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -54,12 +72,15 @@ const Register: React.FC = () => {
         };
 
         await axios.post('https://localhost:7029/Usuarios/RegistroDeUsuario', payload);
-        
-        alert("Registro exitoso");
-        navigate("/login");
+        setAlert({ type: 'success', message: 'Inicio de sesión exitoso' });
+        setOpen(true);
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000); // Redirigir después de 2 segundos
       } catch (error) {
         console.error("Error durante el registro:", error);
-        alert(error);
+        setAlert({ type: 'error', message: 'Error durante el inicio de sesión' });
+        setOpen(true);
       }
     },
   });
@@ -317,6 +338,31 @@ const Register: React.FC = () => {
           }}
         />
       </Grid>
+      <Snackbar 
+        open={open} 
+        autoHideDuration={6000} 
+        onClose={handleClose} 
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // Parte superior derecha
+        sx={{ width: '30%' }} // Tamaño reducido
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={alert?.type} 
+          sx={{ 
+            backgroundColor: '#000000', // Fondo negro
+            color: '#ffffff', 
+            fontSize: '1em',
+            padding: '10px',
+            border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#E10AAB'}`, // Borde rojo para error, rosa neón para éxito
+            "& .MuiAlert-icon": {
+              color: alert?.type === 'error' ? '#FF3860' : '#E10AAB', // Color rojo para error, rosa neón para éxito
+            }
+          }}
+        >
+          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle> {/* Cambio de texto */}
+          {alert?.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };
