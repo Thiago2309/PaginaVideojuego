@@ -17,7 +17,7 @@ import { logoutUser } from '../../store/reducers/userReducer';
 import { Box, Typography, Link, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-const pages = ['Populares', 'Novedades', 'Ofertas'];
+const pages = ['Populares', 'Novedades', 'Ofertas', 'Noticias'];
 const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
 
 function Navegador() {

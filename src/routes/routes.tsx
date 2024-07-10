@@ -7,6 +7,7 @@ import GameDetails from "../pages/GameDetails/GameDetails";
 import GameOfferts from "../pages/GameOffert/GameOfferts";
 import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "../context/AuthContext";
+import NewsView from "../pages/News/NewsView";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
+          <Route path="/newsgame" element={<NewsView />} />
         </Routes>
       </AuthProvider>
     </Router>
