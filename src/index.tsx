@@ -5,13 +5,17 @@ import store from './store/store'; // Asegúrate de importar tu store correctame
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+const clientId = "<1080974684164-cvi75pa6eu2osmctc857ofti28r8osi8.apps.googleusercontent.com>"
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <GoogleOAuthProvider clientId={clientId}>
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  </GoogleOAuthProvider>,
   document.getElementById('root')
 );
 

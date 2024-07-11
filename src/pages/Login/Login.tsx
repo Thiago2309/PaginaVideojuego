@@ -20,7 +20,11 @@ import { loginUser } from '../../store/reducers/userReducer';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
-
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import Google from '@mui/icons-material/Google'; 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+const clientId = "<932101888025-5o66hjp5gf2m6v9tn0pcoe8hfoddv8ub.apps.googleusercontent.com>"
 const defaultTheme = createTheme();
 
 type AlertType = 'success' | 'error' | 'info' | 'warning';
@@ -41,6 +45,14 @@ const Login = () => {
     }
     setOpen(false);
   };
+  const setUser = (response: any) => {
+    console.log('Google login response:', response);
+  };
+  const loginGoogle = useGoogleLogin({
+    onSuccess: (codeResponse: any) => setUser(codeResponse),
+    onError: (error: any) => console.log('Login Failed:', error)
+});
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
@@ -194,6 +206,46 @@ const Login = () => {
                 }}
               />
               <Button
+                onClick={() => loginGoogle()}
+                variant="contained"
+                sx={{
+                  display: 'flex',
+                  gap: '10px',
+                  backgroundColor: '#26272B',
+                  padding: '10px 20px',
+                  color: '#A0A0AB',
+                  fontWeight: 600,
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '16px',
+                  width: '100%',
+                  '&:hover': {
+                    backgroundColor: '#FFF',
+                  },
+                }}
+              >
+                <Google />
+                Iniciar sesión con Google
+              </Button>
+
+              <FacebookLogin
+                appId="695823554794749"
+                onSuccess={(response) => {
+                  console.log('Login Success!', response);
+                }}
+                onFail={(error) => {
+                  console.log('Login Failed!', error);
+                }}
+                onProfileSuccess={(response) => {
+                  console.log('Get Profile Success!', response);
+                }}
+                render={({ onClick, logout }) => (
+                  <Button onClick={onClick} variant="contained" color="primary">
+                    Iniciar sesión con Facebook
+                  </Button>
+                )}
+              />
+
+              <Button
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -256,24 +308,24 @@ const Login = () => {
         open={open} 
         autoHideDuration={6000} 
         onClose={handleClose} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // Parte superior derecha
-        sx={{ width: '30%' }} // Tamaño reducido
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ width: '30%' }}
       >
         <Alert 
           onClose={handleClose} 
           severity={alert?.type} 
           sx={{ 
-            backgroundColor: `${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Fondo negro
+            backgroundColor: `${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`,
             color: '#ffffff', 
             fontSize: '1em',
             padding: '10px',
-            border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Borde rojo para error, rosa neón para éxito
+            border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`,
             "& .MuiAlert-icon": {
-              color: alert?.type === 'error' ? '#ffffff' : '#ffffff', // Color rojo para error, rosa neón para éxito
+              color: alert?.type === 'error' ? '#ffffff' : '#ffffff',
             }
           }}
         >
-          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle> {/* Cambio de texto */}
+          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle>
           {alert?.message}
         </Alert>
       </Snackbar>
