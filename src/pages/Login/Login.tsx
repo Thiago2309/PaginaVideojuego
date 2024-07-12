@@ -47,6 +47,13 @@ const Login = () => {
   };
   const setUser = (response: any) => {
     console.log('Google login response:', response);
+    axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.access_token}`)
+      .then((res) => {
+        console.log('Google user profile:', res.data);
+      })
+      .catch((err) => {
+        console.error('Error fetching Google user profile:', err);
+      });
   };
   const loginGoogle = useGoogleLogin({
     onSuccess: (codeResponse: any) => setUser(codeResponse),

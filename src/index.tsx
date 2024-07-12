@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store/store'; // Asegúrate de importar tu store correctamente
+import store from './store/store';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from "@react-oauth/google";
-const clientId = "<1080974684164-cvi75pa6eu2osmctc857ofti28r8osi8.apps.googleusercontent.com>"
+const clientId = "932101888025-5o66hjp5gf2m6v9tn0pcoe8hfoddv8ub.apps.googleusercontent.com"
 
 ReactDOM.render(
   <GoogleOAuthProvider clientId={clientId}>
