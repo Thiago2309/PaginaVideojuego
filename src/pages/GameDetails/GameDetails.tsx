@@ -28,11 +28,13 @@ const GameDetails: React.FC = () => {
 
       <Box sx={{ flexGrow: 1, p: 3, mx: { xs: 2, sm: 3, md: 5, lg: 4 } }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Games handleBackClick={handleBackClick} />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} md={8}>
-            <Comments />
+            {/* <Comments /> */}
+            <Games handleBackClick={handleBackClick} />
+
           </Grid>
           <Grid item xs={12} md={4}>
             <GameApprobation />

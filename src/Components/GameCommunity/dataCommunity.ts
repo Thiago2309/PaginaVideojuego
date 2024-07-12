@@ -1,7 +1,7 @@
 // asignación dinámica de las rutas de las imágenes en los objetos 
 const BannerGame = require.context("../../assets/images/GameCatalog", true);
 
-export interface GameOffert {
+export interface Game {
   id: number;
   title: string;
   likes: number;
@@ -9,13 +9,11 @@ export interface GameOffert {
   categories: string[];
   platforms: string[];
   ranges: string;
-  price: number;
-  discount: number;
   releaseDate: string;
   image: string;
 }
 
-export const gamesOfferts: GameOffert[] = [
+export const games: Game[] = [
   {
     id: 1,
     title: "Valorant",
@@ -24,8 +22,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Acción", "Disparos"],
     platforms: ["PlayStation 4", "Xbox One"],
     ranges: "Mitico",
-    price: 148.99,
-    discount: 25,
     releaseDate: "2018-04-02",
     image: BannerGame("./Valorant_banner.jpg"),
   },
@@ -37,8 +33,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Aventura", "Exploración"],
     platforms: ["Pc", "Móvil"],
     ranges: "Épico",
-    price: 320.10,
-    discount: 70,
     releaseDate: "2016-02-05",
     image: BannerGame("./Minecraft_banner.png"),
   },
@@ -50,8 +44,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Acción", "Disparos", "Pc"],
     platforms: ["Pc", "Móvil", "PlayStation5"],
     ranges: "Legendario",
-    price: 261.22,
-    discount: 35,
     releaseDate: "2020-11-23",
     image: BannerGame("./Battlefield_banner.jpg"),
   },
@@ -63,8 +55,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Estrategia", "Pc"],
     platforms: ["Pc"],
     ranges: "Épico",
-    price: 22.85,
-    discount: 85,
     releaseDate: "2021-04-09",
     image: BannerGame("./LoL_banner.jpg"),
   },
@@ -76,8 +66,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Pelea", "Acción"],
     platforms: ["PlayStation 4", "Xbox One", "Pc"],
     ranges: "Raro",
-    price: 910.40,
-    discount: 15,
     releaseDate: "2022-04-03",
     image: BannerGame("./MultiVersus_banner.jpg"),
   },
@@ -89,8 +77,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Gacha", "Pc"],
     platforms: ["Pc", "Móvil"],
     ranges: "Legendario",
-    price: 468.69,
-    discount: 12,
     releaseDate: "2022-03-18",
     image: BannerGame("./Honkai_banner.png"),
   },
@@ -102,8 +88,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Acción", "Disparos", "PlayStation5"],
     platforms: ["PlayStation 5", "Pc"],
     ranges: "Común",
-    price: 309.20,
-    discount: 40,
     releaseDate: "2015-02-01",
     image: BannerGame("./Rainbow_banner.jpg"),
   },
@@ -115,8 +99,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Acción", "Disparos"],
     platforms: ["Móvil"],
     ranges: "Raro",
-    price: 279.69,
-    discount: 80,
     releaseDate: "2019-06-04",
     image: BannerGame("./Brawl_banner.png"),
   },
@@ -128,8 +110,6 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Carros", "Pc", "Estrategia"],
     platforms: ["PlayStation 5", "Pc"],
     ranges: "Raro",
-    price: 50.16,
-    discount: 60,
     releaseDate: "2021-06-21",
     image: BannerGame("./Rocket_banner.jpg"),
   },
@@ -141,10 +121,7 @@ export const gamesOfferts: GameOffert[] = [
     categories: ["Terror", "Pc"],
     platforms: ["PlayStation 4", "PlayStation 5", "Pc", "Nintendo"],
     ranges: "Mitico",
-    price: 871.23,
-    discount: 5,
     releaseDate: "2017-05-20",
     image: BannerGame("./DBD_banner.jpg"),
   },
-  //dame el title de los juegor ordenados de manera ascentende por medio del price y otra por medio del discount
 ];

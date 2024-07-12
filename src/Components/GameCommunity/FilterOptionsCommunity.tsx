@@ -9,19 +9,17 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { GameOffert } from "./dataOfferts";
+import { Game } from "./dataCommunity";
 import {
   developersOptions,
   categoriesOptions,
   platformsOptions,
   rangesOptions,
-  priceOptions,
-  discountOptions,
-} from "./helpersOfferts";
+} from "./helpersCommunity";
 
 interface FilterOptionsProps {
-  setFilteredGames: (games: GameOffert[]) => void;
-  games: GameOffert[];
+  setFilteredGames: (games: Game[]) => void;
+  games: Game[];
   selectedDevelopers: string[];
   setSelectedDevelopers: (developers: string[]) => void;
   selectedCategories: string[];
@@ -30,10 +28,6 @@ interface FilterOptionsProps {
   setSelectedPlatforms: (platforms: string[]) => void;
   selectedRanges: string[];
   setSelectedRanges: (ranges: string[]) => void;
-  selectedPrice: { value: string, label: string }[];
-  setSelectedPrice: (price: { value: string, label: string }[]) => void;
-  selectedDiscount: { value: string, label: string }[];
-  setSelectedDiscount: (discount: { value: string, label: string }[]) => void;
 }
 
 const style = {
@@ -52,7 +46,7 @@ const style = {
   maxHeight: "90vh",
 };
 
-const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
+const FilterOptions: React.FC<FilterOptionsProps> = ({
   setFilteredGames,
   games,
   selectedDevelopers,
@@ -63,10 +57,6 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   setSelectedPlatforms,
   selectedRanges,
   setSelectedRanges,
-  selectedPrice,
-  setSelectedPrice,
-  selectedDiscount,
-  setSelectedDiscount,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -75,56 +65,21 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   const [tempPlatforms, setTempPlatforms] = useState<string[]>([]);
   const [tempRanges, setTempRanges] = useState<string[]>([]);
-  const [tempPrice, setTempPrice] = useState<
-    { value: string; label: string }[]
-  >([]);
-  const [tempDiscount, setTempDiscount] = useState<
-    { value: string; label: string }[]
-  >([]);
 
   useEffect(() => {
     const filteredGames = games.filter((game) => {
-      const matchDevelopers =
-        selectedDevelopers.length === 0 ||
-        selectedDevelopers.includes(game.developers);
-      const matchCategories =
-        selectedCategories.length === 0 ||
-        selectedCategories.every((category) =>
-          game.categories.includes(category)
-        );
-      const matchPlatforms =
-        selectedPlatforms.length === 0 ||
-        selectedPlatforms.every((platform) =>
-          game.platforms.includes(platform)
-        );
-      const matchRanges =
-        selectedRanges.length === 0 || selectedRanges.includes(game.ranges);
-      const matchPrice =
-        selectedPrice.length === 0 ||
-        selectedPrice.some((priceRange) => {
-          // const [min, max] = priceRange .value.split("-").map(Number);
-          // return game.price >= min && game.price <= max + 0.99;
-          if (priceRange.value === "1001-") {
-            return game.price >= 1001;
-          } else {
-            const [min, max] = priceRange.value.split('-').map(Number);
-            return game.price >= min && game.price <= max + 0.99;
-          }
-        });
-      const matchDiscount =
-        selectedDiscount.length === 0 ||
-        selectedDiscount.some((discountRange) => {
-          const [min, max] = discountRange.value.split("-").map(Number);
-          return game.discount >= min && game.discount <= max;
-        });
-
       return (
-        matchDevelopers &&
-        matchCategories &&
-        matchPlatforms &&
-        matchRanges &&
-        matchPrice &&
-        matchDiscount
+        (selectedDevelopers.length === 0 ||
+          selectedDevelopers.includes(game.developers)) &&
+        (selectedCategories.length === 0 ||
+          selectedCategories.every((category) =>
+            game.categories.includes(category)
+          )) &&
+        (selectedPlatforms.length === 0 ||
+          selectedPlatforms.every((platform) =>
+            game.platforms.includes(platform)
+          )) &&
+        (selectedRanges.length === 0 || selectedRanges.includes(game.ranges))
       );
     });
     setFilteredGames(filteredGames);
@@ -133,19 +88,16 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     selectedCategories,
     selectedPlatforms,
     selectedRanges,
-    selectedPrice,
-    selectedDiscount,
     setFilteredGames,
     games,
   ]);
 
   const handleClickOpen = () => {
+    // Establecer los valores temporales a los valores actuales de los filtros
     setTempDevelopers(selectedDevelopers);
     setTempCategories(selectedCategories);
     setTempPlatforms(selectedPlatforms);
     setTempRanges(selectedRanges);
-    setTempPrice(selectedPrice);
-    setTempDiscount(selectedDiscount);
     setOpen(true);
   };
 
@@ -153,12 +105,11 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Aplicar los filtros temporales a los filtros reales
     setSelectedDevelopers(tempDevelopers);
     setSelectedCategories(tempCategories);
     setSelectedPlatforms(tempPlatforms);
     setSelectedRanges(tempRanges);
-    setSelectedPrice(tempPrice);
-    setSelectedDiscount(tempDiscount);
     handleClose();
   };
 
@@ -233,7 +184,9 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       }}
                     />
                   )}
-                  onChange={(event, newValue) => setTempDevelopers(newValue)}
+                  onChange={(event, newValue) =>
+                    setTempDevelopers(newValue)
+                  }
                   value={tempDevelopers}
                   sx={{
                     width: "100%",
@@ -281,7 +234,9 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       }}
                     />
                   )}
-                  onChange={(event, newValue) => setTempCategories(newValue)}
+                  onChange={(event, newValue) =>
+                    setTempCategories(newValue)
+                  }
                   value={tempCategories}
                   sx={{
                     width: "100%",
@@ -402,120 +357,19 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  multiple
-                  options={priceOptions}
-                  getOptionLabel={(option) => option.label} 
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Rango de Precios"
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          color: "white",
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#A59898",
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
-                          "& .MuiChip-deleteIcon": { color: "white" },
-                        },
-                      }}
-                    />
-                  )}
-                  onChange={(event, newValue) => setTempPrice(newValue)}
-                  value={tempPrice}
-                  sx={{
-                    width: "100%",
-                    "& .MuiChip-root": {
-                      backgroundColor: "#383446",
-                      color: "white",
-                    },
-                    "& .MuiOutlinedInput-root": { borderRadius: "4px" },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  multiple
-                  options={discountOptions}
-                  getOptionLabel={(option) => option.label}
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Rango de Descuentos"
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          color: "white",
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#A59898",
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
-                          "& .MuiChip-deleteIcon": { color: "white" },
-                        },
-                      }}
-                    />
-                  )}
-                  onChange={(event, newValue) => setTempDiscount(newValue)}
-                  value={tempDiscount}
-                  sx={{
-                    width: "100%",
-                    "& .MuiChip-root": {
-                      backgroundColor: "#383446",
-                      color: "white",
-                    },
-                    "& .MuiOutlinedInput-root": { borderRadius: "4px" },
-                  }}
-                />
-              </Grid>
             </Grid>
           </Box>
-          <Box
-            mt={2}
-            display="flex"
-            justifyContent="flex-end"
-            sx={{ gap: "10px" }}
-          >
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="contained"
-              color="error"
-            >
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+            <Button onClick={handleClose} variant="contained" color="error">
               Cancelar
             </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Aplicar
+            <Button
+              type="submit"
+              sx={{ ml: 2 }}
+              variant="contained"
+              color="primary"
+            >
+              Aceptar
             </Button>
           </Box>
         </Box>
@@ -524,4 +378,4 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   );
 };
 
-export default FilterOptionsOff;
+export default FilterOptions;

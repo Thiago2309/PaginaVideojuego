@@ -13,7 +13,7 @@ interface SortOptionsProps {
   setSort: (sort: string) => void;
 }
 
-const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
+const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
   
   return (
     <Box display="flex" alignItems="center" sx={{ maxWidth: "100%" }}>
@@ -25,7 +25,8 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          maxWidth: "100px",
+          maxWidth: "100px", // Ajusta este valor según sea necesario
+          // display: { xs: 'none', md: 'block' } // Ocultar en modo móvil
         }}
       >
         Ordenar por
@@ -34,25 +35,25 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
         variant="outlined"
         size="small"
         sx={{
-          minWidth: "150px",
-          maxWidth: "200px",
+          minWidth: "150px", // Establece un ancho mínimo para el Select
+          maxWidth: "200px", // Establece un ancho máximo para el Select
           "& .MuiOutlinedInput-input": {
-            whiteSpace: "normal !important",
+            whiteSpace: "normal !important", // Forzar whiteSpace: normal
           },
           "& .MuiOutlinedInput-root": {
-            color: "white",
+            color: "white", // Color del texto
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+              borderColor: "white", // Color del borde al pasar el mouse
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+              borderColor: "white", // Color del borde cuando está enfocado
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+              borderColor: "white", // Color del borde por defecto
             },
           },
           "& .MuiSvgIcon-root": {
-            color: "white",
+            color: "white", // Color de la flecha
           },
         }}
       >
@@ -61,14 +62,14 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           onChange={(e: SelectChangeEvent) => setSort(e.target.value as string)}
           displayEmpty
           sx={{
-            maxWidth: "100%",
-            whiteSpace: "normal",
+            maxWidth: "100%", // Asegura que el contenido del select no desborde su contenedor
+            whiteSpace: "normal", // Forzar whiteSpace: normal
           }}
           MenuProps={{
             PaperProps: {
               sx: {
-                maxWidth: "200px",
-                overflowWrap: "break-word",
+                maxWidth: "200px", // Ancho máximo del menú desplegable
+                overflowWrap: "break-word", // Permite que el texto largo se ajuste
               },
             },
           }}
@@ -76,9 +77,9 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="title-asc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Título A-Z
@@ -86,9 +87,9 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="title-desc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Título Z-A
@@ -96,9 +97,9 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="releaseDate-asc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Fecha Ascendente
@@ -106,9 +107,9 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="releaseDate-desc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Fecha Descendente
@@ -116,9 +117,9 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="likes-asc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Likes Ascendente
@@ -126,52 +127,12 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           <MenuItem
             value="likes-desc"
             sx={{
-              whiteSpace: "normal",
+              whiteSpace: "normal", // Forzar whiteSpace: normal
               wordBreak: "break-word",
-              maxWidth: "200px",
+              maxWidth: "200px", // Ajusta este valor según sea necesario
             }}
           >
             Likes Descendente
-          </MenuItem>
-          <MenuItem
-            value="discount-asc"
-            sx={{
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              maxWidth: "200px",
-            }}
-          >
-            Descuento Ascendente
-          </MenuItem>
-          <MenuItem
-            value="discount-desc"
-            sx={{
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              maxWidth: "200px",
-            }}
-          >
-            Descuento Descendente
-          </MenuItem>
-          <MenuItem
-            value="price-asc"
-            sx={{
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              maxWidth: "200px",
-            }}
-          >
-            Precio Ascendente
-          </MenuItem>
-          <MenuItem
-            value="price-desc"
-            sx={{
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              maxWidth: "200px",
-            }}
-          >
-            Precio Descendente
           </MenuItem>
         </Select>
       </FormControl>
@@ -179,4 +140,4 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
   );
 };
 
-export default SortOptionsOff;
+export default SortOptions;

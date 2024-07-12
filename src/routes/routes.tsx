@@ -7,6 +7,7 @@ import GameDetails from "../pages/GameDetails/GameDetails";
 import GameOfferts from "../pages/GameOffert/GameOfferts";
 import GameCatalog from "../pages/GameCatalog/GameCatalog";
 import GameOffert from "../pages/GameOfferts/GameOfferts";
+import GameCommunity from "../pages/GameCommunity/GameCommunity";
 import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "../context/AuthContext";
 
@@ -22,6 +23,8 @@ const AppRoutes: React.FC = () => {
           <Route path="/gameofferts" element={<GameOfferts />} />
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />
+          <Route path="/gamecommunity" element={<GameCommunity />} />
+
         </Routes>
       </AuthProvider>
     </Router>

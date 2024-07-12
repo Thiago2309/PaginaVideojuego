@@ -1,35 +1,24 @@
+// GameCatalog.tsx
 import React, { useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import SearchBarOff from "../../Components/GameOfferts/SearchBarOffert";
-import FilterOptionsOff from "../../Components/GameOfferts/FilterOptionsOffert";
-import SortOptionsOff from "../../Components/GameOfferts/SortOptionsOffert";
+import SearchBar from "../../Components/GameCommunity/SearchBarCommunity";
+import FilterOptions from "../../Components/GameCommunity/FilterOptionsCommunity";
+import SortOptions from "../../Components/GameCommunity/SortOptionsCommunity";
 import Navegador from "../../layout/Navegador/Navegador";
 import FooterView from "../../layout/Footer/FooterView";
 import { useNavigate } from "react-router-dom";
-import GameCardOff from "../../Components/GameOfferts/GameCardOffert";
-import { gamesOfferts as initialGames, GameOffert } from "../../Components/GameOfferts/dataOfferts";
+import GameCard from "../../Components/GameCommunity/GameCardCommunity";
+import { games as initialGames, Game } from "../../Components/GameCommunity/dataCommunity";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
 
-interface PriceOption {
-  value: string;
-  label: string;
-}
-
-interface DiscountOption {
-  value: string;
-  label: string;
-}
-
-const GameOfferts: React.FC = () => {
+const GameCommunity: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredGames, setFilteredGames] = useState<GameOffert[]>(initialGames);
+  const [filteredGames, setFilteredGames] = useState<Game[]>(initialGames);
   const [sort, setSort] = useState<string>("title-asc");
   const [selectedDevelopers, setSelectedDevelopers] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<PriceOption[]>([]);
-  const [selectedDiscount, setSelectedDiscount] = useState<DiscountOption[]>([]);
 
   const navigate = useNavigate();
 
@@ -53,16 +42,12 @@ const GameOfferts: React.FC = () => {
         new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
     } else if (key === "likes") {
       comparison = a.likes - b.likes;
-    } else if (key === "discount") {
-      comparison = a.discount - b.discount;
-    } else if (key === "price") {
-      comparison = a.price - b.price;
     }
 
     return order === "asc" ? comparison : -comparison;
   });
 
-  const handleFilteredGames = (games: GameOffert[]) => {
+  const handleFilteredGames = (games: Game[]) => {
     if (games.length === 0) {
       setFilteredGames([]);
     } else {
@@ -85,7 +70,7 @@ const GameOfferts: React.FC = () => {
             marginBottom: "30px",
           }}
         >
-          Catálogo de ofertas
+          Comunidad
         </Typography>
         <Grid container spacing={2} alignItems="center">
           <Grid
@@ -96,7 +81,7 @@ const GameOfferts: React.FC = () => {
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
             <Box sx={{ minWidth: "200px" }}>
-              <SearchBarOff
+              <SearchBar
                 games={initialGames}
                 setFilteredGames={setFilteredGames}
                 searchTerm={searchTerm}
@@ -104,7 +89,7 @@ const GameOfferts: React.FC = () => {
               />
             </Box>
             <Box sx={{ ml: 1, mt: { sm: 0 } }}>
-              <FilterOptionsOff
+              <FilterOptions
                 setFilteredGames={handleFilteredGames}
                 games={initialGames}
                 selectedDevelopers={selectedDevelopers}
@@ -115,10 +100,6 @@ const GameOfferts: React.FC = () => {
                 setSelectedPlatforms={setSelectedPlatforms}
                 selectedRanges={selectedRanges}
                 setSelectedRanges={setSelectedRanges}
-                selectedPrice={selectedPrice}
-                setSelectedPrice={setSelectedPrice}
-                selectedDiscount={selectedDiscount}
-                setSelectedDiscount={setSelectedDiscount}
               />
             </Box>
           </Grid>
@@ -132,7 +113,7 @@ const GameOfferts: React.FC = () => {
               justifyContent: { xs: "center", sm: "flex-end", md: "flex-end" },
             }}
           >
-            <SortOptionsOff sort={sort} setSort={setSort} />
+            <SortOptions sort={sort} setSort={setSort} />
           </Grid>
         </Grid>
         {sortedGames.length === 0 && (
@@ -168,7 +149,7 @@ const GameOfferts: React.FC = () => {
                 md={3}
                 lg={2}
               >
-                <GameCardOff game={game} />
+                <GameCard game={game} />
               </Grid>
             ))}
           </Grid>
@@ -188,4 +169,4 @@ const GameOfferts: React.FC = () => {
   );
 };
 
-export default GameOfferts;
+export default GameCommunity;

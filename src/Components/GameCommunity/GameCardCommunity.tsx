@@ -7,12 +7,11 @@ import {
   Chip,
   CardActionArea,
   Stack,
-  Box,
 } from "@mui/material";
-import { GameOffert } from "./dataOfferts";
+import { Game } from "./dataCommunity";
 import { useNavigate } from "react-router-dom";
 
-const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
+const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   const navigate = useNavigate();
 
   // Asegurarse de que la fecha se interprete correctamente
@@ -24,7 +23,7 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
   });
 
   const handleCardClick = () => {
-    navigate("/gameofferts");
+    navigate("/gamedetails");
   };
 
   if (!game || !game.categories) {
@@ -39,31 +38,16 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
         boxShadow: "none",
         borderRadius: 0,
         paddingBottom: 0,
-        position: "relative",
       }}
     >
       <CardActionArea onClick={handleCardClick}>
-        <Box sx={{ position: "relative" }}>
-          <CardMedia
-            component="img"
-            height="300"
-            width="100%"
-            image={game.image}
-            alt={game.title}
-          />
-          <Chip
-            label={`-${game.discount}%`}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "#489D2D",
-              color: "#fff",
-              fontWeight: "bold",
-              fontSize: 14,
-            }}
-          />
-        </Box>
+        <CardMedia
+          component="img"
+          height="300"
+          width="100%"
+          image={game.image}
+          alt={game.title}
+        />
         <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
           <Typography
             gutterBottom
@@ -86,13 +70,6 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
             sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
           >
             {game.likes} k les gusta
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ color: "#3CC70C", fontWeight: "bold", fontSize: 12, textAlign: "left" }}
-          >
-            Por MX${game.price.toFixed(2)}
           </Typography>
           <Stack
             direction="row"
@@ -123,4 +100,4 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
   );
 };
 
-export default GameCardOff;
+export default GameCard;
