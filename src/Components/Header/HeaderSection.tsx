@@ -36,8 +36,8 @@ const HeaderSectionLeft = () => {
               <Button component={RouterLink} to="/register" variant="contained" style={{ backgroundColor: '#1AA197', color: 'white' }}>
                 Regístrate
               </Button>
-              <Button href="https://discord.com/" target="_blank" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
-                Discord
+              <Button component={RouterLink} to="/login" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
+                Inicio de sesion
               </Button>
             </Box>
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
