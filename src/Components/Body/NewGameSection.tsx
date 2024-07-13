@@ -75,9 +75,6 @@ const NewGameSection: React.FC = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'center' }}>
-                {FooterView()}
-            </Box>
         </Box>
 
     );
