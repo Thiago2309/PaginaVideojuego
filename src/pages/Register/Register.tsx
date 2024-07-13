@@ -47,9 +47,9 @@ const Register: React.FC = () => {
       contraseña: "",
       confirmPassword: "",
       fkRol: 1,
-      GoogleId: "", // Valor por defecto nulo
-      FacebookId: "", // Valor por defecto nulo
-      Foto_Perfil: "", // Valor por defecto nulo
+      GoogleId: "",
+      FacebookId: "",
+      Foto_Perfil: "",
     },
     validationSchema: Yup.object({
       nombre_completo: Yup.string().required("Nombre Completo Requerido"),
@@ -80,7 +80,7 @@ const Register: React.FC = () => {
         setOpen(true);
         setTimeout(() => {
           navigate('/login');
-        }, 2000); // Redirigir después de 2 segundos
+        }, 2000);
       } catch (error) {
         console.error("Error durante el registro:", error);
         setAlert({ type: 'error', message: 'Error durante el registro' });
