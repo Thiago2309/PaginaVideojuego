@@ -5,7 +5,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import GameDetails from "../pages/GameDetails/GameDetails";
 import GameOfferts from "../pages/GameOffert/GameOfferts";
-import PublicNew from "../pages/PublicNew/PublicNew";
+import AdminPublic from "../pages/Admin/AdminCrud/VideoGame/GameViewCrud";
 import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "../context/AuthContext";
 
@@ -19,7 +19,9 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
-          <Route path="/publicnew" element={<PublicNew />} />
+          {/* solo para admin */}
+          <Route path="/adminpublic" element={<AdminPublic />} />
+          
         </Routes>
       </AuthProvider>
     </Router>
