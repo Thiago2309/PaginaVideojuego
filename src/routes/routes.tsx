@@ -26,8 +26,6 @@ const AppRoutes: React.FC = () => {
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
-
-          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </AuthProvider>
     </Router>
