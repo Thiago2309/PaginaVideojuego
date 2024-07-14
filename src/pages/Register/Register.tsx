@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -18,6 +17,7 @@ import axios from "axios";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
+
 const defaultTheme = createTheme();
 
 type AlertType = 'success' | 'error' | 'info' | 'warning';
@@ -27,11 +27,11 @@ interface AlertState {
   message: string;
 }
 
-
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [alert, setAlert] = useState<AlertState | null>(null);
   const [open, setOpen] = useState(false);
+
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -41,45 +41,49 @@ const Register: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      nombre: "",
-      apellido: "",
+      nombre_completo: "",
       usuarioNombre: "",
       correo: "",
       contraseña: "",
       confirmPassword: "",
-      fkRol: 1, 
+      fkRol: 1,
+      GoogleId: "",
+      FacebookId: "",
+      Foto_Perfil: "",
     },
     validationSchema: Yup.object({
-      nombre: Yup.string().required("Nombre Requerido"),
-      apellido: Yup.string().required("Apellido Requerido"),
+      nombre_completo: Yup.string().required("Nombre Completo Requerido"),
       usuarioNombre: Yup.string().required("Nombre de Usuario Requerido"),
       correo: Yup.string().email("Correo electrónico inválido").required("Correo requerido"),
       contraseña: Yup.string().required("Contraseña requerida"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("contraseña")], "Las contraseñas deben coincidir")
         .required("Confirmar contraseña requerida"),
-      fkRol: Yup.number().required("Rol requerido").oneOf([1], "Rol inválido"), 
+      fkRol: Yup.number().required("Rol requerido").oneOf([1], "Rol inválido"),
     }),
     onSubmit: async (values) => {
       try {
         const payload = {
-          nombre: values.nombre,
-          apellido: values.apellido,
+          nombre_completo: values.nombre_completo,
           usuarioNombre: values.usuarioNombre,
           correo: values.correo,
           contraseña: values.contraseña,
           fkRol: values.fkRol,
+          GoogleId: values.GoogleId,
+          FacebookId: values.FacebookId,
+          Foto_Perfil: values.Foto_Perfil,
         };
 
         await axios.post('https://localhost:7029/Usuarios/RegistroDeUsuario', payload);
-        setAlert({ type: 'success', message: 'Inicio de sesión exitoso' });
+
+        setAlert({ type: 'success', message: 'Registro exitoso' });
         setOpen(true);
         setTimeout(() => {
           navigate('/login');
-        }, 2000); // Redirigir después de 2 segundos
+        }, 2000);
       } catch (error) {
         console.error("Error durante el registro:", error);
-        setAlert({ type: 'error', message: 'Error durante el inicio de sesión' });
+        setAlert({ type: 'error', message: 'Error durante el registro' });
         setOpen(true);
       }
     },
@@ -130,42 +134,15 @@ const Register: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="nombre"
-                label="Nombre"
-                name="nombre"
+                id="nombre_completo"
+                label="Nombre Completo"
+                name="nombre_completo"
                 autoComplete="name"
                 autoFocus
-                value={formik.values.nombre}
+                value={formik.values.nombre_completo}
                 onChange={formik.handleChange}
-                error={formik.touched.nombre && Boolean(formik.errors.nombre)}
-                helperText={formik.touched.nombre && formik.errors.nombre}
-                sx={{
-                  "& label": {
-                    color: "#ffffff",
-                  },
-                  "& input": {
-                    color: "#ffffff",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#ffffff",
-                      boxShadow: "0px 0px 10px 2px rgba(224, 10, 171, 0.4)",
-                    },
-                  },
-                }}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="apellido"
-                label="Apellidos"
-                name="apellido"
-                autoComplete="lastname"
-                value={formik.values.apellido}
-                onChange={formik.handleChange}
-                error={formik.touched.apellido && Boolean(formik.errors.apellido)}
-                helperText={formik.touched.apellido && formik.errors.apellido}
+                error={formik.touched.nombre_completo && Boolean(formik.errors.nombre_completo)}
+                helperText={formik.touched.nombre_completo && formik.errors.nombre_completo}
                 sx={{
                   "& label": {
                     color: "#ffffff",
@@ -310,9 +287,9 @@ const Register: React.FC = () => {
                     color="text.secondary"
                     sx={{ color: "#ffffff" }}
                   >
-                    ¿Cuentas ya con una cuenta?{" "}
+                    ¿Ya tienes una cuenta?{" "}
                     <Link component={RouterLink} to="/login" variant="body2" sx={{ color: "#E10AAB" }}>
-                      Iniciar Sesión
+                      Inicia Sesión
                     </Link>
                   </Typography>
                 </Grid>
@@ -338,19 +315,19 @@ const Register: React.FC = () => {
           }}
         />
       </Grid>
-      <Snackbar 
-        open={open} 
-        autoHideDuration={6000} 
-        onClose={handleClose} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // Parte superior derecha
-        sx={{ width: '30%' }} // Tamaño reducido
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ width: '30%' }}
       >
-        <Alert 
-          onClose={handleClose} 
-          severity={alert?.type} 
-          sx={{ 
+        <Alert
+          onClose={handleClose}
+          severity={alert?.type}
+          sx={{
             backgroundColor: '#000000', // Fondo negro
-            color: '#ffffff', 
+            color: '#ffffff',
             fontSize: '1em',
             padding: '10px',
             border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#E10AAB'}`, // Borde rojo para error, rosa neón para éxito
@@ -359,7 +336,7 @@ const Register: React.FC = () => {
             }
           }}
         >
-          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle> {/* Cambio de texto */}
+          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle>
           {alert?.message}
         </Alert>
       </Snackbar>
@@ -368,4 +345,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-
