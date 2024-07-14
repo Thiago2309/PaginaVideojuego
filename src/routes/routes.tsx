@@ -9,6 +9,7 @@ import GameCatalog from "../pages/GameCatalog/GameCatalog";
 import GameOffert from "../pages/GameOfferts/GameOfferts";
 import GameCommunity from "../pages/GameCommunity/GameCommunity";
 import PrivateRoute from "./PrivateRoute";
+import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
 
 const AppRoutes: React.FC = () => {
@@ -25,6 +26,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
 
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </AuthProvider>
     </Router>
