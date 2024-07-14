@@ -22,36 +22,29 @@ import {
 } from '@mui/material';
 import { Add, Edit, Delete, Search } from '@mui/icons-material';
 import VideoGameModal from '../VideoGame/VideoGameModal';
-
-interface Videojuego {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    calificacion: number;
-    foto_url: string;
-    genero: string;
-    plataforma: string;
-    fecha_lanzamiento: string;
-    desarrollador: string;
-    editor: string;
-}
+import { VideoGame } from '../../../../Api/Type/IVideoGame';  // Interfaz
+import { fetchVideoGame, deleteVideoGame } from '../../../../Api/ApiVideoGame';
 
 const Community: React.FC = () => {
-    const [videojuegos, setVideojuegos] = useState<Videojuego[]>([]);
-    const [filteredVideojuegos, setFilteredVideojuegos] = useState<Videojuego[]>([]);
+    const [videojuegos, setVideojuegos] = useState<VideoGame[]>([]);
+    const [filteredVideojuegos, setFilteredVideojuegos] = useState<VideoGame[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [editing, setEditing] = useState<Videojuego | null>(null);
+    const [editing, setEditing] = useState<VideoGame | null>(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/api/videojuegos')
-            .then(response => response.json())
-            .then(data => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchVideoGame();
                 setVideojuegos(data);
                 setFilteredVideojuegos(data);
-            });
+            } catch (error) {
+                console.error('Erro con la api', error);
+            }
+        };
+        fetchData();
     }, []);
 
     useEffect(() => {
@@ -66,17 +59,14 @@ const Community: React.FC = () => {
         setIsModalOpen(true);
     };
 
-    const handleEdit = (videojuego: Videojuego) => {
+    const handleEdit = (videojuego: VideoGame) => {
         setEditing(videojuego);
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id: number) => {
-        fetch(`/api/videojuegos/${id}`, {
-            method: 'DELETE',
-        }).then(() => {
-            setVideojuegos(videojuegos.filter(v => v.id !== id));
-        });
+    const handleDelete = async (id: number) => {
+        await deleteVideoGame(id);
+        setVideojuegos(videojuegos.filter(v => v.id !== id));
     };
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -114,7 +104,7 @@ const Community: React.FC = () => {
                                 }}
                                 sx={{ mr: 2 }}
                             />
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-star' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                                 <Button
                                     variant="contained"
                                     color="primary"

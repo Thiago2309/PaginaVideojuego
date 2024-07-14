@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Grid, TextField } from '@mui/material';
-
-interface Videojuego {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  calificacion: number;
-  foto_url: string;
-  genero: string;
-  plataforma: string;
-  fecha_lanzamiento: string;
-  desarrollador: string;
-  editor: string;
-}
+import { VideoGame } from '../../../../Api/Type/IVideoGame'; //interfaz 
+import { createVideoGame, updateVideoGame } from '../../../../Api/ApiVideoGame';
 
 interface VideoGameFormProps {
-  initialData: Videojuego | null;
+  initialData: VideoGame | null;
   onClose: () => void;
-  setVideojuegos: React.Dispatch<React.SetStateAction<Videojuego[]>>;
-  videojuegos: Videojuego[];
+  setVideojuegos: React.Dispatch<React.SetStateAction<VideoGame[]>>;
+  videojuegos: VideoGame[];
 }
 
 const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, setVideojuegos, videojuegos }) => {
-  const [videojuego, setVideojuego] = useState<Videojuego>({
+  const [videojuego, setVideojuego] = useState<VideoGame>({
     id: 0,
     nombre: '',
     descripcion: '',
@@ -49,20 +38,12 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (initialData) {
-      await fetch(`/api/videojuegos/${videojuego.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(videojuego),
-      });
-      setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? videojuego : v)));
+      const updatedVideojuego = await updateVideoGame(videojuego);
+      setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? updatedVideojuego : v)));
     } else {
-      const newVideojuego = { ...videojuego, id: Date.now() };
-      await fetch('/api/videojuegos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newVideojuego),
-      });
-      setVideojuegos([...videojuegos, newVideojuego]);
+      const newVideojuego = { ...videojuego, id: Date.now() };  // This line can be removed if the backend generates the ID
+      const createdVideojuego = await createVideoGame(newVideojuego);
+      setVideojuegos([...videojuegos, createdVideojuego]);
     }
     onClose();
   };
