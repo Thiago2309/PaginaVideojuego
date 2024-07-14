@@ -3,12 +3,13 @@ export interface VideoGame {
     nombre: string;
     descripcion: string;
     calificacion: number;
-    foto_url: string;
+    foto_Url: string;
     genero: string;
     plataforma: string;
-    fecha_lanzamiento: string;
+    fecha_Lanzamiento: string;
     desarrollador: string;
     editor: string;
+    userId: number;
 };
 
 export interface VideoGameFormProps {

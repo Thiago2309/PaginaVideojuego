@@ -2,23 +2,32 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Button, Grid, TextField, Alert, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { VideoGame, VideoGameFormProps } from '../../../../Api/IVideoGame';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store/store';
+import { logoutUser } from '../../store/reducers/userReducer';
 
 const API_URL_POST = 'https://localhost:7029/Videojuegos/RegistroDeVideojuego';
 const API_URL_PUT = 'https://localhost:7029/Videojuegos';
 
 const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, setVideojuegos, videojuegos }) => {
-  const [videojuego, setVideojuego] = useState<VideoGame>({
+  const user = useSelector((state: RootState) => state.user); 
+  const dispatch = useDispatch();
+  console.log('El usuario Autenticado es : '+ user);
+  const initialVideojuego: VideoGame = {
     id: 0,
     nombre: '',
     descripcion: '',
     calificacion: 0,
-    foto_url: '',
+    foto_Url: '[se quitó una URL no válida]',
     genero: '',
     plataforma: '',
-    fecha_lanzamiento: '',
+    fecha_Lanzamiento: '',
     desarrollador: '',
     editor: '',
-  });
+    userId: 0,
+  };
+
+  const [videojuego, setVideojuego] = useState<VideoGame>(initialVideojuego);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
@@ -31,7 +40,10 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setVideojuego({ ...videojuego, [name]: value });
+    setVideojuego(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   const handleAlertClose = () => {
@@ -42,7 +54,6 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
     try {
       const response = await axios.put(`${API_URL_PUT}/${videojuego.id}`, videojuego);
       const updatedVideojuego = response.data.result;
-      console.log(updatedVideojuego);
       setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? updatedVideojuego : v)));
       setAlertMessage('¡Videojuego Editado exitosamente!');
       setAlertSeverity('success');
@@ -54,12 +65,15 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       setAlertSeverity('error');
       setAlertOpen(true);
     }
-  }, [videojuego]);
+  }, [videojuego, setVideojuegos, videojuegos, onClose]);
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     try {
-      const response = await axios.post(API_URL_POST, videojuego);
-      const newVideojuego = response.data;
+      // Crear un objeto sin el campo 'id'
+      const { id, ...videojuegoSinId } = videojuego;
+      console.log(videojuegoSinId);
+      const response = await axios.post(API_URL_POST, videojuegoSinId);
+      const newVideojuego = response.data.result;
       setVideojuegos([...videojuegos, newVideojuego]);
       setAlertMessage('¡Videojuego Creado exitosamente!');
       setAlertSeverity('success');
@@ -71,7 +85,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       setAlertSeverity('error');
       setAlertOpen(true);
     }
-  };
+  }, [videojuego, setVideojuegos, videojuegos, onClose]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +133,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
           <TextField
             label="URL de la Foto"
             name="foto_url"
-            value={videojuego.foto_url}
+            value={videojuego.foto_Url}
             onChange={handleChange}
             fullWidth
           />
@@ -145,8 +159,8 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
         <Grid item xs={6}>
           <TextField
             label="Fecha de Lanzamiento"
-            name="fecha_lanzamiento"
-            value={videojuego.fecha_lanzamiento}
+            name="fecha_Lanzamiento"
+            value={videojuego.fecha_Lanzamiento}
             onChange={handleChange}
             fullWidth
             type="date"
