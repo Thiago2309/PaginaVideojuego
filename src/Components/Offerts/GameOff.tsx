@@ -1,16 +1,5 @@
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  EffectCoverflow,
-  Navigation,
-  Pagination,
-  Autoplay,
-} from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/effect-coverflow";
-import "swiper/css/autoplay";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -20,14 +9,50 @@ import {
   Box,
   Chip,
 } from "@mui/material";
+import { getOfertaById, getUsuarioById } from "../../services/api";
+import Navegador from "../../layout/Navegador/Navegador";
+import FooterView from "../../layout/Footer/FooterView";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  EffectCoverflow,
+  Navigation,
+  Pagination,
+  Autoplay,
+} from "swiper/modules";
 import IconOferta from "@mui/icons-material/LocalOfferOutlined";
-import Battlefield_banner_offert_1 from "../../assets/images/GameOffert/Banner/Battlefield_banner_offert_1.jpg";
-import Battlefield_banner_offert_2 from "../../assets/images/GameOffert/Banner/Battlefield_banner_offert_2.jpeg";
-import Battlefield_banner_offert_3 from "../../assets/images/GameOffert/Banner/Battlefield_banner_offert_3.png";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
+import "swiper/css/autoplay";
+import imagen_default from "../../assets/images/banner_default.jpg";
 
-const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
-  handleBackClick,
-}) => {
+const GameOffert: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) => {
+  const { id } = useParams<{ id: string }>();
+  const [game, setGame] = useState<any>(null);
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const fetchGame = async () => {
+      if (id) {
+        const gameData = await getOfertaById(parseInt(id));
+        setGame(gameData);
+        if (gameData.userId) {
+          const userData = await getUsuarioById(gameData.userId);
+          setUsername(userData.UsuarioNombre || "Usuario");
+        }
+      }
+    };
+    fetchGame();
+  }, [id]);
+
+  if (!game) {
+    return <div>Loading...</div>;
+  }
+
+  const fotos = Array.isArray(game.foto_Url) ? game.foto_Url : [game.foto_Url || imagen_default];
+  const generos = game.genero.split(",").map((genero: string) => genero.trim());
+
   return (
     <Card sx={{ backgroundColor: "#1C172B", width: "100%" }}>
       <CardContent sx={{ padding: 4 }}>
@@ -38,25 +63,25 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
               component="div"
               sx={{ fontWeight: "bold", color: "#ffffff" }}
             >
-              Battlefield
+              {game.nombre}
             </Typography>
           </Grid>
           <Grid item>
             <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#69BE28",
-                  color: "#ffffff",
-                  textTransform: "none",
-                  "& .MuiButton-endIcon": {
-                    marginLeft: 1,
-                  },
-                }}
-                endIcon={<IconOferta />}
-                onClick={handleBackClick}
-              >
-                Ir a la oferta
-              </Button>
+              variant="contained"
+              sx={{
+                backgroundColor: "#69BE28",
+                color: "#ffffff",
+                textTransform: "none",
+                "& .MuiButton-endIcon": {
+                  marginLeft: 1,
+                },
+              }}
+              endIcon={<IconOferta />}
+              onClick={() => window.open(game.link, "_blank")}
+            >
+              Ir a la oferta
+            </Button>
           </Grid>
         </Grid>
         <Typography
@@ -64,19 +89,21 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
           color="text.secondary"
           sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}
         >
-          Publicado el 01 de Enero, 2024 por Admin01
+          Publicado el {new Date(game.fecha_Lanzamiento).toLocaleDateString("es-ES")} por {username}
         </Typography>
         <Box sx={{ mt: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Chip
-              label="Oferta Especial"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-                mr: 1,
-              }}
-            />
+          <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
+            {generos.map((genero: string, index: number) => (
+              <Chip
+                key={index}
+                label={genero}
+                sx={{
+                  backgroundColor: "#2C2839",
+                  color: "#ffffff",
+                  borderRadius: 3,
+                }}
+              />
+            ))}
           </Box>
         </Box>
         <Box sx={{ mt: 2, borderRadius: 3, overflow: "hidden" }}>
@@ -98,49 +125,22 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
             centeredSlides
             autoplay={{ delay: 2500, disableOnInteraction: false }}
           >
-            <SwiperSlide>
-              <img
-                src={Battlefield_banner_offert_1}
-                alt="Battlefield Banner 1"
-                style={{
-                  width: "100%",
-                  maxHeight: "600px",
-                  objectFit: "cover",
-                }}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src={Battlefield_banner_offert_2}
-                alt="Battlefield Banner 2"
-                style={{
-                  width: "100%",
-                  maxHeight: "600px",
-                  objectFit: "cover",
-                }}
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src={Battlefield_banner_offert_3}
-                alt="Battlefield Banner 3"
-                style={{
-                  width: "100%",
-                  maxHeight: "600px",
-                  objectFit: "cover",
-                }}
-              />
-            </SwiperSlide>
+            {fotos.map((url: string, index: number) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={url}
+                  alt={`Banner ${index + 1}`}
+                  style={{
+                    width: "100%",
+                    maxHeight: "600px",
+                    objectFit: "cover",
+                  }}
+                />
+              </SwiperSlide>
+            ))}
             <div className="swiper-pagination" style={{ bottom: "10px" }}></div>
           </Swiper>
         </Box>
-        <Grid
-          container
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 2 }}
-        >
-        </Grid>
         <Typography
           variant="body2"
           color="text.secondary"
@@ -151,16 +151,7 @@ const GameOffert: React.FC<{ handleBackClick: () => void }> = ({
             fontSize: "1.2rem",
           }}
         >
-          Battlefield es una aclamada serie de videojuegos de disparos en
-          primera persona desarrollada por DICE y publicada por Electronic Arts.
-          Con un enfoque en batallas multijugador masivas, Battlefield se
-          distingue por su énfasis en la cooperación entre jugadores y la
-          intensidad de las batallas en entornos destructibles. En Battlefield,
-          los jugadores se sumergen en escenarios de guerra moderna o histórica,
-          desde las trincheras de la Primera Guerra Mundial hasta los campos de
-          batalla futuristas. La serie se destaca por su enfoque en vehículos
-          militares, mapas expansivos y la capacidad de alterar el terreno y los
-          edificios mediante el uso de armamento pesado.
+          {game.descripcion}
         </Typography>
       </CardContent>
     </Card>
