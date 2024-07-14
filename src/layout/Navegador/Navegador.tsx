@@ -1,8 +1,5 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
+import { AppBar, Toolbar, IconButton, Menu, Container, Avatar, Button, Tooltip, MenuItem, Box, Typography, Link, Grid } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
@@ -16,6 +13,20 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/reducers/userReducer';
 import { Box, Typography, Link, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import Logo1 from '../../assets/images/logo.png';
+import Stack from '@mui/material/Stack';
+
+const pages = [
+  { name: 'Populares', path: '/populares' },
+  { name: 'Novedades', path: '/novedades' },
+  { name: 'Ofertas', path: '/ofertas' }
+];
+const settings = [
+  { name: 'Perfil', path: '/profile' },
+  { name: 'Ajustes', path: '/ajustes' },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Cerrar Sesión', path: '/logout' }
+];
 
 const pages = ['Populares', 'Novedades', 'Ofertas'];
 const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
@@ -52,7 +63,7 @@ function Navegador() {
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
             <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
-              <img src={Logo1} alt="logo"style={{ height: '40px' }} />
+              <img src={Logo1} alt="logo" style={{ height: '40px' }} />
             </Link>
           </Box>
 
@@ -86,8 +97,8 @@ function Navegador() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu} component={RouterLink} to={page.path}>
+                  <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -96,11 +107,13 @@ function Navegador() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
+                component={RouterLink}
+                to={page.path}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
@@ -109,7 +122,9 @@ function Navegador() {
             
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Stack direction="row" spacing={2}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </Stack>
               </IconButton>
             </Tooltip>
             <Typography variant="body1" sx={{ color: 'white', marginLeft: '8px' }}>
@@ -132,6 +147,8 @@ function Navegador() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu} component={RouterLink} to={setting.path}>
+                  <Typography textAlign="center">{setting.name}</Typography>
                 <MenuItem key={setting} onClick={setting === 'Cerrar Sesión' ? handleLogout : handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
