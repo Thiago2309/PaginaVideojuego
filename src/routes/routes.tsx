@@ -5,6 +5,9 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import GameDetails from "../pages/GameDetails/GameDetails";
 import GameOfferts from "../pages/GameOffert/GameOfferts";
+import GameCatalog from "../pages/GameCatalog/GameCatalog";
+import GameOffert from "../pages/GameOfferts/GameOfferts";
+import GameCommunity from "../pages/GameCommunity/GameCommunity";
 import PrivateRoute from "./PrivateRoute";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
@@ -20,6 +23,9 @@ const AppRoutes: React.FC = () => {
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/gamecatalog" element={<GameCatalog />} />
+          <Route path="/gameoffert" element={<GameOffert />} />
+          <Route path="/gamecommunity" element={<GameCommunity />} />
         </Routes>
       </AuthProvider>
     </Router>

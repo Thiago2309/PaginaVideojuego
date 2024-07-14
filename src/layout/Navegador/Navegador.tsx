@@ -1,6 +1,17 @@
 import * as React from 'react';
 import { AppBar, Toolbar, IconButton, Menu, Container, Avatar, Button, Tooltip, MenuItem, Box, Typography, Link, Grid } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import Logo1 from '../../assets/images/logo.png';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../store/reducers/userReducer';
+import { Box, Typography, Link, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import Logo1 from '../../assets/images/logo.png';
 import Stack from '@mui/material/Stack';
@@ -17,9 +28,14 @@ const settings = [
   { name: 'Cerrar Sesión', path: '/logout' }
 ];
 
+const pages = ['Populares', 'Novedades', 'Ofertas'];
+const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
+
 function Navegador() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const user = useSelector((state: RootState) => state.user); 
+  const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -35,6 +51,11 @@ function Navegador() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    handleCloseUserMenu(); 
+  };
+  
 
   return (
     // <AppBar position="static" sx={{ backgroundColor: '#3A0909' }}>
@@ -97,7 +118,8 @@ function Navegador() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Stack direction="row" spacing={2}>
@@ -105,6 +127,9 @@ function Navegador() {
                 </Stack>
               </IconButton>
             </Tooltip>
+            <Typography variant="body1" sx={{ color: 'white', marginLeft: '8px' }}>
+              {user.userName}
+            </Typography>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -124,6 +149,8 @@ function Navegador() {
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu} component={RouterLink} to={setting.path}>
                   <Typography textAlign="center">{setting.name}</Typography>
+                <MenuItem key={setting} onClick={setting === 'Cerrar Sesión' ? handleLogout : handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
