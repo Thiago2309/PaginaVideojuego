@@ -4,37 +4,46 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
-import { Game } from "./dataCommunity"; // Importa tu interfaz de Game aquí
+import { CommunityGame } from "./dataCommunity";
 
-const filter = createFilterOptions<Game>({
+const filter = createFilterOptions<CommunityGame>({
   stringify: (option) => option.title,
 });
 
 interface SearchBarProps {
-  games: Game[];
-  setFilteredGames: (games: Game[]) => void;
+  communitygame: CommunityGame[];
+  setFilteredCommunityGame: (communitygame: CommunityGame[]) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  setNoResults: (noResults: boolean) => void; // Añadimos este prop
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTerm, setSearchTerm }) => {
-  const [value, setValue] = React.useState<Game | null>(null);
-  const [inputValue, setInputValue] = React.useState<string>("");
+const SearchBar: React.FC<SearchBarProps> = ({
+  communitygame,
+  setFilteredCommunityGame,
+  searchTerm,
+  setSearchTerm,
+  setNoResults,
+}) => {
+  const [value, setValue] = React.useState<CommunityGame | null>(null);
+  const [inputValue, setInputValue] = React.useState<string>(searchTerm);
 
   const handleSearch = () => {
-    if (!inputValue) {
-      setFilteredGames(games); // Si no hay valor en el input, muestra todos los juegos
-    } else if (value && value.title) {
-      setFilteredGames([value]); // Filtra los juegos mostrando solo el juego seleccionado
-    } else {
-      const filteredGames = games.filter((game) =>
-        game.title && game.title.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      setFilteredGames(filteredGames); // Filtra los juegos por el término de búsqueda
+    const searchQuery = inputValue.trim();
+    if (!searchQuery) {
+      setFilteredCommunityGame(communitygame); // Si no hay valor en el input, muestra todos los juegos
+      setNoResults(false);
+      return;
     }
-    setSearchTerm(inputValue);
+
+    const filteredCommunityGame = communitygame.filter((communitygame) =>
+      communitygame.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setFilteredCommunityGame(filteredCommunityGame);
+    setSearchTerm(searchQuery);
+    setNoResults(filteredCommunityGame.length === 0); // Actualiza el estado de noResults
   };
-  
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -49,7 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
-          setValue(newValue as Game); // Asigna el nuevo valor solo si es del tipo Game
+          setValue(newValue as CommunityGame); // Asigna el nuevo valor solo si es del tipo Game
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -60,7 +69,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-        
+
           const { inputValue } = params;
           const isExisting = options.some(
             (option) => inputValue === option.title
@@ -68,17 +77,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
           if (inputValue !== "" && !isExisting) {
             filtered.push({
               title: inputValue,
-            } as Game); // Asegura que el nuevo objeto sea del tipo Game
+            } as CommunityGame); // Asegura que el nuevo objeto sea del tipo Game
           }
-        
+
           return filtered;
         }}
-        
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={games} // Usa tus juegos aquí
+        options={communitygame} // Usa tus juegos aquí
         getOptionLabel={(option) => {
           // Asegura que TypeScript entiende que `option` es del tipo `Game`
           if (typeof option === "string") {
@@ -96,7 +104,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Buscar juegos"
+            label="Buscar publicación"
             variant="outlined"
             size="small"
             onKeyDown={handleKeyDown}
