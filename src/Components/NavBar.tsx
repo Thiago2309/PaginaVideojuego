@@ -29,6 +29,9 @@ const NavBar: React.FC = () => {
         <li>
           <Link to="/gamecommunity">GameCommunity</Link>
         </li>
+        <li>
+          <Link to="/publicationdetails">PublicationDetails</Link>
+        </li>
       </ul>
     </nav>
   );
