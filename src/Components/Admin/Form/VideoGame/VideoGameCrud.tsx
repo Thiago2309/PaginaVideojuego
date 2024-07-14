@@ -32,27 +32,20 @@ const Community: React.FC = () => {
     const [alertMessage, setAlertMessage] = useState('');
     const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
 
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(API_URL_GET);
+            const data = response.data.result;
+            setVideojuegos(data);
+            setFilteredVideojuegos(data);
+        } catch (error) {
+            console.error('Error fetching video games:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(API_URL_GET);
-                const data = response.data.result;
-                setVideojuegos(data);
-                setFilteredVideojuegos(data);
-            } catch (error) {
-                console.error('Error fetching video games:', error);
-            }
-        };
-
         fetchData();
-    }, []);
-
-    // useEffect(() => {
-    //     const results = videojuegos.filter(videojuego =>
-    //         videojuego.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    //     );
-    //     setFilteredVideojuegos(results);
-    // }, [searchTerm, videojuegos]);
+    }, [videojuegos]);
 
     const handleAdd = () => {
         setEditing(null);
@@ -71,6 +64,7 @@ const Community: React.FC = () => {
             setAlertMessage('¡Videojuego eliminado exitosamente!');
             setAlertSeverity('success');
             setAlertOpen(true);
+            fetchData();
         } catch (error) {
             console.error('Error deleting video game:', error);
             setAlertMessage('Error al eliminar el videojuego');
@@ -193,7 +187,10 @@ const Community: React.FC = () => {
                 <Box sx={{ width: 400, bgcolor: 'background.paper', p: 4, mx: 'auto', mt: '1rem', borderRadius: 2 }}>
                     <VideoGameModal
                         initialData={editing}
-                        onClose={() => setIsModalOpen(false)}
+                        onClose={() => {
+                            setIsModalOpen(false);
+                            fetchData(); // Llamada para obtener la lista de videojuegos actualizada
+                        }}
                         setVideojuegos={setVideojuegos}
                         videojuegos={videojuegos}
                     />

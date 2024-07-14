@@ -10,6 +10,7 @@ import GameOffert from "../pages/GameOfferts/GameOfferts";
 import GameCommunity from "../pages/GameCommunity/GameCommunity";
 import PublicationDetails from "../pages/PublicationDetails/PublicationDetails";
 import PrivateRoute from "./PrivateRoute";
+import AdminPublic from "../pages/Admin/AdminCrud/VideoGame/GameViewCrud";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
 
@@ -23,17 +24,13 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
-          {/* solo para admin */}
-          <Route path="/adminpublic" element={<AdminPublic />} />
-          
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
-          <Route
-            path="/publicationdetails/:id"
-            element={<PublicationDetails />}
-          />
+          <Route path="/publicationdetails/:id" element={<PublicationDetails />} />
+          {/* solo para admin */}
+          <Route path="/adminpublic" element={<AdminPublic />} />
         </Routes>
       </AuthProvider>
     </Router>

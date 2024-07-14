@@ -39,7 +39,7 @@ const HeaderSectionLeft = () => {
               <Button component={RouterLink} to="/login" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
                 Inicio de sesion
               </Button>
-              <Button component={RouterLink} to="/publicnew" variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }}>
+              <Button component={RouterLink} to="/adminpublic" variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }}>
                 Nuevo
               </Button>
             </Box>

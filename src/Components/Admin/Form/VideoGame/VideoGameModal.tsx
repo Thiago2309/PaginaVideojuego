@@ -2,29 +2,26 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Button, Grid, TextField, Alert, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { VideoGame, VideoGameFormProps } from '../../../../Api/IVideoGame';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
-import { logoutUser } from '../../store/reducers/userReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/store';
 
 const API_URL_POST = 'https://localhost:7029/Videojuegos/RegistroDeVideojuego';
 const API_URL_PUT = 'https://localhost:7029/Videojuegos';
 
 const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, setVideojuegos, videojuegos }) => {
-  const user = useSelector((state: RootState) => state.user); 
-  const dispatch = useDispatch();
-  console.log('El usuario Autenticado es : '+ user);
+  const user = useSelector((state: RootState) => state.user);
   const initialVideojuego: VideoGame = {
     id: 0,
     nombre: '',
     descripcion: '',
     calificacion: 0,
-    foto_Url: '[se quitó una URL no válida]',
+    foto_Url: '',
     genero: '',
     plataforma: '',
     fecha_Lanzamiento: '',
     desarrollador: '',
     editor: '',
-    userId: 0,
+    userId: user.id ?? 0,
   };
 
   const [videojuego, setVideojuego] = useState<VideoGame>(initialVideojuego);
@@ -34,9 +31,9 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
 
   useEffect(() => {
     if (initialData) {
-      setVideojuego(initialData);
+      setVideojuego({ ...initialData, userId: user.id ?? 0 });
     }
-  }, [initialData]);
+  }, [initialData, user.id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,7 +55,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       setAlertMessage('¡Videojuego Editado exitosamente!');
       setAlertSeverity('success');
       setAlertOpen(true);
-      onClose();
+      setTimeout(onClose, 1200); // Cierra el modal después de 2 segundos
     } catch (error) {
       console.error('Error saving video game:', error);
       setAlertMessage('Error al editar el videojuego');
@@ -69,21 +66,20 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
 
   const handleCreate = useCallback(async () => {
     try {
-      // Crear un objeto sin el campo 'id'
       const { id, ...videojuegoSinId } = videojuego;
-      console.log(videojuegoSinId);
       const response = await axios.post(API_URL_POST, videojuegoSinId);
       const newVideojuego = response.data.result;
       setVideojuegos([...videojuegos, newVideojuego]);
       setAlertMessage('¡Videojuego Creado exitosamente!');
       setAlertSeverity('success');
       setAlertOpen(true);
-      onClose();
+      setTimeout(onClose, 1200); // Cierra el modal después de 2 segundos
     } catch (error) {
       console.error('Error saving video game:', error);
       setAlertMessage('Error al crear el videojuego');
       setAlertSeverity('error');
       setAlertOpen(true);
+      setTimeout(onClose, 1200); // Cierra el modal después de 2 segundos
     }
   }, [videojuego, setVideojuegos, videojuegos, onClose]);
 
@@ -101,22 +97,24 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
-            label="Nombre"
+            label="Nombre *"
             name="nombre"
             value={videojuego.nombre}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Descripción"
+            label="Descripción *"
             name="descripcion"
             value={videojuego.descripcion}
             onChange={handleChange}
             fullWidth
             multiline
             rows={2}
+            required
           />
         </Grid>
         <Grid item xs={6}>
@@ -131,29 +129,32 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="URL de la Foto"
-            name="foto_url"
+            label="URL de la Foto *"
+            name="foto_Url"
             value={videojuego.foto_Url}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Género"
+            label="Género *"
             name="genero"
             value={videojuego.genero}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Plataforma"
+            label="Plataforma *"
             name="plataforma"
             value={videojuego.plataforma}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={6}>
@@ -169,20 +170,22 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Desarrollador"
+            label="Desarrollador *"
             name="desarrollador"
             value={videojuego.desarrollador}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Editor"
+            label="Editor *"
             name="editor"
             value={videojuego.editor}
             onChange={handleChange}
             fullWidth
+            required
           />
         </Grid>
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
