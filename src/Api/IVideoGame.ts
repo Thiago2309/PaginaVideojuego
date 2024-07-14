@@ -9,4 +9,11 @@ export interface VideoGame {
     fecha_lanzamiento: string;
     desarrollador: string;
     editor: string;
-}
+};
+
+export interface VideoGameFormProps {
+    initialData: VideoGame | null;
+    onClose: () => void;
+    setVideojuegos: React.Dispatch<React.SetStateAction<VideoGame[]>>;
+    videojuegos: VideoGame[];
+};

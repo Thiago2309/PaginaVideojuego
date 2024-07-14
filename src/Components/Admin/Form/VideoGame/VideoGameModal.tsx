@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, Grid, TextField } from '@mui/material';
-import { VideoGame } from '../../../../Api/Type/IVideoGame'; //interfaz 
-import { createVideoGame, updateVideoGame } from '../../../../Api/ApiVideoGame';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, Button, Grid, TextField, Alert, Snackbar } from '@mui/material';
+import axios from 'axios';
+import { VideoGame, VideoGameFormProps } from '../../../../Api/IVideoGame';
 
-interface VideoGameFormProps {
-  initialData: VideoGame | null;
-  onClose: () => void;
-  setVideojuegos: React.Dispatch<React.SetStateAction<VideoGame[]>>;
-  videojuegos: VideoGame[];
-}
+const API_URL_POST = 'https://localhost:7029/Videojuegos/RegistroDeVideojuego';
+const API_URL_PUT = 'https://localhost:7029/Videojuegos';
 
 const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, setVideojuegos, videojuegos }) => {
   const [videojuego, setVideojuego] = useState<VideoGame>({
@@ -23,6 +19,9 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
     desarrollador: '',
     editor: '',
   });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
 
   useEffect(() => {
     if (initialData) {
@@ -35,17 +34,52 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
     setVideojuego({ ...videojuego, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+
+  const handleEdit = useCallback(async () => {
+    try {
+      const response = await axios.put(`${API_URL_PUT}/${videojuego.id}`, videojuego);
+      const updatedVideojuego = response.data.result;
+      console.log(updatedVideojuego);
+      setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? updatedVideojuego : v)));
+      setAlertMessage('¡Videojuego Editado exitosamente!');
+      setAlertSeverity('success');
+      setAlertOpen(true);
+      onClose();
+    } catch (error) {
+      console.error('Error saving video game:', error);
+      setAlertMessage('Error al editar el videojuego');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+    }
+  }, [videojuego]);
+
+  const handleCreate = async () => {
+    try {
+      const response = await axios.post(API_URL_POST, videojuego);
+      const newVideojuego = response.data;
+      setVideojuegos([...videojuegos, newVideojuego]);
+      setAlertMessage('¡Videojuego Creado exitosamente!');
+      setAlertSeverity('success');
+      setAlertOpen(true);
+      onClose();
+    } catch (error) {
+      console.error('Error saving video game:', error);
+      setAlertMessage('Error al crear el videojuego');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (initialData) {
-      const updatedVideojuego = await updateVideoGame(videojuego);
-      setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? updatedVideojuego : v)));
+      handleEdit();
     } else {
-      const newVideojuego = { ...videojuego, id: Date.now() };  // This line can be removed if the backend generates the ID
-      const createdVideojuego = await createVideoGame(newVideojuego);
-      setVideojuegos([...videojuegos, createdVideojuego]);
+      handleCreate();
     }
-    onClose();
   };
 
   return (
@@ -143,6 +177,11 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
           </Button>
         </Grid>
       </Grid>
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
