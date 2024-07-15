@@ -1,12 +1,86 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
-import { Comment, ThumbUp, ThumbDown } from "@mui/icons-material";
 import EA_Studio from "../../assets/images/GameDetails/Icon_desarrolladores/EA_Studio.png";
 import PlayStation from "../../assets/images/GameDetails/Plataformas/PlayStation.jpg";
 import Windows from "../../assets/images/GameDetails/Plataformas/Windows.png";
 import Xbox from "../../assets/images/GameDetails/Plataformas/Xbox.jpg";
+import Movil from "../../assets/images/GameDetails/Plataformas/Movil.jpg";
 
-const GameApprobation: React.FC = () => {
+interface GameProps {
+  game: {
+    nombre: string;
+    desarollador: string;
+    calificacion: number;
+    fecha_Lanzamiento: string;
+    plataforma: string;
+    genero: string[];
+    description: string;
+    foto_Url: string;
+  };
+  handleBackClick: () => void;
+}
+
+const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
+  const [plataformaImage, setPlataformaImage] = useState<string>("");
+  const [ratingColor, setRatingColor] = useState<string>("#ffffff"); // Color inicial
+
+  useEffect(() => {
+    switch (game.plataforma.toUpperCase()) {
+      case "PC":
+        setPlataformaImage(Windows);
+        break;
+      case "XBOX":
+        setPlataformaImage(Xbox);
+        break;
+      case "PLAYSTATION":
+        setPlataformaImage(PlayStation);
+        break;
+      case "MOVIL":
+        setPlataformaImage(Movil);
+        break;
+      default:
+        setPlataformaImage("");
+    }
+  }, [game.plataforma]);
+
+  useEffect(() => {
+    const ratingTitle = getRatingTitle(game.calificacion * 10);
+    const color = getColorFromRating(ratingTitle);
+    setRatingColor(color);
+  }, [game.calificacion]);
+
+ 
+  const getRatingTitle = (calificacion: number): string => {
+    if (calificacion >= 90) {
+      return "Mitico";
+    } else if (calificacion >= 80) {
+      return "Legendario";
+    } else if (calificacion >= 70) {
+      return "Épico";
+    } else if (calificacion >= 50) {
+      return "Raro";
+    } else {
+      return "Común";
+    }
+  };
+
+  const getColorFromRating = (ratingTitle: string): string => {
+    switch (ratingTitle) {
+      case "Mitico":
+        return "#800080"; 
+      case "Legendario":
+        return "#00A82D"; 
+      case "Épico":
+        return "#3CBBF0"; 
+      case "Raro":
+        return "#D8D8D8"; 
+      case "Común":
+        return "#B5651D"; 
+      default:
+        return "#ffffff"; 
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -22,10 +96,10 @@ const GameApprobation: React.FC = () => {
           component="div"
           sx={{ fontWeight: "bold", color: "#ffffff" }}
         >
-          Battlefield
+          {game.nombre}
         </Typography>
         <Typography variant="body2" sx={{ color: "#ffffff", fontSize: 12 }}>
-          Desarrollado por EA Studio
+          {game.desarollador}
         </Typography>
         <Avatar
           src={EA_Studio}
@@ -47,7 +121,7 @@ const GameApprobation: React.FC = () => {
               variant="h2"
               sx={{ color: "#ffffff", fontWeight: "bold", fontSize: 48 }}
             >
-              93%
+              {game.calificacion * 10}%
             </Typography>
             <Box
               sx={{
@@ -61,7 +135,7 @@ const GameApprobation: React.FC = () => {
                 sx={{
                   width: 15,
                   height: 15,
-                  bgcolor: "#AC23C2",
+                  bgcolor: ratingColor,
                   borderRadius: "50%",
                   mr: 1,
                 }}
@@ -70,77 +144,12 @@ const GameApprobation: React.FC = () => {
                 variant="body2"
                 sx={{ color: "#ffffff", fontWeight: "bold", fontSize: 12 }}
               >
-                Nivel Épico
+                Nivel {getRatingTitle(game.calificacion * 10)}
               </Typography>
             </Box>
           </CardContent>
         </Card>
-        <Card sx={{ backgroundColor: "#2C2839", mb: 2 }}>
-          <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 1,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Comment sx={{ color: "#ffffff", mr: 1 }} />
-                <Typography variant="body2" sx={{ color: "#ffffff" }}>
-                  Comentarios
-                </Typography>
-              </Box>
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: "bold", color: "#ffffff" }}
-              >
-                2K
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 1,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <ThumbUp sx={{ color: "#ffffff", mr: 1 }} />
-                <Typography variant="body2" sx={{ color: "#ffffff" }}>
-                  Me gusta
-                </Typography>
-              </Box>
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: "bold", color: "#ffffff" }}
-              >
-                3.1K
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <ThumbDown sx={{ color: "#ffffff", mr: 1 }} />
-                <Typography variant="body2" sx={{ color: "#ffffff" }}>
-                  No me gusta
-                </Typography>
-              </Box>
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: "bold", color: "#ffffff" }}
-              >
-                500
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
+
         <Card sx={{ backgroundColor: "#2C2839" }}>
           <CardContent sx={{ textAlign: "center" }}>
             <Typography
@@ -150,19 +159,35 @@ const GameApprobation: React.FC = () => {
               Plataformas
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              <Avatar
-                src={PlayStation}
-                sx={{ width: 60, height: 60, borderRadius: "8px", mx: 1 }}
-              />
-              <Avatar
-                src={Windows}
-                sx={{ width: 60, height: 60, borderRadius: "8px", mx: 1 }}
-              />
-              <Avatar
-                src={Xbox}
-                sx={{ width: 60, height: 60, borderRadius: "8px", mx: 1 }}
-              />
+              {plataformaImage && (
+                <Avatar
+                  src={plataformaImage}
+                  sx={{ width: 60, height: 60, borderRadius: "8px", mx: 1 }}
+                />
+              )}
             </Box>
+          </CardContent>
+        </Card>
+
+        <br />
+
+        <Card sx={{ backgroundColor: "#2C2839", mb: 2 }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ color: "#ffffff", fontSize: 20 }}>
+              Descripción
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                mt: 2,
+                color: "#ffffff",
+                textAlign: "left",
+                fontSize: "1.2rem",
+              }}
+            >
+              {game.description}
+            </Typography>
           </CardContent>
         </Card>
       </CardContent>

@@ -46,7 +46,7 @@ const Register: React.FC = () => {
       correo: "",
       contraseña: "",
       confirmPassword: "",
-      fkRol: 1,
+      fkRol: 2,
       GoogleId: "",
       FacebookId: "",
       Foto_Perfil: "",

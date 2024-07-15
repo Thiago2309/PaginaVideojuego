@@ -67,7 +67,7 @@ const Login = () => {
         setOpen(true);
         setTimeout(() => {
           navigate('/');
-        }, 2000); // Redirigir después de 2 segundos
+        }, 2000);
       } catch (error) {
         console.error("Error durante el inicio de sesión:", error);
         setAlert({ type: 'error', message: 'Error durante el inicio de sesión' });
