@@ -7,6 +7,8 @@ import { RootState } from '../../store/store';
 import { logoutUser } from '../../store/reducers/userReducer';
 import { Link as RouterLink } from 'react-router-dom';
 
+const pages = ['Populares', 'Novedades', 'Ofertas', 'Noticias'];
+const settings = ['Perfil', 'Ajustes', 'Dashboard', 'Cerrar Sesión'];
 const pages = [
   { name: 'Populares', path: '/populares' },
   { name: 'Novedades', path: '/novedades' },
