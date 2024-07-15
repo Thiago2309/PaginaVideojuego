@@ -1,24 +1,20 @@
-// GameCatalog.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import SearchBar from "../../Components/GameCommunity/SearchBarCommunity";
-import FilterOptions from "../../Components/GameCommunity/FilterOptionsCommunity";
 import SortOptions from "../../Components/GameCommunity/SortOptionsCommunity";
 import Navegador from "../../layout/Navegador/Navegador";
 import FooterView from "../../layout/Footer/FooterView";
 import { useNavigate } from "react-router-dom";
 import GameCard from "../../Components/GameCommunity/GameCardCommunity";
-import { games as initialGames, Game } from "../../Components/GameCommunity/dataCommunity";
+import Publications from "../../Components/GameCommunity/PublicationCommunity";
+import { communitygame, CommunityGame } from "../../Components/GameCommunity/dataCommunity";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
 
 const GameCommunity: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredGames, setFilteredGames] = useState<Game[]>(initialGames);
+  const [filteredCommunityGame, setFilteredCommunityGame] = useState<CommunityGame[]>(communitygame);
+  const [noResults, setNoResults] = useState(false);
   const [sort, setSort] = useState<string>("title-asc");
-  const [selectedDevelopers, setSelectedDevelopers] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-  const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
@@ -26,20 +22,26 @@ const GameCommunity: React.FC = () => {
     navigate("/");
   };
 
-  const searchedGames = filteredGames.filter(
-    (game) =>
-      game.title && game.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearch = (searchTerm: string) => {
+    const results = communitygame.filter((communitygame) =>
+      communitygame.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCommunityGame(results);
+    setNoResults(results.length === 0);
+  };
 
-  const sortedGames = searchedGames.sort((a, b) => {
+  useEffect(() => {
+    setFilteredCommunityGame(communitygame);
+  }, [communitygame]);
+
+  const sortedCommunityGame = filteredCommunityGame.sort((a, b) => {
     const [key, order] = sort.split("-");
     let comparison = 0;
 
     if (key === "title") {
       comparison = a.title.localeCompare(b.title);
     } else if (key === "releaseDate") {
-      comparison =
-        new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
+      comparison = new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
     } else if (key === "likes") {
       comparison = a.likes - b.likes;
     }
@@ -47,19 +49,21 @@ const GameCommunity: React.FC = () => {
     return order === "asc" ? comparison : -comparison;
   });
 
-  const handleFilteredGames = (games: Game[]) => {
-    if (games.length === 0) {
-      setFilteredGames([]);
-    } else {
-      setFilteredGames(games);
-    }
+  // Nueva función para manejar la adición de publicaciones
+  const handleAddPublication = (newPublication: CommunityGame) => {
+    communitygame.push(newPublication);
+    handleSearch(searchTerm); // Actualiza los resultados de búsqueda
   };
 
   return (
     <Grid>
       <Navegador />
-
-      <Box sx={{ padding: 4, paddingTop: 1 }}>
+      <Box
+        sx={{
+          padding: { xs: 2, sm: 3, md: 4, lg: 20, xl: 20 },
+          pt: { xs: 2, sm: 3, md: 3, lg: 3, xl: 3 },
+        }}
+      >
         <Typography
           variant="h1"
           sx={{
@@ -82,24 +86,11 @@ const GameCommunity: React.FC = () => {
           >
             <Box sx={{ minWidth: "200px" }}>
               <SearchBar
-                games={initialGames}
-                setFilteredGames={setFilteredGames}
+                communitygame={communitygame}
+                setFilteredCommunityGame={setFilteredCommunityGame}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-              />
-            </Box>
-            <Box sx={{ ml: 1, mt: { sm: 0 } }}>
-              <FilterOptions
-                setFilteredGames={handleFilteredGames}
-                games={initialGames}
-                selectedDevelopers={selectedDevelopers}
-                setSelectedDevelopers={setSelectedDevelopers}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-                selectedPlatforms={selectedPlatforms}
-                setSelectedPlatforms={setSelectedPlatforms}
-                selectedRanges={selectedRanges}
-                setSelectedRanges={setSelectedRanges}
+                setNoResults={setNoResults}
               />
             </Box>
           </Grid>
@@ -116,7 +107,14 @@ const GameCommunity: React.FC = () => {
             <SortOptions sort={sort} setSort={setSort} />
           </Grid>
         </Grid>
-        {sortedGames.length === 0 && (
+
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Publications onAddPublication={handleAddPublication} />
+          </Grid>
+        </Grid>
+        
+        {noResults && (
           <Box
             display="flex"
             flexDirection="column"
@@ -138,18 +136,18 @@ const GameCommunity: React.FC = () => {
             </Typography>
           </Box>
         )}
-        {sortedGames.length > 0 && (
+        {!noResults && sortedCommunityGame.length > 0 && (
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            {sortedGames.map((game) => (
+            {sortedCommunityGame.map((communitygame) => (
               <Grid
                 item
-                key={game.id || game.title}
-                xs={6}
-                sm={3}
-                md={3}
-                lg={2}
+                key={communitygame.id || communitygame.title}
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
               >
-                <GameCard game={game} />
+                <GameCard communitygame={communitygame} />
               </Grid>
             ))}
           </Grid>

@@ -11,7 +11,9 @@ import { Link as RouterLink } from 'react-router-dom';
 const pages = [
   { name: 'Catalogo de juegos', path: '/gamecatalog' },
   { name: 'Novedades', path: '/novedades' },
-  { name: 'Ofertas', path: '/ofertas' }
+  { name: 'Ofertas', path: '/ofertas' },
+  { name: 'Comunidad', path: '/gamecommunity' },
+  { name: 'Noticias', path: '/newsgame' }
 ];
 
 const settings = [

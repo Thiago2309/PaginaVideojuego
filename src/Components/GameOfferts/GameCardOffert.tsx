@@ -11,25 +11,19 @@ import {
 } from "@mui/material";
 import { GameOffert } from "./dataOfferts";
 import { useNavigate } from "react-router-dom";
+import imagen_default from "../../assets/images/banner_default.jpg";
 
 const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
   const navigate = useNavigate();
 
-  // Asegurarse de que la fecha se interprete correctamente
-  const formattedDate = new Date(game.releaseDate).toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    timeZone: "UTC", // Esto asegura que la fecha se mantenga en UTC
-  });
-
   const handleCardClick = () => {
-    navigate("/gameofferts");
+    navigate(`/gameofferts/${game.id}`);
   };
 
-  if (!game || !game.categories) {
-    return null; // Maneja el caso donde el juego o sus categorías son undefined
-  }
+  // Convertir la cadena de géneros en un array para iterar sobre ella
+  const generos = game.genero.split(",").map(genero => genero.trim());
+  const precio = game.precio !== undefined ? game.precio.toFixed(2) : 'N/A';
+  const descuento = game.descuento !== undefined ? `-${game.descuento}%` : '';
 
   return (
     <Card
@@ -48,21 +42,23 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
             component="img"
             height="300"
             width="100%"
-            image={game.image}
-            alt={game.title}
+            image={game.foto_Url || imagen_default}
+            alt={game.nombre}
           />
-          <Chip
-            label={`-${game.discount}%`}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "#489D2D",
-              color: "#fff",
-              fontWeight: "bold",
-              fontSize: 14,
-            }}
-          />
+          {descuento && (
+            <Chip
+              label={descuento}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                backgroundColor: "#489D2D",
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 14,
+              }}
+            />
+          )}
         </Box>
         <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
           <Typography
@@ -78,21 +74,21 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
               marginBottom: 0,
             }}
           >
-            {game.title}
+            {game.nombre}
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
           >
-            {game.likes} k les gusta
+            100 k les gusta
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ color: "#3CC70C", fontWeight: "bold", fontSize: 12, textAlign: "left" }}
           >
-            Por MX${game.price.toFixed(2)}
+            Por MX${precio}
           </Typography>
           <Stack
             direction="row"
@@ -102,10 +98,10 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
               marginTop: 1,
             }}
           >
-            {game.categories.map((category) => (
+            {generos.map((genero) => (
               <Chip
-                key={category}
-                label={category}
+                key={genero}
+                label={genero}
                 color="primary"
                 size="small"
                 sx={{
