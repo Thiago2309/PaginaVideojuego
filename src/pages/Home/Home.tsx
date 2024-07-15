@@ -23,7 +23,7 @@ const Home: React.FC = () => {
         <NewsSection />
         <NewGameSection />
         <Footer />
-        <NewsView />
+        {/* <NewsView /> */}
         {/* <Api /> */}
       </div>
     </div>
