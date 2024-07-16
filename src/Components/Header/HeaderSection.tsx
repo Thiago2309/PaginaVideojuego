@@ -12,6 +12,7 @@ import { RootState } from '../../store/store';
 const HeaderSectionLeft = () => {
   const user = useSelector((state: RootState) => state.user); 
   const isLoggedIn = !!user.id;
+  const Admin = user.rol; //para el rol admin 
   const dispatch = useDispatch();
   return (
     <Box sx={{ flexGrow: 1, padding: 4, color: 'white', position: 'relative', overflow: 'hidden' }}>
@@ -47,6 +48,9 @@ const HeaderSectionLeft = () => {
                 </Button>
               </Box>
             )}
+            <Button component={RouterLink} to="/adminpublicoption" variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }}>
+              Nuevo
+            </Button>
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               {ContactSection()}
             </Box>
