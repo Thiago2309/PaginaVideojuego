@@ -16,13 +16,15 @@ interface GameProps {
     genero: string[];
     description: string;
     foto_Url: string;
+    usuarioNombre: string;
+    rolNombre: string;
   };
   handleBackClick: () => void;
 }
 
 const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
   const [plataformaImage, setPlataformaImage] = useState<string>("");
-  const [ratingColor, setRatingColor] = useState<string>("#ffffff"); // Color inicial
+  const [ratingColor, setRatingColor] = useState<string>("#ffffff");
 
   useEffect(() => {
     switch (game.plataforma.toUpperCase()) {
@@ -49,7 +51,6 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
     setRatingColor(color);
   }, [game.calificacion]);
 
- 
   const getRatingTitle = (calificacion: number): string => {
     if (calificacion >= 90) {
       return "Mitico";
@@ -67,17 +68,17 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
   const getColorFromRating = (ratingTitle: string): string => {
     switch (ratingTitle) {
       case "Mitico":
-        return "#800080"; 
+        return "#800080";
       case "Legendario":
-        return "#00A82D"; 
+        return "#00A82D";
       case "Épico":
-        return "#3CBBF0"; 
+        return "#3CBBF0";
       case "Raro":
-        return "#D8D8D8"; 
+        return "#D8D8D8";
       case "Común":
-        return "#B5651D"; 
+        return "#B5651D";
       default:
-        return "#ffffff"; 
+        return "#ffffff";
     }
   };
 
@@ -190,6 +191,7 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
             </Typography>
           </CardContent>
         </Card>
+
       </CardContent>
     </Card>
   );

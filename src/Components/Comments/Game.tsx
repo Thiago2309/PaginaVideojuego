@@ -31,9 +31,14 @@ const Games: React.FC<GameProps> = ({ game, handleBackClick }) => {
             </Button>
           </Grid> */}
         </Grid>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}>
-          Fecha de lanzamiento {game.fecha_Lanzamiento}  Publicado por {game.rolNombre}
-        </Typography>
+        <CardContent sx={{ display: "flex", justifyContent: "space-between", color: "#ffffff" }}>
+            <Typography variant="body2" sx={{ fontSize: 14 }}>
+              Fecha de lanzamiento: {game.fecha_Lanzamiento}
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: 14 }}>
+              Publicado por: {game.rolNombre}
+            </Typography>
+          </CardContent>
 
         <Box sx={{ mt: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>

@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Link } from "@mui/material";
+import { Link, Toolbar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import axios from "axios";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
+import Logo1 from '../../assets/images/logo.png';
 
 const defaultTheme = createTheme();
 
@@ -59,9 +60,10 @@ const Register: React.FC = () => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("contraseña")], "Las contraseñas deben coincidir")
         .required("Confirmar contraseña requerida"),
-      fkRol: Yup.number().required("Rol requerido").oneOf([1], "Rol inválido"),
+      fkRol: Yup.number().required("Rol requerido").oneOf([2], "Rol inválido"),
     }),
     onSubmit: async (values) => {
+      console.log("Entra al onSubmit"); // Log para depuración
       try {
         const payload = {
           nombre_completo: values.nombre_completo,
@@ -73,16 +75,15 @@ const Register: React.FC = () => {
           FacebookId: values.FacebookId,
           Foto_Perfil: values.Foto_Perfil,
         };
-
+        console.log("Payload:", payload); // Log para depuración
         await axios.post('https://localhost:7029/Usuarios/RegistroDeUsuario', payload);
-
         setAlert({ type: 'success', message: 'Registro exitoso' });
         setOpen(true);
         setTimeout(() => {
           navigate('/login');
         }, 2000);
       } catch (error) {
-        console.error("Error durante el registro:", error);
+        console.error("Error durante el registro:", error); // Log para depuración
         setAlert({ type: 'error', message: 'Error durante el registro' });
         setOpen(true);
       }
@@ -103,8 +104,17 @@ const Register: React.FC = () => {
           square
           sx={{
             background: "#080317",
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          <Toolbar disableGutters>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+              <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
+                <img src={Logo1} alt="logo" style={{ height: '40px', margin: '10px' }} />
+              </Link>
+            </Box>
+          </Toolbar>
           <Box
             sx={{
               my: "auto",
@@ -294,52 +304,34 @@ const Register: React.FC = () => {
                   </Typography>
                 </Grid>
               </Grid>
+
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+              <Alert 
+                onClose={handleClose} 
+                severity={alert?.type} 
+                sx={{ 
+                  backgroundColor: `${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Fondo negro
+                  color: '#ffffff', 
+                  fontSize: '1.2rem', // Tamaño de fuente aumentado
+                  border: `1px solid ${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Borde blanco
+                  boxShadow: `0px 0px 10px 2px ${alert?.type === 'error' ? 'rgba(255, 0, 0, 0.4)' : 'rgba(26, 161, 151, 0.4)'}`, // Sombra del cuadro
+                  padding: '16px', // Espaciado interno
+                }}
+              >
+                <AlertTitle>{alert?.type === 'error' ? 'Error' : 'Éxito'}</AlertTitle>
+                {alert?.message}
+              </Alert>
+              </Snackbar>
             </Box>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={6}
-          sx={{
-            backgroundImage: `url(${Image_Register})`,
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            boxShadow: "-20px 0px 20px rgba(0, 0, 0, 0.6)",
-          }}
-        />
+        <Grid item xs={false} sm={4} md={6} sx={{ backgroundImage: `url(${Image_Register})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
       </Grid>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        sx={{ width: '30%' }}
-      >
-        <Alert
-          onClose={handleClose}
-          severity={alert?.type}
-          sx={{
-            backgroundColor: '#000000', // Fondo negro
-            color: '#ffffff',
-            fontSize: '1em',
-            padding: '10px',
-            border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#E10AAB'}`, // Borde rojo para error, rosa neón para éxito
-            "& .MuiAlert-icon": {
-              color: alert?.type === 'error' ? '#FF3860' : '#E10AAB', // Color rojo para error, rosa neón para éxito
-            }
-          }}
-        >
-          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle>
-          {alert?.message}
-        </Alert>
-      </Snackbar>
     </ThemeProvider>
   );
 };

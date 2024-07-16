@@ -9,17 +9,14 @@ import { Link as RouterLink } from 'react-router-dom';
 
 
 const pages = [
-  { name: 'Catalogo de juegos', path: '/gamecatalog' },
-  { name: 'Novedades', path: '/novedades' },
-  { name: 'Ofertas', path: '/ofertas' },
+  { name: 'Juegos', path: '/gamecatalog' },
+  { name: 'Ofertas', path: '/gameoffert' },
   { name: 'Comunidad', path: '/gamecommunity' },
   { name: 'Noticias', path: '/newsgame' }
 ];
 
 const settings = [
   { name: 'Perfil', path: '/profile' },
-  { name: 'Ajustes', path: '/ajustes' },
-  { name: 'Dashboard', path: '/dashboard' },
   { name: 'Cerrar Sesión', path: '/' }
 ];
 

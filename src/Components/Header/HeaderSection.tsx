@@ -29,7 +29,7 @@ const HeaderSectionLeft = () => {
           <Box>
             <Typography variant="h3" gutterBottom sx={{ textAlign: 'left', mt: { xs: '80px', sm: '80px', md: 'none' } }}>
               ¡Bienvenidos al Epicentro 
-              de los Videojuegos!
+              de los Videojuegos, {user.usuarioNombre} !
             </Typography>
             <Typography variant="body1" gutterBottom sx={{ textAlign: 'left', justifyContent: { xs: 'none', sm: 'none', md: 'flex-start' } }}>
               Sumérgete en el universo de los videojuegos con las últimas noticias, reseñas y lanzamientos. 

@@ -7,7 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link } from "@mui/material";
+import { Link, Toolbar } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -20,6 +20,7 @@ import { loginUser } from '../../store/reducers/userReducer';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
+import Logo1 from '../../assets/images/logo.png';
 
 const defaultTheme = createTheme();
 
@@ -90,11 +91,20 @@ const Login = () => {
           square
           sx={{
             background: "#080317",
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
+          <Toolbar disableGutters>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+              <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
+                <img src={Logo1} alt="logo" style={{ height: '40px', margin: '10px' }} />
+              </Link>
+            </Box>
+          </Toolbar>
           <Box
             sx={{
-              my: "auto",
+              my: 'auto',
               mx: 12,
               display: "flex",
               flexDirection: "column",
@@ -115,7 +125,7 @@ const Login = () => {
               component="form"
               noValidate
               onSubmit={formik.handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{ mt: 1, width: '100%' }}
             >
               <TextField
                 margin="normal"
@@ -265,15 +275,13 @@ const Login = () => {
           sx={{ 
             backgroundColor: `${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Fondo negro
             color: '#ffffff', 
-            fontSize: '1em',
-            padding: '10px',
-            border: `2px solid ${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Borde rojo para error, rosa neón para éxito
-            "& .MuiAlert-icon": {
-              color: alert?.type === 'error' ? '#ffffff' : '#ffffff', // Color rojo para error, rosa neón para éxito
-            }
+            fontSize: '1.2rem', // Tamaño de fuente aumentado
+            border: `1px solid ${alert?.type === 'error' ? '#FF3860' : '#1AA197'}`, // Borde blanco
+            boxShadow: `0px 0px 10px 2px ${alert?.type === 'error' ? 'rgba(255, 0, 0, 0.4)' : 'rgba(26, 161, 151, 0.4)'}`, // Sombra del cuadro
+            padding: '16px', // Espaciado interno
           }}
         >
-          <AlertTitle>{alert?.type === 'success' ? 'Correcto' : 'Error'}</AlertTitle> {/* Cambio de texto */}
+          <AlertTitle>{alert?.type === 'error' ? 'Error' : 'Éxito'}</AlertTitle>
           {alert?.message}
         </Alert>
       </Snackbar>
