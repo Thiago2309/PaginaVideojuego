@@ -7,23 +7,25 @@ import { RootState } from '../../store/store';
 import { logoutUser } from '../../store/reducers/userReducer';
 import { Link as RouterLink } from 'react-router-dom';
 
+
 const pages = [
-  { name: 'Populares', path: '/populares' },
-  { name: 'Novedades', path: '/novedades' },
-  { name: 'Ofertas', path: '/ofertas' }
+  { name: 'Juegos', path: '/gamecatalog' },
+  { name: 'Ofertas', path: '/gameoffert' },
+  { name: 'Comunidad', path: '/gamecommunity' },
+  { name: 'Noticias', path: '/newsgame' }
 ];
 
 const settings = [
   { name: 'Perfil', path: '/profile' },
-  { name: 'Ajustes', path: '/ajustes' },
-  { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Cerrar Sesión', path: '/logout' }
+  { name: 'Cerrar Sesión', path: '/' }
 ];
 
 function Navegador() {
+ 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const user = useSelector((state: RootState) => state.user); 
+  const isLoggedIn = !!user.id;
   const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -106,39 +108,43 @@ function Navegador() {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Stack direction="row" spacing={2}>
-                  <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
-                </Stack>
-              </IconButton>
-            </Tooltip>
-            <Typography variant="body1" sx={{ color: 'white', marginLeft: '8px' }}>
-              {user.userName}
-            </Typography>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={setting.name === 'Cerrar Sesión' ? handleLogout : handleCloseUserMenu} component={RouterLink} to={setting.path}>
-                  <Typography textAlign="center">{setting.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+            {isLoggedIn && (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Stack direction="row" spacing={2}>
+                      <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
+                    </Stack>
+                  </IconButton>
+                </Tooltip>
+                <Typography variant="body1" sx={{ color: 'white', marginLeft: '8px' }}>
+                  {user.usuarioNombre}
+                </Typography>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting.name} onClick={setting.name === 'Cerrar Sesión' ? handleLogout : handleCloseUserMenu} component={RouterLink} to={setting.path}>
+                      <Typography textAlign="center">{setting.name}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
+             </Box>
         </Toolbar>
       </Container>
   );

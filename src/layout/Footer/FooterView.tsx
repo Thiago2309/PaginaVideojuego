@@ -32,10 +32,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecatalog"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Populares
+            Juegos
           </Link>
             |
         </Grid>
@@ -48,7 +48,7 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gameoffert"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             Ofertas
@@ -69,10 +69,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecommunity"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Novedades
+            Comunidad
           </Link>
             |
         </Grid>
@@ -85,10 +85,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/newsgame"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Nosotros
+            Noticias
           </Link>
             |
         </Grid>
@@ -97,15 +97,15 @@ const FooterView = () => {
         <Grid item>
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecatalog"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Populares
+            Juegos
           </Link>
           {' | '}
           <Link
             component={RouterLink}
-            to="#"
+            to="/gameoffert"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             Ofertas
@@ -113,18 +113,18 @@ const FooterView = () => {
           {' | '}
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecommunity"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Novedades
+            Comunidad
           </Link>
           {' | '}
           <Link
             component={RouterLink}
-            to="#"
+            to="/newsgame"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Nosotros
+            Noticias
           </Link>
         </Grid>
       </Grid>
