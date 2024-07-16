@@ -3,7 +3,7 @@ import { TextField, Button, Box, Card, CardContent, MenuItem, Select, InputLabel
 import SearchBar from "./GameOfferSearch";
 import { Deal, SavedDeal } from "./dataApiOffert";
 import { getGameDetails, searchGames, getGameScreenshots } from "./../../services/apiRAWG";
-import { Game, Screenshot } from "./dataApi";
+import { Game, Screenshot } from "../Admin/Form/VideoGame/dataApi";
 
 const AdminAddOfferForm: React.FC = () => {
   const [deal, setDeal] = useState<Partial<Deal>>({});

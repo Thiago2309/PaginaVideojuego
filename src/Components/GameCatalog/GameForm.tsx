@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Checkbox, FormControlLabel, Card, CardContent } from "@mui/material";
 import SearchBar from "./GameSearch";
-import { Game, Screenshot } from "./dataApi";
+import { Game, Screenshot } from "../Admin/Form/VideoGame/dataApi";
 
 const GameForm: React.FC = () => {
   const [game, setGame] = useState<Partial<Game>>({});

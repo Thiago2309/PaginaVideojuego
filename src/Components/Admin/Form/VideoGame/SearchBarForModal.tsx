@@ -1,15 +1,15 @@
+// SearchBarForModal.tsx
 import React, { useState, useEffect, useCallback } from "react";
 import { TextField, Autocomplete, Box } from "@mui/material";
-import { searchGames, getGameDetails, getGameScreenshots } from "./../../services/apiRAWG";
-import { Game } from "../Admin/Form/VideoGame/dataApi";
+import { searchGames, getGameDetails, getGameScreenshots } from "./../../../../services/apiRAWG";
+import { Game } from "./dataApi";
 import debounce from 'lodash/debounce';
 
-interface SearchBarProps {
-  onGamesFetched: (games: Game[]) => void;
-  onSelectGame: (game: Game) => void;
+interface SearchBarForModalProps {
+  onSelectGame: (game: Partial<Game>) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onGamesFetched, onSelectGame }) => {
+const SearchBarForModal: React.FC<SearchBarForModalProps> = ({ onSelectGame }) => {
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<Game[]>([]);
   const [open, setOpen] = useState(false);
@@ -21,9 +21,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onGamesFetched, onSelectGame }) =
       const games = await searchGames(query);
       setOptions(games);
       setIsLoading(false);
-      onGamesFetched(games);
     }, 500),
-    [onGamesFetched]
+    []
   );
 
   useEffect(() => {
@@ -93,35 +92,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onGamesFetched, onSelectGame }) =
             variant="outlined"
             size="small"
             onKeyDown={handleKeyDown}
-            sx={{
-              "& .MuiInputLabel-root": {
-                color: "white",
-              },
-              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                color: "white",
-              },
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "0px",
-                borderBottomLeftRadius: "4px",
-                borderTopLeftRadius: "4px",
-                backgroundColor: "#383446",
-                color: "white",
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#14101F",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#14101F",
-                },
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1e182e",
-                },
-                "& .MuiAutocomplete-endAdornment": {
-                  "& .MuiSvgIcon-root": {
-                    color: "white",
-                  },
-                },
-              },
-            }}
           />
         )}
       />
@@ -129,4 +99,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ onGamesFetched, onSelectGame }) =
   );
 };
 
-export default React.memo(SearchBar);
+export default React.memo(SearchBarForModal);

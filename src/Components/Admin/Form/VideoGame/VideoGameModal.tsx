@@ -4,6 +4,8 @@ import axios from 'axios';
 import { VideoGame, VideoGameFormProps } from '../../../../Api/IVideoGame';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/store';
+import SearchBarForModal from './SearchBarForModal';
+import { Game } from "./dataApi";
 
 const API_URL_POST = 'https://localhost:7029/Videojuegos/RegistroDeVideojuego';
 const API_URL_PUT = 'https://localhost:7029/Videojuegos';
@@ -28,6 +30,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -41,6 +44,10 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       ...prevState,
       [name]: value
     }));
+
+    if (name === 'foto_Url') {
+      setPreviewImage(value);
+    }
   };
 
   const handleAlertClose = () => {
@@ -83,6 +90,22 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
     }
   }, [videojuego, setVideojuegos, videojuegos, onClose]);
 
+  const handleSelectGame = (game: Partial<Game>) => {
+    setVideojuego(prevState => ({
+      ...prevState,
+      nombre: game.name || '',
+      descripcion: game.description_raw || '',
+      calificacion: game.rating || 0,
+      foto_Url: game.background_image || '',
+      genero: game.genres?.[0]?.name || '', // Solo tomar el primer género
+      plataforma: game.platforms?.[0]?.platform.name || '', // Solo tomar la primera plataforma
+      fecha_Lanzamiento: game.released || '',
+      desarrollador: game.developers?.[0]?.name || '', // Solo tomar el primer desarrollador
+      editor: game.publishers?.[0]?.name || '', // Solo tomar el primer editor
+    }));
+    setPreviewImage(game.background_image || null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (initialData) {
@@ -94,6 +117,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+      <SearchBarForModal onSelectGame={handleSelectGame} />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
@@ -140,6 +164,13 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
             sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
+        {previewImage && (
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <img src={previewImage} alt="Preview" style={{ maxWidth: "100%", height: "auto" }} />
+            </Box>
+          </Grid>
+        )}
         <Grid item xs={6}>
           <TextField
             label="Género"
