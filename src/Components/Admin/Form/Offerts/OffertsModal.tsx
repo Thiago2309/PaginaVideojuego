@@ -3,6 +3,7 @@ import { Box, Button, TextField, Typography, CardContent, useMediaQuery, useThem
 import axios from 'axios';
 import { Offerts, OffertsFormProps } from '../../../../Api/IOfferts';
 import { useSelector } from 'react-redux';
+import Modal from "@mui/material/Modal";
 import { RootState } from '../../../../store/store';
 import GameOfferSearch from '../../../GameCatalog/GameOfferSearch';
 import { Deal } from '../../../GameCatalog/dataApiOffert';
@@ -94,14 +95,14 @@ const OffertsModal: React.FC<OffertsFormProps> = ({ initialData, onClose, setOfe
             editor: '',
             precio: deal.normalPrice,
             descuento: deal.salePrice,
-            link: https://www.cheapshark.com/redirect?dealID=${deal.dealID},
+            link: `https://www.cheapshark.com/redirect?dealID=${deal.dealID}`,
         }));
         fetchRAWGData(deal.title); // Llama a RAWG para obtener más detalles
     }, [fetchRAWGData]);
 
     const handleEdit = useCallback(async () => {
         try {
-            const response = await axios.put(${API_URL_UPDATE}/${oferta.id}, oferta);
+            const response = await axios.put(`${API_URL_UPDATE}/${oferta.id}`, oferta);
             const updatedOferta = response.data;
             setOfertas(ofertas.map(o => (o.id === oferta.id ? updatedOferta : o)));
             setAlertMessage('¡Oferta Editada exitosamente!');
@@ -159,195 +160,240 @@ const OffertsModal: React.FC<OffertsFormProps> = ({ initialData, onClose, setOfe
         setAlertOpen(false);
     };
 
-    return (
-        <Box
-            sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: isMobile ? '95%' : '50%',
-                bgcolor: 'background.paper',
-                borderRadius: 2,
-                boxShadow: 24,
-                p: 4,
-            }}
-        >
-            <CardContent>
-                <Typography variant="h6" gutterBottom>
-                    {oferta.id ? 'Editar Oferta' : 'Nueva Oferta'}
-                </Typography>
-                <GameOfferSearch onDealsFetched={handleDealsFetched} onSelectDeal={handleSelectDeal} />
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="Nombre"
-                            name="nombre"
-                            value={oferta.nombre}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="Descripción"
-                            name="descripcion"
-                            value={oferta.descripcion}
-                            onChange={handleChange}
-                            fullWidth
-                            multiline
-                            rows={2}
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Calificación"
-                            name="calificacion"
-                            value={oferta.calificacion}
-                            onChange={handleChange}
-                            fullWidth
-                            type="number"
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="URL de la Foto"
-                            name="foto_Url"
-                            value={oferta.foto_Url}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    {previewImage && (
-                        <Grid item xs={12}>
-                            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-                                <img src={previewImage} alt="Preview" style={{ maxWidth: "100%", height: "auto" }} />
-                            </Box>
-                        </Grid>
-                    )}
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Género"
-                            name="genero"
-                            value={oferta.genero}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Plataforma"
-                            name="plataforma"
-                            value={oferta.plataforma}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Fecha de Lanzamiento"
-                            name="fecha_Lanzamiento"
-                            value={oferta.fecha_Lanzamiento}
-                            onChange={handleChange}
-                            fullWidth
-                            type="date"
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Desarrollador"
-                            name="desarrollador"
-                            value={oferta.desarrollador}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                    {offers.length > 0 && (
-                    <FormControl fullWidth sx={{ mb: 2 }}>
-                        <InputLabel id="select-offer-label">Seleccionar Oferta</InputLabel>
-                        <Select
-                            labelId="select-offer-label"
-                            value={selectedDeal?.dealID || ''}
-                            label="Seleccionar Oferta"
-                            onChange={(e) => {
-                                const selectedDeal = offers.find(offer => offer.dealID === e.target.value);
-                                if (selectedDeal) {
-                                  handleSelectDeal(selectedDeal);
-                                }
-                              }}                        >
-                            {offers.map((offer) => (
-                                <MenuItem key={offer.dealID} value={offer.dealID}>
-                                    {${offer.title} - ${offer.storeName} - $${offer.salePrice.toFixed(2)} (Normal Price: $${offer.normalPrice.toFixed(2)}) - ${((1 - offer.salePrice / offer.normalPrice) * 100).toFixed(2)}% off}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                )}
+    const style = {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: isMobile ? '95%' : '50%',
+        bgcolor: '#1C172A',
+        border: 'none',
+        borderRadius: '8px',
+        boxShadow: 24,
+        p: 4,
+        overflowY: 'auto',
+        maxHeight: '80vh',
+    };
 
+    const inputStyles = {
+        "& .MuiInputLabel-root": { color: "white" },
+        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
+        "& .MuiOutlinedInput-root": {
+            color: "white",
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#A59898",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+            },
+            "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+            "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": { color: "white" },
+            "& .MuiChip-deleteIcon": { color: "white" },
+            "& .MuiSvgIcon-root": { color: "white" }, // Icono de la fecha en blanco
+        },
+        "& .MuiChip-root": { backgroundColor: "#383446", color: "white" },
+        // "& .MuiOutlinedInput-root": { borderRadius: "4px" },
+    };
+
+    return (
+        <Modal
+            open={true}
+            onClose={onClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <CardContent>
+                    <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+                        {oferta.id ? 'Editar Oferta' : 'Nueva Oferta'}
+                    </Typography>
+                    <Box sx={{ mb: 2 }}>
+                        <GameOfferSearch onDealsFetched={handleDealsFetched} onSelectDeal={handleSelectDeal} />
+                    </Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Nombre"
+                                name="nombre"
+                                value={oferta.nombre}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Descripción"
+                                name="descripcion"
+                                value={oferta.descripcion}
+                                onChange={handleChange}
+                                fullWidth
+                                multiline
+                                rows={2}
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Calificación"
+                                name="calificacion"
+                                value={oferta.calificacion}
+                                onChange={handleChange}
+                                fullWidth
+                                type="number"
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="URL de la Foto"
+                                name="foto_Url"
+                                value={oferta.foto_Url}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        {previewImage && (
+                            <Grid item xs={12}>
+                                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                                    <img src={previewImage} alt="Preview" style={{ maxWidth: "100%", height: "auto" }} />
+                                </Box>
+                            </Grid>
+                        )}
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Género"
+                                name="genero"
+                                value={oferta.genero}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Plataforma"
+                                name="plataforma"
+                                value={oferta.plataforma}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Fecha de Lanzamiento"
+                                name="fecha_Lanzamiento"
+                                value={oferta.fecha_Lanzamiento}
+                                onChange={handleChange}
+                                fullWidth
+                                type="date"
+                                InputLabelProps={{ shrink: true }}
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Desarrollador"
+                                name="desarrollador"
+                                value={oferta.desarrollador}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            {offers.length > 0 && (
+                                <FormControl fullWidth sx={{ mb: 2 }}>
+                                    <InputLabel id="select-offer-label" sx={{ color: 'white' }}>Seleccionar Oferta</InputLabel>
+                                    <Select
+                                        labelId="select-offer-label"
+                                        value={selectedDeal?.dealID || ''}
+                                        label="Seleccionar Oferta"
+                                        onChange={(e) => {
+                                            const selectedDeal = offers.find(offer => offer.dealID === e.target.value);
+                                            if (selectedDeal) {
+                                                handleSelectDeal(selectedDeal);
+                                            }
+                                        }}
+                                        sx={{ color: 'white', '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+                                    >
+                                        {offers.map((offer) => (
+                                            <MenuItem key={offer.dealID} value={offer.dealID}>
+                                                {`${offer.title} - ${offer.storeName} - $${offer.salePrice.toFixed(2)} (Normal Price: $${offer.normalPrice.toFixed(2)}) - ${((1 - offer.salePrice / offer.normalPrice) * 100).toFixed(2)}% off`}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Editor"
+                                name="editor"
+                                value={oferta.editor}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Precio"
+                                name="precio"
+                                value={oferta.precio}
+                                onChange={handleChange}
+                                fullWidth
+                                type="number"
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Descuento"
+                                name="descuento"
+                                value={oferta.descuento}
+                                onChange={handleChange}
+                                fullWidth
+                                type="number"
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Enlace"
+                                name="link"
+                                value={oferta.link}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                sx={inputStyles}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Button variant="contained" color="primary" onClick={handleSave}>
+                                {oferta.id ? 'Guardar Cambios' : 'Crear'}
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Editor"
-                            name="editor"
-                            value={oferta.editor}
-                            onChange={handleChange}
-                            fullWidth
-                            required 
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Precio"
-                            name="precio"
-                            value={oferta.precio}
-                            onChange={handleChange}
-                            fullWidth
-                            type="number"
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Descuento"
-                            name="descuento"
-                            value={oferta.descuento}
-                            onChange={handleChange}
-                            fullWidth
-                            type="number"
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Enlace"
-                            name="link"
-                            value={oferta.link}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button variant="contained" color="primary" onClick={handleSave}>
-                            {oferta.id ? 'Guardar Cambios' : 'Crear'}
-                        </Button>
-                    </Grid>
-                </Grid>
-            </CardContent>
-            <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
-                    {alertMessage}
-                </Alert>
-            </Snackbar>
-        </Box>
+                </CardContent>
+                <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                    <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+                        {alertMessage}
+                    </Alert>
+                </Snackbar>
+            </Box>
+        </Modal>
     );
 };
 

@@ -1,6 +1,6 @@
-// SearchBarForModal.tsx
 import React, { useState, useEffect, useCallback } from "react";
-import { TextField, Autocomplete, Box } from "@mui/material";
+import { TextField, Autocomplete, Button, Box } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { searchGames, getGameDetails, getGameScreenshots } from "./../../../../services/apiRAWG";
 import { Game } from "./dataApi";
 import debounce from 'lodash/debounce';
@@ -92,9 +92,59 @@ const SearchBarForModal: React.FC<SearchBarForModalProps> = ({ onSelectGame }) =
             variant="outlined"
             size="small"
             onKeyDown={handleKeyDown}
+            sx={{
+              "& .MuiInputLabel-root": {
+                color: "white",
+              },
+              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
+                color: "white",
+              },
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "0px",
+                borderBottomLeftRadius: "4px",
+                borderTopLeftRadius: "4px",
+                backgroundColor: "#383446",
+                color: "white",
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#14101F",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#14101F",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1e182e",
+                },
+                "& .MuiAutocomplete-endAdornment": {
+                  "& .MuiSvgIcon-root": {
+                    color: "white",
+                  },
+                },
+              },
+            }}
           />
         )}
       />
+      <Button
+        size="large"
+        variant="contained"
+        onClick={() => {
+          setInputValue('');
+          setOpen(false);
+        }}
+        sx={{
+          backgroundColor: "#14101F",
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+          borderLeft: "none",
+          minWidth: "auto",
+          padding: "8px 8px",
+          "&:hover": {
+            backgroundColor: "#1E192D",
+          },
+        }}
+      >
+        <SearchIcon />
+      </Button>
     </Box>
   );
 };
