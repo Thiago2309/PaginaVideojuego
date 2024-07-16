@@ -12,9 +12,11 @@ import PublicationDetails from "../pages/PublicationDetails/PublicationDetails";
 import PrivateRoute from "./PrivateRoute";
 import AdminPublic from "../pages/Admin/AdminCrud/VideoGame/GameViewCrud";
 import AdminPublicOption from "../pages/Admin/AdminOpcion/AdminPublicNew";
+import AdminPublicOfferts from "../pages/Admin/AdminCrud/Offerts/OffertsViewCrud";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
 import NewsView from "../pages/News/NewsView";
+
 
 const AppRoutes: React.FC = () => {
   return (
@@ -36,6 +38,7 @@ const AppRoutes: React.FC = () => {
           {/* solo para admin */}
           <Route path="/adminpublicoption" element={<AdminPublicOption />} />
           <Route path="/adminpublic" element={<AdminPublic />} />
+          <Route path="/adminpublicOffert" element={<AdminPublicOfferts />} />
         </Routes>
       </AuthProvider>
     </Router>
