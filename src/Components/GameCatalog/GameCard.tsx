@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
@@ -11,9 +11,12 @@ import {
 import { Game } from "../../store/reducers/videojuegosReducer";
 import { useNavigate } from "react-router-dom";
 
-const BannerGame = require.context("../../assets/images/GameCatalog", true);
+const BannerGame = require.context("../../assets/images", true);
+const placeholderImage = BannerGame(`./banner_default.jpg`);
+
 const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
 
   const formattedDate = new Date(game.fecha_Lanzamiento).toLocaleDateString("es-ES", {
     day: "2-digit",
@@ -23,22 +26,24 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   });
 
   const handleCardClick = () => {
-     navigate(`/gamedetails/${game.id}`);
+    navigate(`/gamedetails/${game.id}`);
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   let imagePath = "";
   try {
-    imagePath = BannerGame(`./${game.foto_Url}`);
-    console.log("Imaengenads: ",imagePath)
+    imagePath = imageError ? placeholderImage : BannerGame(`./${game.foto_Url}`);
   } catch (e) {
-    console.error("Error loading image:", e);
-    imagePath = BannerGame(`./Valorant_banner.jpg`); 
+    // console.error("Error loading image:", e);
+    imagePath = placeholderImage;
   }
-  
+
   if (!game || !game.genero) {
     return null; 
   }
-
 
   return (
     <Card
@@ -57,6 +62,7 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
           width="100%"
           image={imagePath}
           alt={game.nombre}
+          onError={handleImageError}
         />
         <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
           <Typography
@@ -104,7 +110,6 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
               />
             ))}
           </Stack>
-
         </CardContent>
       </CardActionArea>
     </Card>

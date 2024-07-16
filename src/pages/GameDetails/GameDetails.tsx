@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Grid, Box, } from "@mui/material";
+import {Grid, Box} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Navegador from "../../layout/Navegador/Navegador";
 import Games from "../../Components/Comments/Game";
 import GameApprobation from "../../Components/Comments/GameApprobation";
 import FooterView from "../../layout/Footer/FooterView";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer"; 
 import { useDispatch, useSelector } from "react-redux";
 import { User } from '../../store/reducers/userReducer';
 import axios from "axios";
 import { RootState } from "../../store/store";
 
-const BannerGame = require.context("../../assets/images/GameCatalog", true);
+const BannerGame = require.context("../../assets/images", true);
 
 const GameDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -23,7 +23,6 @@ const GameDetails: React.FC = () => {
   const handleBackClick = () => {
     navigate("/");
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,16 +35,15 @@ const GameDetails: React.FC = () => {
           const userResponse = await axios.get(`https://localhost:7029/Usuarios/${gameData.userId}`);
           const userData = userResponse.data.result;
           setUser(userData);
-          console.log("Los datos del usuario son: ", userData);
+          // console.log("Los datos del usuario son: ", userData);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
   }, [id]); // Ejecutar el efecto solo cuando cambie el id
-  
   
   if (!game) {
     return <div>Loading...</div>; // Muestra un mensaje de carga mientras se obtienen los datos
@@ -57,14 +55,13 @@ const GameDetails: React.FC = () => {
     timeZone: "UTC",
   });
   
-
   let imagePath = "";
   try {
     imagePath = BannerGame(`./${game.foto_Url}`);
-    console.log("Imaengenads: ",imagePath)
+    // console.log("Imagen:", imagePath);
   } catch (e) {
-    console.error("Error loading image:", e);
-    imagePath = BannerGame(`./Valorant_banner.jpg`); 
+    // console.error("Error loading image:", e);
+    imagePath = BannerGame(`./banner_default.jpg`); 
   }
 
   const selectedGame = {
@@ -79,19 +76,22 @@ const GameDetails: React.FC = () => {
     usuarioNombre: user?.usuarioNombre ?? "Desconocido",
     rolNombre: user?.rol?.nombre ?? "Desconocido",
   };
-  console.log("El id es: ", id)
+  // console.log("El id es: ", id);
 
   return (
     <div>
       <Navegador />
-
       <Box sx={{ flexGrow: 1, p: 3, mx: { xs: 2, sm: 3, md: 5, lg: 4 } }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8}>
-            <Games game={selectedGame} handleBackClick={handleBackClick} />
+            <Box sx={{ height: '100%' }}>
+              <Games game={selectedGame} handleBackClick={handleBackClick} />
+            </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <GameApprobation game={selectedGame} handleBackClick={handleBackClick}/>
+            <Box sx={{ height: '100%' }}>
+              <GameApprobation game={selectedGame} handleBackClick={handleBackClick} />
+            </Box>
           </Grid>
         </Grid>
       </Box>
