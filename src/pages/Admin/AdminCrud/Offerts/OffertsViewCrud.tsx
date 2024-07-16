@@ -11,9 +11,9 @@ import { Comment, ThumbUp, ThumbDown } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Navegador from "../../../../layout/Navegador/Navegador";
 import FooterView from "../../../../layout/Footer/FooterView";
-import VideoGameCrud from "../../../../Components/Admin/Form/VideoGame/VideoGameCrud";
+import OffertsCrud from "../../../../Components/Admin/Form/Offerts/OffertsCrud";
 
-const GameViewCrud: React.FC = () => {
+const OffertsViewCrud: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -32,7 +32,7 @@ const GameViewCrud: React.FC = () => {
       <Box sx={{ flex: '1', p: 3, mx: { xs: 2, sm: 3, md: 5, lg: 4 } }}>
         <Grid>
           <Grid item xs={12} md={4}>
-            <VideoGameCrud />
+            <OffertsCrud />
           </Grid>
         </Grid>
       </Box>
@@ -43,4 +43,4 @@ const GameViewCrud: React.FC = () => {
   );
 };
 
-export default GameViewCrud;
+export default OffertsViewCrud;

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { styled, ButtonBase, Typography, Box } from '@mui/material';
 
 // Importa las imágenes desde tu carpeta de assets
-import img1 from '../../../assets/images/GTA.png';
-import img2 from '../../../assets/images/img2.png';
-import img3 from '../../../assets/images/img1.png'; 
+import img1 from '../../../assets/images/v.jpeg';
+import img2 from '../../../assets/images/ofert.jpg';
+import img3 from '../../../assets/images/Users.jpg';
 
 const images = [
     {
@@ -18,13 +18,13 @@ const images = [
         src: img2,
         title: 'Ofertas',
         width: '40%',
-        link: '/ofertas' // Ruta a la que debe redirigir
+        link: '/adminpublicOffert' // Ruta a la que debe redirigir
     },
     {
         src: img3,
         title: 'Usuarios', // Cambia esto según tu necesidad
         width: '40%',
-        link: '/nuevo' // Ruta a la que debe redirigir
+        link: '/404' // Ruta a la que debe redirigir
     },
 ];
 
@@ -48,19 +48,21 @@ const Image = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',
     height: 200,
     marginBottom: theme.spacing(2),
+    borderRadius: '16px',
+    overflow: 'hidden',
     [theme.breakpoints.down('xs')]: {
         width: '100% !important', // Overrides inline-style
         height: 100,
     },
     '&:hover, &$focusVisible': {
         zIndex: 1,
-        '& $imageBackdrop': {
+        '& $ImageBackdrop': {
             opacity: 0.15,
         },
-        '& $imageMarked': {
+        '& $ImageMarked': {
             opacity: 0,
         },
-        '& $imageTitle': {
+        '& $ImageTitle': {
             border: '4px solid currentColor',
         },
     },
@@ -76,6 +78,7 @@ const ImageSrc = styled('span')({
     backgroundPosition: 'center 40%',
     opacity: 0.3, // Configura la opacidad de la imagen
     zIndex: 1,
+    borderRadius: '16px',
 });
 
 const ImageBackdrop = styled('span')(({ theme }) => ({
@@ -87,6 +90,7 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.common.black,
     opacity: 0.3,
     transition: theme.transitions.create('opacity'),
+    borderRadius: '16px',
 }));
 
 const ImageButton = styled('span')({
@@ -127,7 +131,7 @@ const AdminSelect: React.FC = () => {
         <Root>
             <Box sx={{ textAlign: 'center', mb: 4 }}>
                 <Typography variant="h4" component="h1">
-                    Selecciona el CRUD que deseas editar: VideoJuegos o Ofertas
+                    Selecciona el CRUD
                 </Typography>
             </Box>
             <ImageContainer>
@@ -145,16 +149,15 @@ const AdminSelect: React.FC = () => {
                                 backgroundImage: `url(${image.src})`,
                             }}
                         />
-                        <ImageBackdrop />
+                        <ImageBackdrop className="imageBackdrop" />
                         <ImageButton>
                             <br />
                             <ImageTitle
-                                // component="span"
                                 variant="subtitle1"
                                 color="inherit"
                             >
                                 {image.title}
-                                <ImageMarked />
+                                <ImageMarked className="imageMarked" />
                             </ImageTitle>
                         </ImageButton>
                     </Image>
@@ -175,15 +178,14 @@ const AdminSelect: React.FC = () => {
                                 backgroundImage: `url(${image.src})`,
                             }}
                         />
-                        <ImageBackdrop />
+                        <ImageBackdrop className="imageBackdrop" />
                         <ImageButton>
                             <ImageTitle
-                                // component="span"
                                 variant="subtitle1"
                                 color="inherit"
                             >
                                 {image.title}
-                                <ImageMarked />
+                                <ImageMarked className="imageMarked" />
                             </ImageTitle>
                         </ImageButton>
                     </Image>
