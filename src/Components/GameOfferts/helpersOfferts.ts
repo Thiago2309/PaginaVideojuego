@@ -1,22 +1,22 @@
-// helpers.ts
-import { GameOffert, gamesOfferts } from "./dataOfferts";
+import { GameOffert } from "./dataOfferts"; // Asegúrate de que la ruta es correcta
 
 export const getUniqueOptions = (games: GameOffert[], key: keyof GameOffert) => {
   const options = new Set<string>();
   games.forEach((game) => {
-    if (Array.isArray(game[key])) {
-      (game[key] as string[]).forEach((option) => options.add(option));
-    } else {
-      options.add(game[key] as string);
+    const value = game[key];
+    if (typeof value === "string") {
+      value.split(",").forEach((option) => options.add(option.trim()));
+    } else if (typeof value === "number") {
+      options.add(value.toString());
     }
   });
   return Array.from(options);
 };
 
-export const developersOptions = getUniqueOptions(gamesOfferts, "developers");
-export const categoriesOptions = getUniqueOptions(gamesOfferts, "categories");
-export const platformsOptions = getUniqueOptions(gamesOfferts, "platforms");
-// helpers.ts
+export const developersOptions = (games: GameOffert[]) => getUniqueOptions(games, "desarrollador");
+export const categoriesOptions = (games: GameOffert[]) => getUniqueOptions(games, "genero");
+export const platformsOptions = (games: GameOffert[]) => getUniqueOptions(games, "plataforma");
+
 export const rangesOptions = [
   { title: "Mitico", color: "#800080" }, // Morado
   { title: "Épico", color: "#3CBBF0" }, // Azul diamante
@@ -33,16 +33,6 @@ export const priceOptions = [
   { value: "501-1000", label: "501 - 1000" },
   { value: "1001-", label: "1001 y superior" },
 ];
-
-//poner decimales
-// export const priceOptions = [
-//   { value: "0-50", label: "0 - 50.99" },
-//   { value: "51-100", label: "51 - 100.99" },
-//   { value: "101-200", label: "101 - 200.99" },
-//   { value: "201-500", label: "201 - 500.99" },
-//   { value: "501-1000", label: "501 - 1000.99" },
-// ];
-
 
 export const discountOptions = [
   { value: "0-10", label: "0% - 10%" },

@@ -12,6 +12,7 @@ import PublicationDetails from "../pages/PublicationDetails/PublicationDetails";
 import PrivateRoute from "./PrivateRoute";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
+import NewsView from "../pages/News/NewsView";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,14 +24,13 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/gamedetails" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
+          <Route path="/newsgame" element={<NewsView />} />
+          <Route path="/gameofferts/:id" element={<GameOfferts />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
-          <Route
-            path="/publicationdetails/:id"
-            element={<PublicationDetails />}
-          />
+          <Route path="/publicationdetails/:id" element={<PublicationDetails />} />
         </Routes>
       </AuthProvider>
     </Router>

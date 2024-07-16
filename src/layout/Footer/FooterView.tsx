@@ -32,10 +32,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecatalog"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Populares
+            Juegos
           </Link>
             |
         </Grid>
@@ -48,7 +48,7 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gameoffert"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
             Ofertas
@@ -69,10 +69,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/gamecommunity"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Novedades
+            Comunidad
           </Link>
             |
         </Grid>
@@ -93,7 +93,7 @@ const FooterView = () => {
             |
         </Grid>
       </Grid>
-      <Grid container justifyContent="center" alignItems="center" spacing={1} sx={{ textAlign: 'center', display: { xs: 'flex', md: 'none' }, flexDirection: 'column' }}>
+      {/* <Grid container justifyContent="center" alignItems="center" spacing={1} sx={{ textAlign: 'center', display: { xs: 'flex', md: 'none' }, flexDirection: 'column' }}>
         <Grid item>
           <Link
             component={RouterLink}
@@ -127,7 +127,7 @@ const FooterView = () => {
             Nosotros
           </Link>
         </Grid>
-      </Grid>
+      </Grid> */}
       <Grid container justifyContent="center" spacing={2} sx={{ mt: 2 }}>
         <Grid item>
           <Link
