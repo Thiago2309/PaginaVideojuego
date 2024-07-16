@@ -9,25 +9,22 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { Game } from "./data";
+import { Game } from "../../store/reducers/videojuegosReducer";
 import {
   developersOptions,
   categoriesOptions,
   platformsOptions,
-  rangesOptions,
 } from "./helpers";
 
 interface FilterOptionsProps {
   setFilteredGames: (games: Game[]) => void;
-  games: Game[];
+  allGames: Game[];
   selectedDevelopers: string[];
   setSelectedDevelopers: (developers: string[]) => void;
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
   selectedPlatforms: string[];
   setSelectedPlatforms: (platforms: string[]) => void;
-  selectedRanges: string[];
-  setSelectedRanges: (ranges: string[]) => void;
 }
 
 const style = {
@@ -48,56 +45,36 @@ const style = {
 
 const FilterOptions: React.FC<FilterOptionsProps> = ({
   setFilteredGames,
-  games,
+  allGames,
   selectedDevelopers,
   setSelectedDevelopers,
   selectedCategories,
   setSelectedCategories,
   selectedPlatforms,
   setSelectedPlatforms,
-  selectedRanges,
-  setSelectedRanges,
 }) => {
   const [open, setOpen] = useState(false);
 
-  // Estados temporales para los filtros
+  // Temporary states for filters
   const [tempDevelopers, setTempDevelopers] = useState<string[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   const [tempPlatforms, setTempPlatforms] = useState<string[]>([]);
-  const [tempRanges, setTempRanges] = useState<string[]>([]);
 
   useEffect(() => {
-    const filteredGames = games.filter((game) => {
-      return (
-        (selectedDevelopers.length === 0 ||
-          selectedDevelopers.includes(game.developers)) &&
-        (selectedCategories.length === 0 ||
-          selectedCategories.every((category) =>
-            game.categories.includes(category)
-          )) &&
-        (selectedPlatforms.length === 0 ||
-          selectedPlatforms.every((platform) =>
-            game.platforms.includes(platform)
-          )) &&
-        (selectedRanges.length === 0 || selectedRanges.includes(game.ranges))
-      );
+    const filteredGames = allGames.filter((game) => {
+      const matchDevelopers = selectedDevelopers.length === 0 || selectedDevelopers.some((developer) => game.desarrollador.includes(developer));
+      const matchCategories = selectedCategories.length === 0 || selectedCategories.every((category) => game.genero.includes(category));
+      const matchPlatforms = selectedPlatforms.length === 0 || selectedPlatforms.every((platform) => game.plataforma.includes(platform));
+
+      return matchDevelopers && matchCategories && matchPlatforms;
     });
     setFilteredGames(filteredGames);
-  }, [
-    selectedDevelopers,
-    selectedCategories,
-    selectedPlatforms,
-    selectedRanges,
-    setFilteredGames,
-    games,
-  ]);
+  }, [selectedDevelopers, selectedCategories, selectedPlatforms, setFilteredGames, allGames]);
 
   const handleClickOpen = () => {
-    // Establecer los valores temporales a los valores actuales de los filtros
     setTempDevelopers(selectedDevelopers);
     setTempCategories(selectedCategories);
     setTempPlatforms(selectedPlatforms);
-    setTempRanges(selectedRanges);
     setOpen(true);
   };
 
@@ -105,11 +82,9 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Aplicar los filtros temporales a los filtros reales
     setSelectedDevelopers(tempDevelopers);
     setSelectedCategories(tempCategories);
     setSelectedPlatforms(tempPlatforms);
-    setSelectedRanges(tempRanges);
     handleClose();
   };
 
@@ -151,7 +126,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={developersOptions}
+                  options={developersOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
@@ -162,9 +137,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                       size="small"
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -173,27 +146,18 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                             borderColor: "white",
                           },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                          "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": { color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
                     />
                   )}
-                  onChange={(event, newValue) =>
-                    setTempDevelopers(newValue)
-                  }
+                  onChange={(event, newValue) => setTempDevelopers(newValue)}
                   value={tempDevelopers}
                   sx={{
                     width: "100%",
-                    "& .MuiChip-root": {
-                      backgroundColor: "#383446",
-                      color: "white",
-                    },
+                    "& .MuiChip-root": { backgroundColor: "#383446", color: "white" },
                     "& .MuiOutlinedInput-root": { borderRadius: "4px" },
                   }}
                 />
@@ -201,49 +165,37 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={categoriesOptions}
+                  options={categoriesOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Categorias"
+                      label="Categorías"
                       variant="outlined"
                       size="small"
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#A59898",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                            borderColor: "white" },
+                          "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": { color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
                     />
                   )}
-                  onChange={(event, newValue) =>
-                    setTempCategories(newValue)
-                  }
+                  onChange={(event, newValue) => setTempCategories(newValue)}
                   value={tempCategories}
                   sx={{
                     width: "100%",
-                    "& .MuiChip-root": {
-                      backgroundColor: "#383446",
-                      color: "white",
-                    },
+                    "& .MuiChip-root": { backgroundColor: "#383446", color: "white" },
                     "& .MuiOutlinedInput-root": { borderRadius: "4px" },
                   }}
                 />
@@ -251,7 +203,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={platformsOptions}
+                  options={platformsOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
@@ -262,23 +214,16 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                       size="small"
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#A59898",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                            borderColor: "white" },
+                          "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": { color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -288,88 +233,29 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                   value={tempPlatforms}
                   sx={{
                     width: "100%",
-                    "& .MuiChip-root": {
-                      backgroundColor: "#383446",
-                      color: "white",
-                    },
-                    "& .MuiOutlinedInput-root": { borderRadius: "4px" },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  multiple
-                  options={rangesOptions}
-                  getOptionLabel={(option) => option.title}
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Rangos"
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          color: "white",
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#A59898",
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
-                        },
-                      }}
-                    />
-                  )}
-                  onChange={(event, newValue) =>
-                    setTempRanges(newValue.map((item) => item.title))
-                  }
-                  value={rangesOptions.filter((option) =>
-                    tempRanges.includes(option.title)
-                  )}
-                  renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        {...getTagProps({ index })}
-                        key={option.title}
-                        style={{
-                          backgroundColor: option.color,
-                          color: "white",
-                        }}
-                        label={option.title}
-                      />
-                    ))
-                  }
-                  sx={{
-                    width: "100%",
-                    "& .MuiChip-root": { color: "white" },
+                    "& .MuiChip-root": { backgroundColor: "#383446", color: "white" },
                     "& .MuiOutlinedInput-root": { borderRadius: "4px" },
                   }}
                 />
               </Grid>
             </Grid>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-            <Button onClick={handleClose} variant="contained" color="error">
+          <Box
+            mt={2}
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ gap: "10px" }}
+          >
+            <Button
+              type="button"
+              onClick={handleClose}
+              variant="contained"
+              color="error"
+            >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              sx={{ ml: 2 }}
-              variant="contained"
-              color="primary"
-            >
-              Aceptar
+            <Button type="submit" variant="contained" color="primary">
+              Aplicar
             </Button>
           </Box>
         </Box>

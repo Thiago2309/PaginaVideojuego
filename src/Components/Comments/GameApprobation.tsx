@@ -88,10 +88,10 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
         backgroundColor: "#1C172B",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: '100%',
       }}
     >
-      <CardContent sx={{ padding: 4 }}>
+      <CardContent sx={{ padding: 4, flexGrow: 1 }}>
         <Typography
           variant="h4"
           component="div"

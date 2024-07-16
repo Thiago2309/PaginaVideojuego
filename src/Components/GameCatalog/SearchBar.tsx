@@ -4,10 +4,10 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
-import { Game } from "./data"; // Importa tu interfaz de Game aquí
+import { Game } from "../../store/reducers/videojuegosReducer";
 
 const filter = createFilterOptions<Game>({
-  stringify: (option) => option.title,
+  stringify: (option) => option.nombre,
 });
 
 interface SearchBarProps {
@@ -23,18 +23,17 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
 
   const handleSearch = () => {
     if (!inputValue) {
-      setFilteredGames(games); // Si no hay valor en el input, muestra todos los juegos
-    } else if (value && value.title) {
-      setFilteredGames([value]); // Filtra los juegos mostrando solo el juego seleccionado
+      setFilteredGames(games);
+    } else if (value && value.nombre) {
+      setFilteredGames([value]);
     } else {
       const filteredGames = games.filter((game) =>
-        game.title && game.title.toLowerCase().includes(inputValue.toLowerCase())
+        game.nombre && game.nombre.toLowerCase().includes(inputValue.toLowerCase())
       );
-      setFilteredGames(filteredGames); // Filtra los juegos por el término de búsqueda
+      setFilteredGames(filteredGames);
     }
     setSearchTerm(inputValue);
   };
-  
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -43,52 +42,46 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
   };
 
   return (
-    <Box
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
-          setValue(newValue as Game); // Asigna el nuevo valor solo si es del tipo Game
+          setValue(newValue as Game);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue);
           if (newInputValue === "") {
-            setValue(null); // Reinicia el valor si el input está vacío
+            setValue(null);
           }
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-        
           const { inputValue } = params;
           const isExisting = options.some(
-            (option) => inputValue === option.title
+            (option) => inputValue === option.nombre
           );
           if (inputValue !== "" && !isExisting) {
             filtered.push({
-              title: inputValue,
-            } as Game); // Asegura que el nuevo objeto sea del tipo Game
+              nombre: inputValue,
+            } as Game);
           }
-        
           return filtered;
         }}
-        
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={games} // Usa tus juegos aquí
+        options={games}
         getOptionLabel={(option) => {
-          // Asegura que TypeScript entiende que `option` es del tipo `Game`
           if (typeof option === "string") {
             return option;
           }
-          return option.title;
+          return option.nombre;
         }}
         renderOption={(props, option) => (
-          <li {...props} key={option.title}>
-            {typeof option === "string" ? option : option.title}
+          <li {...props} key={option.nombre}>
+            {typeof option === "string" ? option : option.nombre}
           </li>
         )}
         sx={{ width: 300 }}
@@ -101,12 +94,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
             size="small"
             onKeyDown={handleKeyDown}
             sx={{
-              "& .MuiInputLabel-root": {
-                color: "white",
-              },
-              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                color: "white",
-              },
+              "& .MuiInputLabel-root": { color: "white" },
+              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
               "& .MuiOutlinedInput-root": {
                 borderRadius: "0px",
                 borderBottomLeftRadius: "4px",
@@ -122,10 +111,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#1e182e",
                 },
-                "& .MuiAutocomplete-endAdornment": {
-                  "& .MuiSvgIcon-root": {
-                    color: "white",
-                  },
+                "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
+                  color: "white",
                 },
               },
             }}

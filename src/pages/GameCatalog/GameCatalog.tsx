@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
+import SearchBar from "../../Components/GameCatalog/SearchBar";
+import FilterOptions from "../../Components/GameCatalog/FilterOptions";
 import SortOptions from "../../Components/GameCatalog/SortOptions";
 import Navegador from "../../layout/Navegador/Navegador";
 import FooterView from "../../layout/Footer/FooterView";
@@ -9,23 +11,28 @@ import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { RootState } from "../../store/store";
-import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer"; 
+import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer";
 
 const GameCatalog: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [sort, setSort] = useState<string>("nombre-asc");
+  const [filteredGames, setFilteredGames] = useState<Game[]>([]);
+  const [selectedDevelopers, setSelectedDevelopers] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
 
   const dispatch = useDispatch();
   const games = useSelector((state: RootState) => state.videojuegos.games);
   const loading = useSelector((state: RootState) => state.videojuegos.loading);
   const error = useSelector((state: RootState) => state.videojuegos.error);
-  const [filteredGames, setFilteredGames] = useState<Game[]>(games);
+
   useEffect(() => {
     const fetchGames = async () => {
       try {
         dispatch(fetchGamesStart());
         const response = await axios.get("https://localhost:7029/Videojuegos/ObtenerVideojuegos");
         dispatch(fetchGamesSuccess(response.data.result));
-      } catch (error:any) {
+      } catch (error: any) {
         dispatch(fetchGamesFailure(error.message));
       }
     };
@@ -33,19 +40,27 @@ const GameCatalog: React.FC = () => {
     fetchGames();
   }, [dispatch]);
 
+  useEffect(() => {
+    setFilteredGames(games);
+  }, [games]);
+
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     navigate("/");
   };
 
-  const sortedGames = [...games].sort((a, b) => {
+  const searchedGames = filteredGames.filter(
+    (game) => game.nombre && game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedGames = searchedGames.sort((a, b) => {
     const [key, order] = sort.split("-");
     let comparison = 0;
 
     if (key === "nombre") {
       comparison = a.nombre.localeCompare(b.nombre);
-    } else if (key === "fecha_lanzamiento") {
+    } else if (key === "fecha_Lanzamiento") {
       comparison = new Date(a.fecha_Lanzamiento).getTime() - new Date(b.fecha_Lanzamiento).getTime();
     } else if (key === "calificacion") {
       comparison = a.calificacion - b.calificacion;
@@ -79,7 +94,26 @@ const GameCatalog: React.FC = () => {
             md={6}
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
-            {/* Aquí puedes agregar tus componentes de búsqueda y filtro si es necesario */}
+            <Box sx={{ minWidth: "200px" }}>
+              <SearchBar
+                games={games}
+                setFilteredGames={setFilteredGames}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+              />
+            </Box>
+            <Box sx={{ ml: 1, mt: { sm: 0 } }}>
+              <FilterOptions
+                setFilteredGames={setFilteredGames}
+                allGames={games}
+                selectedDevelopers={selectedDevelopers}
+                setSelectedDevelopers={setSelectedDevelopers}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                selectedPlatforms={selectedPlatforms}
+                setSelectedPlatforms={setSelectedPlatforms}
+              />
+            </Box>
           </Grid>
           <Grid
             item
