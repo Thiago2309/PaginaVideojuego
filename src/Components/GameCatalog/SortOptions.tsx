@@ -14,7 +14,6 @@ interface SortOptionsProps {
 }
 
 const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
-  
   return (
     <Box display="flex" alignItems="center" sx={{ maxWidth: "100%" }}>
       <Typography
@@ -25,8 +24,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          maxWidth: "100px", // Ajusta este valor según sea necesario
-          // display: { xs: 'none', md: 'block' } // Ocultar en modo móvil
+          maxWidth: "100px",
         }}
       >
         Ordenar por
@@ -35,25 +33,25 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
         variant="outlined"
         size="small"
         sx={{
-          minWidth: "150px", // Establece un ancho mínimo para el Select
-          maxWidth: "200px", // Establece un ancho máximo para el Select
+          minWidth: "150px",
+          maxWidth: "200px",
           "& .MuiOutlinedInput-input": {
-            whiteSpace: "normal !important", // Forzar whiteSpace: normal
+            whiteSpace: "normal !important",
           },
           "& .MuiOutlinedInput-root": {
-            color: "white", // Color del texto
+            color: "white",
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white", // Color del borde al pasar el mouse
+              borderColor: "white",
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white", // Color del borde cuando está enfocado
+              borderColor: "white",
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white", // Color del borde por defecto
+              borderColor: "white",
             },
           },
           "& .MuiSvgIcon-root": {
-            color: "white", // Color de la flecha
+            color: "white",
           },
         }}
       >
@@ -62,77 +60,77 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           onChange={(e: SelectChangeEvent) => setSort(e.target.value as string)}
           displayEmpty
           sx={{
-            maxWidth: "100%", // Asegura que el contenido del select no desborde su contenedor
-            whiteSpace: "normal", // Forzar whiteSpace: normal
+            maxWidth: "100%",
+            whiteSpace: "normal",
           }}
           MenuProps={{
             PaperProps: {
               sx: {
-                maxWidth: "200px", // Ancho máximo del menú desplegable
-                overflowWrap: "break-word", // Permite que el texto largo se ajuste
+                maxWidth: "200px",
+                overflowWrap: "break-word",
               },
             },
           }}
         >
           <MenuItem
-            value="title-asc"
+            value="nombre-asc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
-            Título A-Z
+            Nombre A-Z
           </MenuItem>
           <MenuItem
-            value="title-desc"
+            value="nombre-desc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
-            Título Z-A
+            Nombre Z-A
           </MenuItem>
           <MenuItem
-            value="releaseDate-asc"
+            value="fecha_Lanzamiento-asc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
             Fecha Ascendente
           </MenuItem>
           <MenuItem
-            value="releaseDate-desc"
+            value="fecha_Lanzamiento-desc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
             Fecha Descendente
           </MenuItem>
           <MenuItem
-            value="likes-asc"
+            value="calificacion-asc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
-            Likes Ascendente
+            Calificación Ascendente
           </MenuItem>
           <MenuItem
-            value="likes-desc"
+            value="calificacion-desc"
             sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
+              whiteSpace: "normal",
               wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
+              maxWidth: "200px",
             }}
           >
-            Likes Descendente
+            Calificación Descendente
           </MenuItem>
         </Select>
       </FormControl>
