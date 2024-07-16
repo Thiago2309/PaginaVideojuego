@@ -85,10 +85,10 @@ const FooterView = () => {
         >
           <Link
             component={RouterLink}
-            to="#"
+            to="/newsgame"
             sx={{ color: '#d6dfed', textDecoration: 'none', mx: 1 }}
           >
-            Nosotros
+            Noticias
           </Link>
             |
         </Grid>
