@@ -12,6 +12,8 @@ import PublicationDetails from "../pages/PublicationDetails/PublicationDetails";
 import PrivateRoute from "./PrivateRoute";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
+import Nosotros from "../Components/AboutUs/Nosotros";
+import Error404 from "../Components/HttpHandler/404";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -31,6 +33,8 @@ const AppRoutes: React.FC = () => {
             path="/publicationdetails/:id"
             element={<PublicationDetails />}
           />
+          <Route path="/404" element={<Error404 />} />
+          <Route path="/nosotros" element={<Nosotros />} />
         </Routes>
       </AuthProvider>
     </Router>

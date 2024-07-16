@@ -10,7 +10,8 @@ import { Link as RouterLink } from 'react-router-dom';
 const pages = [
   { name: 'Populares', path: '/populares' },
   { name: 'Novedades', path: '/novedades' },
-  { name: 'Ofertas', path: '/ofertas' }
+  { name: 'Ofertas', path: '/ofertas' },
+  { name: 'Nosotros', path: '/nosotros' },
 ];
 
 const settings = [
