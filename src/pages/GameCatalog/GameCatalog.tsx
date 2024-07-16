@@ -1,24 +1,37 @@
-// GameCatalog.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import SearchBar from "../../Components/GameCatalog/SearchBar";
-import FilterOptions from "../../Components/GameCatalog/FilterOptions";
 import SortOptions from "../../Components/GameCatalog/SortOptions";
 import Navegador from "../../layout/Navegador/Navegador";
 import FooterView from "../../layout/Footer/FooterView";
 import { useNavigate } from "react-router-dom";
 import GameCard from "../../Components/GameCatalog/GameCard";
-import { games as initialGames, Game } from "../../Components/GameCatalog/data";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { RootState } from "../../store/store";
+import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer"; 
 
 const GameCatalog: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredGames, setFilteredGames] = useState<Game[]>(initialGames);
-  const [sort, setSort] = useState<string>("title-asc");
-  const [selectedDevelopers, setSelectedDevelopers] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-  const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
+  const [sort, setSort] = useState<string>("nombre-asc");
+
+  const dispatch = useDispatch();
+  const games = useSelector((state: RootState) => state.videojuegos.games);
+  const loading = useSelector((state: RootState) => state.videojuegos.loading);
+  const error = useSelector((state: RootState) => state.videojuegos.error);
+  const [filteredGames, setFilteredGames] = useState<Game[]>(games);
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        dispatch(fetchGamesStart());
+        const response = await axios.get("https://localhost:7029/Videojuegos/ObtenerVideojuegos");
+        dispatch(fetchGamesSuccess(response.data.result));
+      } catch (error:any) {
+        dispatch(fetchGamesFailure(error.message));
+      }
+    };
+
+    fetchGames();
+  }, [dispatch]);
 
   const navigate = useNavigate();
 
@@ -26,34 +39,20 @@ const GameCatalog: React.FC = () => {
     navigate("/");
   };
 
-  const searchedGames = filteredGames.filter(
-    (game) =>
-      game.title && game.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const sortedGames = searchedGames.sort((a, b) => {
+  const sortedGames = [...games].sort((a, b) => {
     const [key, order] = sort.split("-");
     let comparison = 0;
 
-    if (key === "title") {
-      comparison = a.title.localeCompare(b.title);
-    } else if (key === "releaseDate") {
-      comparison =
-        new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
-    } else if (key === "likes") {
-      comparison = a.likes - b.likes;
+    if (key === "nombre") {
+      comparison = a.nombre.localeCompare(b.nombre);
+    } else if (key === "fecha_lanzamiento") {
+      comparison = new Date(a.fecha_Lanzamiento).getTime() - new Date(b.fecha_Lanzamiento).getTime();
+    } else if (key === "calificacion") {
+      comparison = a.calificacion - b.calificacion;
     }
 
     return order === "asc" ? comparison : -comparison;
   });
-
-  const handleFilteredGames = (games: Game[]) => {
-    if (games.length === 0) {
-      setFilteredGames([]);
-    } else {
-      setFilteredGames(games);
-    }
-  };
 
   return (
     <Grid>
@@ -80,28 +79,7 @@ const GameCatalog: React.FC = () => {
             md={6}
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
-            <Box sx={{ minWidth: "200px" }}>
-              <SearchBar
-                games={initialGames}
-                setFilteredGames={setFilteredGames}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-              />
-            </Box>
-            <Box sx={{ ml: 1, mt: { sm: 0 } }}>
-              <FilterOptions
-                setFilteredGames={handleFilteredGames}
-                games={initialGames}
-                selectedDevelopers={selectedDevelopers}
-                setSelectedDevelopers={setSelectedDevelopers}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-                selectedPlatforms={selectedPlatforms}
-                setSelectedPlatforms={setSelectedPlatforms}
-                selectedRanges={selectedRanges}
-                setSelectedRanges={setSelectedRanges}
-              />
-            </Box>
+            {/* Aquí puedes agregar tus componentes de búsqueda y filtro si es necesario */}
           </Grid>
           <Grid
             item
@@ -143,7 +121,7 @@ const GameCatalog: React.FC = () => {
             {sortedGames.map((game) => (
               <Grid
                 item
-                key={game.id || game.title}
+                key={game.id || game.nombre}
                 xs={6}
                 sm={3}
                 md={3}
