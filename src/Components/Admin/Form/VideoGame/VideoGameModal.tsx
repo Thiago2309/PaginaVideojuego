@@ -97,17 +97,18 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
-            label="Nombre *"
+            label="Nombre"
             name="nombre"
             value={videojuego.nombre}
             onChange={handleChange}
             fullWidth
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Descripción *"
+            label="Descripción"
             name="descripcion"
             value={videojuego.descripcion}
             onChange={handleChange}
@@ -115,6 +116,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
             multiline
             rows={2}
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -129,32 +131,35 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="URL de la Foto *"
+            label="URL de la Foto"
             name="foto_Url"
             value={videojuego.foto_Url}
             onChange={handleChange}
             fullWidth
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Género *"
+            label="Género"
             name="genero"
             value={videojuego.genero}
             onChange={handleChange}
             fullWidth
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Plataforma *"
+            label="Plataforma"
             name="plataforma"
             value={videojuego.plataforma}
             onChange={handleChange}
             fullWidth
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -170,22 +175,24 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Desarrollador *"
+            label="Desarrollador"
             name="desarrollador"
             value={videojuego.desarrollador}
             onChange={handleChange}
             fullWidth
             required
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Editor *"
+            label="Editor"
             name="editor"
             value={videojuego.editor}
             onChange={handleChange}
             fullWidth
-            required
+            required 
+            sx={{ '& .MuiFormLabel-asterisk': { color: 'red' } }}
           />
         </Grid>
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
