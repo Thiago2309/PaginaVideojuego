@@ -14,6 +14,7 @@ import AdminPublic from "../pages/Admin/AdminCrud/VideoGame/GameViewCrud";
 import AdminPublicOption from "../pages/Admin/AdminOpcion/AdminPublicNew";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
+import NewsView from "../pages/News/NewsView";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,8 +24,10 @@ const AppRoutes: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/gamedetails" element={<GameDetails />} />
+          <Route path="/gamedetails/:id" element={<GameDetails />} />
           <Route path="/gameofferts" element={<GameOfferts />} />
+          <Route path="/newsgame" element={<NewsView />} />
+          <Route path="/gameofferts/:id" element={<GameOfferts />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />

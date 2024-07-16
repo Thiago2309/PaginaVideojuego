@@ -4,31 +4,41 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  Chip,
   CardActionArea,
   Stack,
+  Chip,
 } from "@mui/material";
-import { Game } from "./data";
+import { Game } from "../../store/reducers/videojuegosReducer";
 import { useNavigate } from "react-router-dom";
 
+const BannerGame = require.context("../../assets/images/GameCatalog", true);
 const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   const navigate = useNavigate();
 
-  // Asegurarse de que la fecha se interprete correctamente
-  const formattedDate = new Date(game.releaseDate).toLocaleDateString("es-ES", {
+  const formattedDate = new Date(game.fecha_Lanzamiento).toLocaleDateString("es-ES", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    timeZone: "UTC", // Esto asegura que la fecha se mantenga en UTC
+    timeZone: "UTC",
   });
 
   const handleCardClick = () => {
-    navigate("/gamedetails");
+     navigate(`/gamedetails/${game.id}`);
   };
 
-  if (!game || !game.categories) {
-    return null; // Maneja el caso donde el juego o sus categorías son undefined
+  let imagePath = "";
+  try {
+    imagePath = BannerGame(`./${game.foto_Url}`);
+    console.log("Imaengenads: ",imagePath)
+  } catch (e) {
+    console.error("Error loading image:", e);
+    imagePath = BannerGame(`./Valorant_banner.jpg`); 
   }
+  
+  if (!game || !game.genero) {
+    return null; 
+  }
+
 
   return (
     <Card
@@ -45,8 +55,8 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
           component="img"
           height="300"
           width="100%"
-          image={game.image}
-          alt={game.title}
+          image={imagePath}
+          alt={game.nombre}
         />
         <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
           <Typography
@@ -62,14 +72,14 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
               marginBottom: 0,
             }}
           >
-            {game.title}
+            {game.nombre} {/* Mostrar el nombre del juego */}
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
           >
-            {game.likes} k les gusta
+            Lanzamiento: {formattedDate}
           </Typography>
           <Stack
             direction="row"
@@ -79,10 +89,10 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
               marginTop: 1,
             }}
           >
-            {game.categories.map((category) => (
+            {game.genero.split(',').map((genero, index) => (
               <Chip
-                key={category}
-                label={category}
+                key={index}
+                label={genero.trim()}
                 color="primary"
                 size="small"
                 sx={{
@@ -94,6 +104,7 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
               />
             ))}
           </Stack>
+
         </CardContent>
       </CardActionArea>
     </Card>

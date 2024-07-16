@@ -14,14 +14,14 @@ import {
   developersOptions,
   categoriesOptions,
   platformsOptions,
-  rangesOptions,
+  // rangesOptions,
   priceOptions,
   discountOptions,
 } from "./helpersOfferts";
 
 interface FilterOptionsProps {
   setFilteredGames: (games: GameOffert[]) => void;
-  games: GameOffert[];
+  allGames: GameOffert[];
   selectedDevelopers: string[];
   setSelectedDevelopers: (developers: string[]) => void;
   selectedCategories: string[];
@@ -54,7 +54,7 @@ const style = {
 
 const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   setFilteredGames,
-  games,
+  allGames,
   selectedDevelopers,
   setSelectedDevelopers,
   selectedCategories,
@@ -74,7 +74,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   const [tempDevelopers, setTempDevelopers] = useState<string[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   const [tempPlatforms, setTempPlatforms] = useState<string[]>([]);
-  const [tempRanges, setTempRanges] = useState<string[]>([]);
+  // const [tempRanges, setTempRanges] = useState<string[]>([]);
   const [tempPrice, setTempPrice] = useState<
     { value: string; label: string }[]
   >([]);
@@ -83,46 +83,44 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   >([]);
 
   useEffect(() => {
-    const filteredGames = games.filter((game) => {
+    const filteredGames = allGames.filter((game) => {
       const matchDevelopers =
         selectedDevelopers.length === 0 ||
-        selectedDevelopers.includes(game.developers);
+        selectedDevelopers.includes(game.desarrollador);
       const matchCategories =
         selectedCategories.length === 0 ||
         selectedCategories.every((category) =>
-          game.categories.includes(category)
+          game.genero.includes(category)
         );
       const matchPlatforms =
         selectedPlatforms.length === 0 ||
         selectedPlatforms.every((platform) =>
-          game.platforms.includes(platform)
+          game.plataforma.includes(platform)
         );
-      const matchRanges =
-        selectedRanges.length === 0 || selectedRanges.includes(game.ranges);
+      // const matchRanges =
+      //   selectedRanges.length === 0 || selectedRanges.includes(game.rango); // Ajusta si es necesario
       const matchPrice =
         selectedPrice.length === 0 ||
         selectedPrice.some((priceRange) => {
-          // const [min, max] = priceRange .value.split("-").map(Number);
-          // return game.price >= min && game.price <= max + 0.99;
           if (priceRange.value === "1001-") {
-            return game.price >= 1001;
+            return game.precio >= 1001;
           } else {
             const [min, max] = priceRange.value.split('-').map(Number);
-            return game.price >= min && game.price <= max + 0.99;
+            return game.precio >= min && game.precio <= max + 0.99;
           }
         });
       const matchDiscount =
         selectedDiscount.length === 0 ||
         selectedDiscount.some((discountRange) => {
           const [min, max] = discountRange.value.split("-").map(Number);
-          return game.discount >= min && game.discount <= max;
+          return game.descuento >= min && game.descuento <= max;
         });
 
       return (
         matchDevelopers &&
         matchCategories &&
         matchPlatforms &&
-        matchRanges &&
+        // matchRanges &&
         matchPrice &&
         matchDiscount
       );
@@ -132,18 +130,18 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     selectedDevelopers,
     selectedCategories,
     selectedPlatforms,
-    selectedRanges,
+    // selectedRanges,
     selectedPrice,
     selectedDiscount,
     setFilteredGames,
-    games,
+    allGames,
   ]);
 
   const handleClickOpen = () => {
     setTempDevelopers(selectedDevelopers);
     setTempCategories(selectedCategories);
     setTempPlatforms(selectedPlatforms);
-    setTempRanges(selectedRanges);
+    // setTempRanges(selectedRanges);
     setTempPrice(selectedPrice);
     setTempDiscount(selectedDiscount);
     setOpen(true);
@@ -156,7 +154,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     setSelectedDevelopers(tempDevelopers);
     setSelectedCategories(tempCategories);
     setSelectedPlatforms(tempPlatforms);
-    setSelectedRanges(tempRanges);
+    // setSelectedRanges(tempRanges);
     setSelectedPrice(tempPrice);
     setSelectedDiscount(tempDiscount);
     handleClose();
@@ -200,7 +198,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={developersOptions}
+                  options={developersOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
@@ -248,7 +246,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={categoriesOptions}
+                  options={categoriesOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
@@ -296,7 +294,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={platformsOptions}
+                  options={platformsOptions(allGames)}
                   getOptionLabel={(option) => option}
                   filterSelectedOptions
                   renderInput={(params) => (
@@ -308,8 +306,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
                         "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                          color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -322,8 +319,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                             borderColor: "white",
                           },
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                            color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -341,7 +337,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Autocomplete
                   multiple
                   options={rangesOptions}
@@ -401,7 +397,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                     "& .MuiOutlinedInput-root": { borderRadius: "4px" },
                   }}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
@@ -417,8 +413,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
                         "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                          color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -431,8 +426,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                             borderColor: "white",
                           },
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                            color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -465,8 +459,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
                         "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white",
-                        },
+                          color: "white" },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -479,8 +472,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                             borderColor: "white",
                           },
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white",
-                          },
+                            color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}

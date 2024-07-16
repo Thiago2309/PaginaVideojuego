@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import SearchBarOff from "../../Components/GameOfferts/SearchBarOffert";
+import SearchBarOff from "../../Components/GameOfferts/SearchBarOff";
 import FilterOptionsOff from "../../Components/GameOfferts/FilterOptionsOffert";
 import SortOptionsOff from "../../Components/GameOfferts/SortOptionsOffert";
 import Navegador from "../../layout/Navegador/Navegador";
 import FooterView from "../../layout/Footer/FooterView";
 import { useNavigate } from "react-router-dom";
 import GameCardOff from "../../Components/GameOfferts/GameCardOffert";
-import { gamesOfferts as initialGames, GameOffert } from "../../Components/GameOfferts/dataOfferts";
+import { GameOffert } from "../../Components/GameOfferts/dataOfferts";
+import { getOfertas } from "../../services/api";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
 
 interface PriceOption {
@@ -22,7 +23,8 @@ interface DiscountOption {
 
 const GameOfferts: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredGames, setFilteredGames] = useState<GameOffert[]>(initialGames);
+  const [allGames, setAllGames] = useState<GameOffert[]>([]);
+  const [filteredGames, setFilteredGames] = useState<GameOffert[]>([]);
   const [sort, setSort] = useState<string>("title-asc");
   const [selectedDevelopers, setSelectedDevelopers] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -33,13 +35,27 @@ const GameOfferts: React.FC = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getOfertas();
+      const dataWithLikes = data.map((game: GameOffert) => ({
+        ...game,
+        likes: Math.floor(Math.random() * 1000), // Asigna un valor estático o aleatorio a likes
+      }));
+      setAllGames(dataWithLikes);
+      setFilteredGames(dataWithLikes);
+    };
+
+    fetchData();
+  }, []);
+
   const handleBackClick = () => {
     navigate("/");
   };
 
   const searchedGames = filteredGames.filter(
     (game) =>
-      game.title && game.title.toLowerCase().includes(searchTerm.toLowerCase())
+      game.nombre && game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedGames = searchedGames.sort((a, b) => {
@@ -47,27 +63,23 @@ const GameOfferts: React.FC = () => {
     let comparison = 0;
 
     if (key === "title") {
-      comparison = a.title.localeCompare(b.title);
+      comparison = a.nombre.localeCompare(b.nombre);
     } else if (key === "releaseDate") {
       comparison =
-        new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
-    } else if (key === "likes") {
-      comparison = a.likes - b.likes;
+        new Date(a.fecha_Lanzamiento).getTime() - new Date(b.fecha_Lanzamiento).getTime();
     } else if (key === "discount") {
-      comparison = a.discount - b.discount;
+      comparison = a.descuento - b.descuento;
     } else if (key === "price") {
-      comparison = a.price - b.price;
+      comparison = a.precio - b.precio;
+    } else if (key === "likes") {
+      comparison = (a.likes || 0) - (b.likes || 0); // Usar un valor por defecto para likes
     }
 
     return order === "asc" ? comparison : -comparison;
   });
 
   const handleFilteredGames = (games: GameOffert[]) => {
-    if (games.length === 0) {
-      setFilteredGames([]);
-    } else {
-      setFilteredGames(games);
-    }
+    setFilteredGames(games);
   };
 
   return (
@@ -97,16 +109,16 @@ const GameOfferts: React.FC = () => {
           >
             <Box sx={{ minWidth: "200px" }}>
               <SearchBarOff
-                games={initialGames}
+                games={allGames}
                 setFilteredGames={setFilteredGames}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
               />
             </Box>
             <Box sx={{ ml: 1, mt: { sm: 0 } }}>
-              <FilterOptionsOff
+            <FilterOptionsOff
                 setFilteredGames={handleFilteredGames}
-                games={initialGames}
+                allGames={allGames}
                 selectedDevelopers={selectedDevelopers}
                 setSelectedDevelopers={setSelectedDevelopers}
                 selectedCategories={selectedCategories}
@@ -162,7 +174,7 @@ const GameOfferts: React.FC = () => {
             {sortedGames.map((game) => (
               <Grid
                 item
-                key={game.id || game.title}
+                key={game.id || game.nombre}
                 xs={6}
                 sm={3}
                 md={3}
