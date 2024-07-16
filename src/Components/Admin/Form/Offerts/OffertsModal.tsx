@@ -94,14 +94,14 @@ const OffertsModal: React.FC<OffertsFormProps> = ({ initialData, onClose, setOfe
             editor: '',
             precio: deal.normalPrice,
             descuento: deal.salePrice,
-            link: `https://www.cheapshark.com/redirect?dealID=${deal.dealID}`,
+            link: https://www.cheapshark.com/redirect?dealID=${deal.dealID},
         }));
         fetchRAWGData(deal.title); // Llama a RAWG para obtener más detalles
     }, [fetchRAWGData]);
 
     const handleEdit = useCallback(async () => {
         try {
-            const response = await axios.put(`${API_URL_UPDATE}/${oferta.id}`, oferta);
+            const response = await axios.put(${API_URL_UPDATE}/${oferta.id}, oferta);
             const updatedOferta = response.data;
             setOfertas(ofertas.map(o => (o.id === oferta.id ? updatedOferta : o)));
             setAlertMessage('¡Oferta Editada exitosamente!');
@@ -285,7 +285,7 @@ const OffertsModal: React.FC<OffertsFormProps> = ({ initialData, onClose, setOfe
                               }}                        >
                             {offers.map((offer) => (
                                 <MenuItem key={offer.dealID} value={offer.dealID}>
-                                    {`${offer.title} - ${offer.storeName} - $${offer.salePrice.toFixed(2)} (Normal Price: $${offer.normalPrice.toFixed(2)}) - ${((1 - offer.salePrice / offer.normalPrice) * 100).toFixed(2)}% off`}
+                                    {${offer.title} - ${offer.storeName} - $${offer.salePrice.toFixed(2)} (Normal Price: $${offer.normalPrice.toFixed(2)}) - ${((1 - offer.salePrice / offer.normalPrice) * 100).toFixed(2)}% off}
                                 </MenuItem>
                             ))}
                         </Select>
