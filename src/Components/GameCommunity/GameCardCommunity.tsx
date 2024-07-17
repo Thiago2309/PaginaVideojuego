@@ -19,33 +19,31 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
 import { Publicacion, LikeDislike } from "../../store/reducers/PublicaionesReducer";
 import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store/store';
 const defaultUserIcon = "path/to/default/user/icon.png";
 
 const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
   const navigate = useNavigate();
-  console.log(publicacion)
-  console.log("ASDASD: ", publicacion.likesDislikes)
-// Likes
-  const initialLikes = Array.isArray(publicacion.likesDislikes)
-  ? publicacion.likesDislikes.filter((ld) => ld.like === "L").length
-  : 0;
-  const [likes, setLikes] = useState<number>(initialLikes);
-  const [liked, setLiked] = useState<boolean>(false);
-  console.log(initialLikes)
-  // Dislikes
-  const initialDislikes = Array.isArray(publicacion.likesDislikes)
-  ? publicacion.likesDislikes.filter((ld) => ld.like === "D").length
-  : 0;
-  const [dislikes, setDislikes] = useState<number>(initialDislikes);
-  const [disliked, setDisliked] = useState<boolean>(false);
-
-  // Comments
-  const initialComments = Array.isArray(publicacion.comentarios)
-  ? publicacion.comentarios.length
-  : 0;
-  const [commentsCount, setCommentsCount] = useState<number>(initialComments);
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number>(1);
+  const [userName, setUserName] = useState<string>("");
+
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7029/Usuarios/${publicacion.userId}`);
+        const usuarioNombre = response.data.result.usuarioNombre;
+        console.log("Nombre completo del usuario:", usuarioNombre);
+        setUserName(usuarioNombre);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
+
+    fetchUserName();
+  }, [publicacion.userId]);
 
   const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString(
     "es-ES",
@@ -57,51 +55,12 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
     }
   );
   
-  useEffect(() => {
-    setLikes(initialLikes);
-    setDislikes(initialDislikes);
-    setCommentsCount(initialComments);
-  }, [publicacion, initialLikes, initialDislikes, initialComments]);
 
+  
   const handleCardClick = () => {
     navigate(`/publicationdetails/${publicacion.id}`);
   };
 
-  const handleLike = async () => {
-    try {
-      const response = await axios.post(`https://localhost:7029/LikesDislikes/like/${publicacion.id}`, { like: "L" });
-      const updatedLikesDislikes: LikeDislike[] = response.data;
-      const newLikes = updatedLikesDislikes.filter((ld) => ld.like === "L").length;
-      setLikes(newLikes);
-      setLiked(true);
-
-      // Update dislikes count if necessary
-      if (disliked) {
-        setDisliked(false);
-        setDislikes(updatedLikesDislikes.filter((ld) => ld.like === "D").length);
-      }
-    } catch (error) {
-      console.error("Error liking publication:", error);
-    }
-  };
-
-  const handleDislike = async () => {
-    try {
-      const response = await axios.post(`https://localhost:7029/LikesDislikes/dislike/${publicacion.id}`, { like: "D" });
-      const updatedLikesDislikes: LikeDislike[] = response.data;
-      const newDislikes = updatedLikesDislikes.filter((ld) => ld.like === "D").length;
-      setDislikes(newDislikes);
-      setDisliked(true);
-
-      // Update likes count if necessary
-      if (liked) {
-        setLiked(false);
-        setLikes(updatedLikesDislikes.filter((ld) => ld.like === "L").length);
-      }
-    } catch (error) {
-      console.error("Error disliking publication:", error);
-    }
-  };
 
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -143,9 +102,9 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                 alt="User Icon"
                 sx={{ width: 30, height: 30, mr: 1 }}
               />
-              {/* <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
-                Publicado por {publicacion.authors} el {formattedDate}
-              </Typography> */}
+              <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
+              Publicado por {userName} el {formattedDate}
+              </Typography> 
             </Box>
             <Typography
               gutterBottom
@@ -184,7 +143,7 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                   overflow: "hidden",
                 }}
               >
-                {imageLoaded && (
+                {/* {imageLoaded && (
                   <Box
                     sx={{
                       position: "absolute",
@@ -200,7 +159,7 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                       display: "block",
                     }}
                   />
-                )}
+                )} */}
                 <CardMedia
                   component="img"
                   image={publicacion.imagen}
@@ -235,7 +194,7 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
             justifyContent={{ xs: "center", sm: "space-between" }}
             sx={{ width: { xs: "100%", sm: "auto" } }}
           >
-            <Chip
+            {/* <Chip
               icon={
                 <IconButton
                   onClick={(e) => {
@@ -277,8 +236,8 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                 marginRight: { xs: 0, sm: 1 },
                 "& .MuiChip-icon": { marginLeft: 0 },
               }}
-            />
-            <Chip
+            /> */}
+            {/* <Chip
               icon={
                 <IconButton sx={{ color: "white" }}>
                   <CommentIcon />
@@ -295,7 +254,7 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                 height: 40,
                 "& .MuiChip-icon": { marginLeft: 0 },
               }}
-            />
+            /> */}
           </Box>
         </CardActions>
       </Card>
