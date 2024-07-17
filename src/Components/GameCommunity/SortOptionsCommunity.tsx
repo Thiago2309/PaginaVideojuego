@@ -114,26 +114,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
           >
             Fecha Descendente
           </MenuItem>
-          <MenuItem
-            value="likes-asc"
-            sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
-              wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
-            }}
-          >
-            Likes Ascendente
-          </MenuItem>
-          <MenuItem
-            value="likes-desc"
-            sx={{
-              whiteSpace: "normal", // Forzar whiteSpace: normal
-              wordBreak: "break-word",
-              maxWidth: "200px", // Ajusta este valor según sea necesario
-            }}
-          >
-            Likes Descendente
-          </MenuItem>
+
         </Select>
       </FormControl>
     </Box>

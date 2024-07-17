@@ -9,6 +9,7 @@ import GameCatalog from "../pages/GameCatalog/GameCatalog";
 import GameOffert from "../pages/GameOfferts/GameOfferts";
 import GameCommunity from "../pages/GameCommunity/GameCommunity";
 import PublicationDetails from "../pages/PublicationDetails/PublicationDetails";
+import NotFound from "../pages/NotFound/NotFounf";
 import PrivateRoute from "./PrivateRoute";
 import AdminPublic from "../pages/Admin/AdminCrud/VideoGame/GameViewCrud";
 import AdminPublicOption from "../pages/Admin/AdminOpcion/AdminPublicNew";
@@ -16,9 +17,13 @@ import AdminPublicOfferts from "../pages/Admin/AdminCrud/Offerts/OffertsViewCrud
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
 import NewsView from "../pages/News/NewsView";
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../../src/store/store';
 
 const AppRoutes: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user); 
+  const isAdmin = user.fkRol === 1; // Verifica si el rol es administrador
+  
   return (
     <Router>
       <AuthProvider>
@@ -35,10 +40,17 @@ const AppRoutes: React.FC = () => {
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
           <Route path="/publicationdetails/:id" element={<PublicationDetails />} />
-          {/* solo para admin */}
-          <Route path="/adminpublicoption" element={<AdminPublicOption />} />
-          <Route path="/adminpublic" element={<AdminPublic />} />
-          <Route path="/adminpublicOffert" element={<AdminPublicOfferts />} />
+          
+          {/* Rutas solo para administradores */}
+          {isAdmin && (
+            <>
+              <Route path="/adminpublicoption" element={<AdminPublicOption />} />
+              <Route path="/adminpublic" element={<AdminPublic />} />
+              <Route path="/adminpublicOffert" element={<AdminPublicOfferts />} />
+            </>
+          )}
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </Router>

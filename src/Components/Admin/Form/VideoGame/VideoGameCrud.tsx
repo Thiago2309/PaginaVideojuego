@@ -9,7 +9,6 @@ import {
     IconButton,
     TextField,
     InputAdornment,
-    Modal,
     Snackbar,
     Alert,
     Typography,
@@ -17,6 +16,7 @@ import {
     useTheme,
 } from '@mui/material';
 import Swal from 'sweetalert2'; 
+import Modal from "@mui/material/Modal";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Add, Edit, Delete, Search } from '@mui/icons-material';
 import VideoGameModal from '../VideoGame/VideoGameModal';
