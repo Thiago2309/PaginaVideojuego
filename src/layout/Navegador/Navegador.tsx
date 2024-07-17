@@ -16,7 +16,7 @@ const pages = [
 ];
 
 const settings = [
-  { name: 'Perfil', path: '/profile' },
+  // { name: 'Perfil', path: '/profile' },
   { name: 'Cerrar Sesión', path: '/' }
 ];
 
