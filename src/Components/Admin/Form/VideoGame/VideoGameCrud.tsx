@@ -9,12 +9,14 @@ import {
     IconButton,
     TextField,
     InputAdornment,
-    Modal,
     Snackbar,
     Alert,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import Swal from 'sweetalert2'; 
+import Modal from "@mui/material/Modal";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Add, Edit, Delete, Search } from '@mui/icons-material';
 import VideoGameModal from '../VideoGame/VideoGameModal';
@@ -32,6 +34,10 @@ const Community: React.FC = () => {
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // hook para conocer la medida de la pantalla
+    const isTablet = useMediaQuery(theme.breakpoints.down('md')); // hook para conocer la medida de la pantalla en tablets
 
     const fetchData = async () => {
         try {
@@ -93,14 +99,14 @@ const Community: React.FC = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, eliminarlo!'
         }).then((result) => {
-            // if (result.isConfirmed) {
-            //     handleDelete(id); 
-            //     Swal.fire(
-            //         'Eliminado!',
-            //         'El videojuego ha sido eliminado.',
-            //         'success'
-            //     );
-            // }
+            if (result.isConfirmed) {
+                handleDelete(id); 
+                Swal.fire(
+                    'Eliminado!',
+                    'El videojuego ha sido eliminado.',
+                    'success'
+                );
+            }
         });
     };
 
@@ -113,43 +119,61 @@ const Community: React.FC = () => {
         setAlertOpen(false);
     };
 
-    const columns: GridColDef[] = [
-        { field: 'id', headerName: 'Id', width: 40 },
-        { field: 'nombre', headerName: 'Nombre', width: 200 },
-        { field: 'descripcion', headerName: 'Descripción', width: 150 },
-        { field: 'calificacion', headerName: 'Calificación', width: 70 },
-        { field: 'foto_url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
-            <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
-        )},
-        { field: 'genero', headerName: 'Género', width: 120 },
-        { field: 'plataforma', headerName: 'Plataforma', width: 150 },
-        { field: 'fecha_lanzamiento', headerName: 'Lanzamiento', width: 150, renderCell: (params: GridRenderCellParams) => (
-            new Date(params.value).toLocaleDateString()
-        )},
-        { field: 'desarrollador', headerName: 'Desarrollador', width: 150 },
-        { field: 'editor', headerName: 'Editor', width: 150 },
-        {
-            field: 'acciones', headerName: 'Acciones', width: 150, renderCell: (params: GridRenderCellParams) => (
-                <Box>
-                    <IconButton onClick={() => handleEdit(params.row as VideoGame)} color="primary">
-                        <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteConfirmation(params.row.id)} color='error'>
-                        <Delete />
-                    </IconButton>
-                </Box>
-            )
-        },
-    ];
+    const columns: GridColDef[] = isMobile
+        ? [
+            { field: 'id', headerName: 'Id', width: 80 },
+            { field: 'nombre', headerName: 'Nombre', width: 150 },
+            {
+                field: 'acciones', headerName: 'Acciones', width: 150, renderCell: (params: GridRenderCellParams) => (
+                    <Box>
+                        <IconButton onClick={() => handleEdit(params.row as VideoGame)} color="primary">
+                            <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteConfirmation(params.row.id)} color='error'>
+                            <Delete />
+                        </IconButton>
+                    </Box>
+                )
+            },
+        ]
+        : [
+            { field: 'id', headerName: 'Id', width: 80 },
+            { field: 'nombre', headerName: 'Nombre', width: 160 },
+            { field: 'descripcion', headerName: 'Descripción', width: 140 },
+            { field: 'calificacion', headerName: 'Cali', width: 90 },
+            { field: 'foto_url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
+                <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
+            )},
+            { field: 'genero', headerName: 'Género', width: 120 },
+            { field: 'plataforma', headerName: 'Plataforma', width: 150 },
+            { field: 'fecha_Lanzamiento', headerName: 'Lanzamiento', width: 150, renderCell: (params: GridRenderCellParams) => (
+                new Date(params.value).toLocaleDateString()
+            )},
+            { field: 'desarrollador', headerName: 'Desarrollador', width: 150 },
+            { field: 'editor', headerName: 'Editor', width: 150 },
+            {
+                field: 'acciones', headerName: 'Acciones', width: 150, renderCell: (params: GridRenderCellParams) => (
+                    <Box>
+                        <IconButton onClick={() => handleEdit(params.row as VideoGame)} color="primary">
+                            <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteConfirmation(params.row.id)} color='error'>
+                            <Delete />
+                        </IconButton>
+                    </Box>
+                )
+            },
+        ];
 
     return (
         <Box sx={{ width: '100%', mx: 'auto', mt: 4 }}>
             <Card sx={{ mt: 4 }}>
                 <CardHeader
                     title="Lista de Videojuegos"
-                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between' }}
+                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row' }}
                     action={
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', p: 2 , m: 2 }}>
+
                             <TextField
                                 placeholder="Buscar..."
                                 value={searchTerm}
@@ -162,19 +186,18 @@ const Community: React.FC = () => {
                                         </InputAdornment>
                                     ),
                                 }}
-                                sx={{ mr: 2 }}
+                                sx={{ mr: isMobile ? 0 : 2, mb: isMobile ? 2 : 0 }}
                             />
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', textAlign: 'left' }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary" 
-                                    startIcon={<Add />}
-                                    onClick={handleAdd}
-                                    size="small"
-                                >
-                                    Nuevo
-                                </Button>
-                            </Box>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<Add />}
+                                onClick={handleAdd}
+                                size="small"
+                                sx={{ width: isMobile ? '100%' : 'auto' }}
+                            >
+                                Nuevo
+                            </Button>
                         </Box>
                     }
                 />
@@ -189,7 +212,7 @@ const Community: React.FC = () => {
                                 },
                             },
                         }}
-                        pageSizeOptions={[10,25,50]}
+                        pageSizeOptions={[10, 25, 50]}
                         autoHeight
                         sx={{
                             '& .MuiDataGrid-columnHeaders': {
@@ -209,7 +232,7 @@ const Community: React.FC = () => {
                                 backgroundColor: '#d1d9ff', // Color de fondo para la fila seleccionada
                             },
                             '& .MuiDataGrid-row.Mui-selected:hover': {
-                                backgroundColor: '#c0c8ff', // Color de fondo al pasar el cursor sobre la fila seleccionada
+                                backgroundColor: '#bec9ff', // Color de fondo para la fila seleccionada al pasar el cursor
                             },
                         }}
                     />

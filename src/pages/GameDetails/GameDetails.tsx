@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Grid, Box, } from "@mui/material";
+import {Grid, Box} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Navegador from "../../layout/Navegador/Navegador";
 import Games from "../../Components/Comments/Game";
 import GameApprobation from "../../Components/Comments/GameApprobation";
 import FooterView from "../../layout/Footer/FooterView";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer"; 
 import { useDispatch, useSelector } from "react-redux";
 import { User } from '../../store/reducers/userReducer';
 import axios from "axios";
 import { RootState } from "../../store/store";
 
-const BannerGame = require.context("../../assets/images/GameCatalog", true);
+const BannerGame = require.context("../../assets/images", true);
 
 const GameDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -23,7 +23,6 @@ const GameDetails: React.FC = () => {
   const handleBackClick = () => {
     navigate("/");
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,16 +35,15 @@ const GameDetails: React.FC = () => {
           const userResponse = await axios.get(`https://localhost:7029/Usuarios/${gameData.userId}`);
           const userData = userResponse.data.result;
           setUser(userData);
-          console.log("Los datos del usuario son: ", userData);
+          // console.log("Los datos del usuario son: ", userData);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
   }, [id]);
-  
   
   if (!game) {
     return <div>Loading...</div>; 
@@ -57,7 +55,6 @@ const GameDetails: React.FC = () => {
     timeZone: "UTC",
   });
   
-
   const imagePath = game.foto_Url;
 
   const selectedGame = {
@@ -76,14 +73,17 @@ const GameDetails: React.FC = () => {
   return (
     <div>
       <Navegador />
-
       <Box sx={{ flexGrow: 1, p: 3, mx: { xs: 2, sm: 3, md: 5, lg: 4 } }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8}>
-            <Games game={selectedGame} handleBackClick={handleBackClick} />
+            <Box sx={{ height: '100%' }}>
+              <Games game={selectedGame} handleBackClick={handleBackClick} />
+            </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <GameApprobation game={selectedGame} handleBackClick={handleBackClick}/>
+            <Box sx={{ height: '100%' }}>
+              <GameApprobation game={selectedGame} handleBackClick={handleBackClick} />
+            </Box>
           </Grid>
         </Grid>
       </Box>
