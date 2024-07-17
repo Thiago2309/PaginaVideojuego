@@ -139,7 +139,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
               }}
               dangerouslySetInnerHTML={{ __html: communitygame.description }}
             />
-            {communitygame.image && (
+            {/* {communitygame.image && (
               <Box
                 sx={{
                   position: "relative",
@@ -183,7 +183,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                   }}
                 />
               </Box>
-            )}
+            )} */}
           </CardContent>
         </CardActionArea>
         <CardActions
@@ -202,7 +202,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
             justifyContent={{ xs: "center", sm: "space-between" }}
             sx={{ width: { xs: "100%", sm: "auto" } }}
           >
-            <Chip
+            {/* <Chip
               icon={
                 <IconButton
                   onClick={(e) => {
@@ -278,7 +278,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 },
               }}
               onClick={(e) => e.stopPropagation()}
-            />
+            /> */}
           </Box>
         </CardActions>
       </Card>
