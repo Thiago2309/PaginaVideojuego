@@ -44,11 +44,11 @@ const GameDetails: React.FC = () => {
     };
 
     fetchData();
-  }, [id]); // Ejecutar el efecto solo cuando cambie el id
+  }, [id]);
   
   
   if (!game) {
-    return <div>Loading...</div>; // Muestra un mensaje de carga mientras se obtienen los datos
+    return <div>Loading...</div>; 
   }
   const formattedDate = new Date(game.fecha_Lanzamiento).toLocaleDateString("es-ES", {
     day: "2-digit",
@@ -58,14 +58,7 @@ const GameDetails: React.FC = () => {
   });
   
 
-  let imagePath = "";
-  try {
-    imagePath = BannerGame(`./${game.foto_Url}`);
-    console.log("Imaengenads: ",imagePath)
-  } catch (e) {
-    console.error("Error loading image:", e);
-    imagePath = BannerGame(`./Valorant_banner.jpg`); 
-  }
+  const imagePath = game.foto_Url;
 
   const selectedGame = {
     nombre: game.nombre,
@@ -79,7 +72,6 @@ const GameDetails: React.FC = () => {
     usuarioNombre: user?.usuarioNombre ?? "Desconocido",
     rolNombre: user?.rol?.nombre ?? "Desconocido",
   };
-  console.log("El id es: ", id)
 
   return (
     <div>

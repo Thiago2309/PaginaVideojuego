@@ -67,7 +67,7 @@ const Publications: React.FC= () => {
           toolbar: [
             ["bold", "italic", "underline", "strike"],
             [{ list: "ordered" }, { list: "bullet" }],
-            ["link", "image"],
+            ["link"],
             ["clean"],
           ],
         },

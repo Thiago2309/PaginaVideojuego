@@ -45,23 +45,12 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
     fetchUserName();
   }, [publicacion.userId]);
 
-  const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString(
-    "es-ES",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    }
-  );
-  
-
-  
-  const handleCardClick = () => {
-    navigate(`/publicationdetails/${publicacion.id}`);
-  };
-
-
+  const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageLoaded(true);
@@ -84,7 +73,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
         }}
       >
         <CardActionArea
-          onClick={handleCardClick}
           sx={{ position: "relative", zIndex: 1 }}
         >
           <CardContent

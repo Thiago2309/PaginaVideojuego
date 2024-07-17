@@ -44,27 +44,13 @@ const GameCommunity: React.FC = () => {
         const response = await axios.get("https://localhost:7029/Publicaciones/ObtenerPublicaciones");
         const publicacionData: Publicacion[] = response.data.result;
         dispatch(fetchPublicacionesSuccess(publicacionData));
-        await Promise.all(
-          publicacionData.map(async (publicacion: Publicacion) => {
-            try {
-              const comentariosResponse = await axios.get(`https://localhost:7029/Comentarios/ByPublicacionId/${publicacion.id}`);
-              const comentarios = comentariosResponse.data;
-              dispatch(updateComentarios({ id: publicacion.id, comentarios }));
-              const likesDislikesResponse = await axios.get(`https://localhost:7029/LikesDislikes/GetLikesDislikesByPublicacionId/${publicacion.id}`);
-              const likesDislikes = likesDislikesResponse.data;
-              dispatch(updateLikesDislikes({ id: publicacion.id, likesDislikes }));
-            } catch (error) {
-              console.error(`Error fetching data for publication ${publicacion.id}:`, error);
-            }
-          })
-        );
       } catch (error: any) {
         dispatch(fetchPublicacionesFailure(error.message));
       }
     };
 
     fetchPublicaciones();
-  }, [dispatch]);
+  }, [publicaciones]);
 
   // const handleSearch = (searchTerm: string) => {
   //   const results = communitygame.filter((communitygame) =>
