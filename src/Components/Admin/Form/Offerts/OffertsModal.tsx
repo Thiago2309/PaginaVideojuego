@@ -42,6 +42,7 @@ const OffertsModal: React.FC<OffertsFormProps> = ({ initialData, onClose, setOfe
     useEffect(() => {
         if (initialData) {
             setOferta(initialData);
+            setPreviewImage(initialData.foto_Url);  // Mostrar la imagen inicial si está disponible
         }
     }, [initialData]);
 

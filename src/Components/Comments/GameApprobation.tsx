@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
-import EA_Studio from "../../assets/images/GameDetails/Icon_desarrolladores/EA_Studio.png";
-import PlayStation from "../../assets/images/GameDetails/Plataformas/PlayStation.jpg";
-import Windows from "../../assets/images/GameDetails/Plataformas/Windows.png";
-import Xbox from "../../assets/images/GameDetails/Plataformas/Xbox.jpg";
-import Movil from "../../assets/images/GameDetails/Plataformas/Movil.jpg";
+import defaultImage from "../../assets/images/GameCatalog/Platforms/defaultPlatformImage.png"; // Imagen por defecto
+// Importar imágenes de las plataformas
+import Android from "../../assets/images/GameCatalog/Platforms/Android.jpg";
+import GameCube from "../../assets/images/GameCatalog/Platforms/GameCube.jpg";
+import iOS from "../../assets/images/GameCatalog/Platforms/iOS.jpg";
+import Linux from "../../assets/images/GameCatalog/Platforms/Linux.png";
+import macOS from "../../assets/images/GameCatalog/Platforms/macOS.png";
+import Movil from "../../assets/images/GameCatalog/Platforms/Movil.png";
+import NES from "../../assets/images/GameCatalog/Platforms/NES.png";
+import NintendoSwitch from "../../assets/images/GameCatalog/Platforms/NintendoSwitch.png";
+import PC from "../../assets/images/GameCatalog/Platforms/PC.jpg";
+import PlayStation from "../../assets/images/GameCatalog/Platforms/PlayStation.jpg";
+import PlayStation2 from "../../assets/images/GameCatalog/Platforms/PlayStation2.png";
+import PlayStation3 from "../../assets/images/GameCatalog/Platforms/PlayStation3.jpg";
+import PlayStation4 from "../../assets/images/GameCatalog/Platforms/PlayStation4.jpg";
+import PlayStation5 from "../../assets/images/GameCatalog/Platforms/PlayStation5.jpg";
+import PSP from "../../assets/images/GameCatalog/Platforms/PSP.png";
+import SNES from "../../assets/images/GameCatalog/Platforms/SNES.png";
+import Wii from "../../assets/images/GameCatalog/Platforms/Wii.jpg";
+import Xbox360 from "../../assets/images/GameCatalog/Platforms/Xbox360.png";
+import XboxOne from "../../assets/images/GameCatalog/Platforms/XboxOne.png";
+import XboxSeriesSX from "../../assets/images/GameCatalog/Platforms/XboxSeriesSX.png";
+import Xbox from "../../assets/images/GameCatalog/Platforms/Xbox.png";
 
 interface GameProps {
   game: {
@@ -12,7 +30,7 @@ interface GameProps {
     desarollador: string;
     calificacion: number;
     fecha_Lanzamiento: string;
-    plataforma: string;
+    plataforma: string[];
     genero: string[];
     description: string;
     foto_Url: string;
@@ -23,26 +41,37 @@ interface GameProps {
 }
 
 const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
-  const [plataformaImage, setPlataformaImage] = useState<string>("");
+  const [plataformaImages, setPlataformaImages] = useState<string[]>([]);
   const [ratingColor, setRatingColor] = useState<string>("#ffffff");
 
   useEffect(() => {
-    switch (game.plataforma.toUpperCase()) {
-      case "PC":
-        setPlataformaImage(Windows);
-        break;
-      case "XBOX":
-        setPlataformaImage(Xbox);
-        break;
-      case "PLAYSTATION":
-        setPlataformaImage(PlayStation);
-        break;
-      case "MOVIL":
-        setPlataformaImage(Movil);
-        break;
-      default:
-        setPlataformaImage("");
-    }
+    const platformImagesMap: { [key: string]: string } = {
+      "ANDROID": Android,
+      "GAMECUBE": GameCube,
+      "IOS": iOS,
+      "LINUX": Linux,
+      "MAC": macOS,
+      "MACOS": macOS,
+      "MOVIL": Movil,
+      "NES": NES,
+      "NINTENDO SWITCH": NintendoSwitch,
+      "PC": PC,
+      "PLAYSTATION": PlayStation,
+      "PLAYSTATION 2": PlayStation2,
+      "PLAYSTATION 3": PlayStation3,
+      "PLAYSTATION 4": PlayStation4,
+      "PLAYSTATION 5": PlayStation5,
+      "PSP": PSP,
+      "SNES": SNES,
+      "WII": Wii,
+      "XBOX 360": Xbox360,
+      "XBOX ONE": XboxOne,
+      "XBOX SERIES S/X": XboxSeriesSX,
+      "XBOX": Xbox,
+    };
+
+    const images = game.plataforma.map(platform => platformImagesMap[platform.toUpperCase()] || defaultImage);
+    setPlataformaImages(images);
   }, [game.plataforma]);
 
   useEffect(() => {
@@ -99,20 +128,9 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
         >
           {game.nombre}
         </Typography>
-        <Typography variant="body2" sx={{ color: "#ffffff", fontSize: 12 }}>
+        <Typography variant="body2" sx={{ color: "#ffffff", fontSize: 12, mb: 2 }}>
           {game.desarollador}
-        </Typography>
-        <Avatar
-          src={EA_Studio}
-          sx={{
-            width: 30,
-            height: 30,
-            mt: 1,
-            mb: 2,
-            mx: "auto",
-            borderRadius: "50%",
-          }}
-        />
+        </Typography> 
         <Card sx={{ backgroundColor: "#2C2839", mb: 2 }}>
           <CardContent sx={{ textAlign: "center" }}>
             <Typography variant="h6" sx={{ color: "#ffffff", fontSize: 20 }}>
@@ -160,37 +178,18 @@ const GameApprobation: React.FC<GameProps> = ({ game, handleBackClick }) => {
               Plataformas
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              {plataformaImage && (
+              {plataformaImages.map((image, index) => (
                 <Avatar
-                  src={plataformaImage}
+                  key={index}
+                  src={image}
                   sx={{ width: 60, height: 60, borderRadius: "8px", mx: 1 }}
                 />
-              )}
+              ))}
             </Box>
           </CardContent>
         </Card>
 
         <br />
-
-        <Card sx={{ backgroundColor: "#2C2839", mb: 2 }}>
-          <CardContent>
-            <Typography variant="h6" sx={{ color: "#ffffff", fontSize: 20 }}>
-              Descripción
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mt: 2,
-                color: "#ffffff",
-                textAlign: "left",
-                fontSize: "1.2rem",
-              }}
-            >
-              {game.description}
-            </Typography>
-          </CardContent>
-        </Card>
 
       </CardContent>
     </Card>

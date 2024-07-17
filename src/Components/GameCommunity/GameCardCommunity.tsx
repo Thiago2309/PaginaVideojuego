@@ -163,7 +163,7 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                   }}
                 />
               </Box>
-            )} */}
+            )} 
           </CardContent>
         </CardActionArea>
         <CardActions

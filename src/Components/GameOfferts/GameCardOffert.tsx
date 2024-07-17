@@ -76,13 +76,13 @@ const GameCardOff: React.FC<{ game: GameOffert }> = ({ game }) => {
           >
             {game.nombre}
           </Typography>
-          <Typography
+          {/* <Typography
             variant="body2"
             color="text.secondary"
             sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
           >
             100 k les gusta
-          </Typography>
+          </Typography> */}
           <Typography
             variant="body2"
             color="text.secondary"
