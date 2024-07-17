@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -11,69 +11,50 @@ import {
   Chip,
   CardActions,
 } from "@mui/material";
-import { CommunityGame } from "./dataCommunity";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
-
+import { Publicacion, LikeDislike } from "../../store/reducers/PublicaionesReducer";
+import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store/store';
 const defaultUserIcon = "path/to/default/user/icon.png";
 
-const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
-  communitygame,
-}) => {
+const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
   const navigate = useNavigate();
-  const [likes, setLikes] = useState(communitygame.likes);
-  const [dislikes, setDislikes] = useState(communitygame.dislikes);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageAspectRatio, setImageAspectRatio] = useState(1);
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState<number>(1);
+  const [userName, setUserName] = useState<string>("");
 
-  const formattedDate = new Date(communitygame.releaseDate).toLocaleDateString(
-    "es-ES",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    }
-  );
 
-  const handleCardClick = () => {
-    navigate(`/publicationdetails/${communitygame.id}`);
-  };
-  
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7029/Usuarios/${publicacion.userId}`);
+        const usuarioNombre = response.data.result.usuarioNombre;
+        console.log("Nombre completo del usuario:", usuarioNombre);
+        setUserName(usuarioNombre);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
 
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setDisliked(false);
+    fetchUserName();
+  }, [publicacion.userId]);
 
-    setLikes((prev) => (liked ? prev - 1 : prev + 1));
-    if (disliked) {
-      setDislikes((prev) => prev - 1);
-    }
-  };
+  const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 
-  const handleDislike = () => {
-    setDisliked((prev) => !prev);
-    setLiked(false);
-
-    setDislikes((prev) => (disliked ? prev - 1 : prev + 1));
-    if (liked) {
-      setLikes((prev) => prev - 1);
-    }
-  };
-
-  const handleImageLoad = (
-    event: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageLoaded(true);
-    setImageAspectRatio(
-      event.currentTarget.naturalWidth / event.currentTarget.naturalHeight
-    );
+    setImageAspectRatio(event.currentTarget.naturalWidth / event.currentTarget.naturalHeight);
   };
 
   const isVerticalImage = imageLoaded && imageAspectRatio < 1;
@@ -92,7 +73,6 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
         }}
       >
         <CardActionArea
-          onClick={handleCardClick}
           sx={{ position: "relative", zIndex: 1 }}
         >
           <CardContent
@@ -111,8 +91,8 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 sx={{ width: 30, height: 30, mr: 1 }}
               />
               <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
-                Publicado por {communitygame.authors} el {formattedDate}
-              </Typography>
+              Publicado por {userName} el {formattedDate}
+              </Typography> 
             </Box>
             <Typography
               gutterBottom
@@ -126,7 +106,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 marginBottom: 1,
               }}
             >
-              {communitygame.title}
+              {publicacion.titulo}
             </Typography>
             <Typography
               variant="body2"
@@ -137,9 +117,9 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 fontSize: 18,
                 overflow: "hidden",
               }}
-              dangerouslySetInnerHTML={{ __html: communitygame.description }}
+              dangerouslySetInnerHTML={{ __html: publicacion.descripcion }}
             />
-            {communitygame.image && (
+            {publicacion.imagen && (
               <Box
                 sx={{
                   position: "relative",
@@ -151,7 +131,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                   overflow: "hidden",
                 }}
               >
-                {imageLoaded && (
+                {/* {imageLoaded && (
                   <Box
                     sx={{
                       position: "absolute",
@@ -159,7 +139,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                       left: 0,
                       width: "100%",
                       height: "100%",
-                      backgroundImage: `url(${communitygame.image})`,
+                      backgroundImage: `url(${publicacion.imagen})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       filter: "blur(20px)",
@@ -167,11 +147,11 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                       display: "block",
                     }}
                   />
-                )}
+                )} */}
                 <CardMedia
                   component="img"
-                  image={communitygame.image}
-                  alt={communitygame.title}
+                  image={publicacion.imagen}
+                  alt={publicacion.titulo}
                   onLoad={handleImageLoad}
                   sx={{
                     maxWidth: "100%",
@@ -183,7 +163,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                   }}
                 />
               </Box>
-            )}
+            )} */
           </CardContent>
         </CardActionArea>
         <CardActions
@@ -202,7 +182,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
             justifyContent={{ xs: "center", sm: "space-between" }}
             sx={{ width: { xs: "100%", sm: "auto" } }}
           >
-            <Chip
+            {/* <Chip
               icon={
                 <IconButton
                   onClick={(e) => {
@@ -242,43 +222,27 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 height: 40,
                 marginBottom: { xs: 1, sm: 0 },
                 marginRight: { xs: 0, sm: 1 },
-                "& .MuiChip-icon": {
-                  color: "white",
-                  marginLeft: "10px",
-                  paddingRight: "8px",
-                },
-                "& .MuiChip-label": {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "auto",
-                  paddingLeft: "8px",
-                  paddingRight: "10px",
-                },
+                "& .MuiChip-icon": { marginLeft: 0 },
               }}
-            />
-            <Chip
-              icon={<CommentIcon sx={{ color: "white" }} />}
-              label={`${communitygame.comment}`}
+            /> */}
+            {/* <Chip
+              icon={
+                <IconButton sx={{ color: "white" }}>
+                  <CommentIcon />
+                </IconButton>
+              }
+              label={
+                <Typography variant="body2" sx={{ color: "#fff" }}>
+                  {publicacion.commentsCount}
+                </Typography>
+              }
               sx={{
                 backgroundColor: "#2C2839",
                 color: "#fff",
                 height: 40,
-                marginLeft: { xs: 0, sm: 1 },
-                "& .MuiChip-icon": {
-                  color: "white",
-                  marginLeft: "10px",
-                },
-                "& .MuiChip-label": {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "auto",
-                  paddingRight: "10px",
-                },
+                "& .MuiChip-icon": { marginLeft: 0 },
               }}
-              onClick={(e) => e.stopPropagation()}
-            />
+            /> */}
           </Box>
         </CardActions>
       </Card>

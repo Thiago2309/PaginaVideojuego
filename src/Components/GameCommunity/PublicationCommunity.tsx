@@ -3,44 +3,54 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { Box, Typography, Button, Card, CardContent, Avatar, TextField } from "@mui/material";
 import "../../assets/styles/global.css";
-import { CommunityGame } from "../../Components/GameCommunity/dataCommunity";
+import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from "../../store/store";
+import {
+  fetchPublicacionesStart,
+  fetchPublicacionesSuccess,
+  fetchPublicacionesFailure,
+  updateComentarios,
+  updateLikesDislikes,
+  Publicacion,
+} from "../../store/reducers/PublicaionesReducer";
 
-interface PublicationsProps {
-  onAddPublication: (newPublication: CommunityGame) => void;
-}
-
-const Publications: React.FC<PublicationsProps> = ({ onAddPublication }) => {
+const Publications: React.FC= () => {
+  const dispatch = useDispatch();
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [mostrarEditor, setMostrarEditor] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill | null>(null);
-
+  const user = useSelector((state: RootState) => state.user); 
+  const publicaciones = useSelector((state: RootState) => state.publicaciones.publicaciones);
   const handleTextFieldFocus = () => {
     setMostrarEditor(true);
   };
 
-  const handleAddPublication = () => {
+  const handleAddPublication = async () => {
     if (newTitle.trim() === "" || newContent.trim() === "") return;
 
     const { cleanContent, image } = extractContentAndImage(newContent);
 
-    const newPublication: CommunityGame = {
-      id: Date.now(),
-      title: newTitle,
-      description: cleanContent,
-      authors: "Usuario Predeterminado",
-      releaseDate: new Date().toISOString().split("T")[0],
-      likes: 0,
-      dislikes: 0,
-      comment: 0,
-      image: image,
+    const publicationData = {
+      userId: user.id,
+      titulo: newTitle,
+      descripcion: cleanContent,
+      imagen: image || "", 
+      fechaPublicacion: new Date().toISOString(),
     };
 
-    onAddPublication(newPublication);
-    setNewTitle("");
-    setNewContent("");
-    setMostrarEditor(false);
+    try {
+      await axios.post("https://localhost:7029/Publicaciones/RegistrarPublicacion", publicationData);
+      setNewTitle("");
+      setNewContent("");
+      setMostrarEditor(false);
+      dispatch(fetchPublicacionesStart());
+    } catch (error) {
+      console.error("Error al publicar la publicación:", error);
+    }
+    
   };
 
   const handleCancel = () => {
@@ -57,7 +67,7 @@ const Publications: React.FC<PublicationsProps> = ({ onAddPublication }) => {
           toolbar: [
             ["bold", "italic", "underline", "strike"],
             [{ list: "ordered" }, { list: "bullet" }],
-            ["link", "image"],
+            ["link"],
             ["clean"],
           ],
         },

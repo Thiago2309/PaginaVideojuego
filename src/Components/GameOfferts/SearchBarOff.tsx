@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import { GameOffert } from "./dataOfferts"; // Importa tu interfaz de Game aquí
 
 const filter = createFilterOptions<GameOffert>({
-  stringify: (option) => option.title,
+  stringify: (option) => option.nombre,
 });
 
 interface SearchBarProps {
@@ -24,17 +24,14 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
   const handleSearch = () => {
     if (!inputValue) {
       setFilteredGames(games); // Si no hay valor en el input, muestra todos los juegos
-    } else if (value && value.title) {
-      setFilteredGames([value]); // Filtra los juegos mostrando solo el juego seleccionado
     } else {
       const filteredGames = games.filter((game) =>
-        game.title && game.title.toLowerCase().includes(inputValue.toLowerCase())
+        game.nombre && game.nombre.toLowerCase().includes(inputValue.toLowerCase())
       );
       setFilteredGames(filteredGames); // Filtra los juegos por el término de búsqueda
     }
     setSearchTerm(inputValue);
   };
-  
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -60,20 +57,8 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-        
-          const { inputValue } = params;
-          const isExisting = options.some(
-            (option) => inputValue === option.title
-          );
-          if (inputValue !== "" && !isExisting) {
-            filtered.push({
-              title: inputValue,
-            } as GameOffert); // Asegura que el nuevo objeto sea del tipo Game
-          }
-        
           return filtered;
         }}
-
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
@@ -84,11 +69,11 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
           if (typeof option === "string") {
             return option;
           }
-          return option.title;
+          return option.nombre;
         }}
         renderOption={(props, option) => (
-          <li {...props} key={option.title}>
-            {typeof option === "string" ? option : option.title}
+          <li {...props} key={option.id}>
+            {option.nombre}
           </li>
         )}
         sx={{ width: 300 }}

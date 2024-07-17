@@ -7,11 +7,11 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  CardMedia,
 } from "@mui/material";
-import Footer from '../../layout/Footer/FooterView'
+import Footer from '../../layout/Footer/FooterView';
 import Navegador from '../../layout/Navegador/Navegador';
 import E404 from '../../assets/images/404.jpg';
-
 
 const Error404: React.FC = () => {
   const theme = useTheme();
@@ -24,41 +24,41 @@ const Error404: React.FC = () => {
         container
         justifyContent="center"
         alignItems="center"
-        style={{ minHeight: '80vh' }}
+        style={{ minHeight: '80vh', padding: theme.spacing(3) }}
       >
-        <Card sx={{ backgroundColor: "#1C172B", width: "80%", mt: 2, mb: 2 }}>
-          <CardContent sx={{ padding: isMobile ? 2 : 4 }}>
-            <Grid container alignItems="center" justifyContent="center" direction="column">
-              <Grid item xs={12}>
-                <Typography
-                  variant="h4"
-                  component="div"
-                  sx={{ fontWeight: "bold", color: "#ffffff", textAlign: 'center', fontFamily: "'Press Start 2P', cursive" }}
-                >
-                  ERROR 404
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="center" mt={2}>
-                  <img src={E404} alt="Error 404" style={{ width: isMobile ? '100%' : '30%' }} />
-                </Box>
-              </Grid>
-            </Grid>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mt: 2,
-                color: "#ffffff",
-                textAlign: "center",
-                fontSize: "1.2rem",
-                fontFamily: "'Press Start 2P', cursive"
-              }}
-            >
-              Lo sentimos, la página que estás buscando no existe. Por favor, verifica la URL o regresa a la página principal.
-            </Typography>
-          </CardContent>
-        </Card>
+        <Grid item xs={12} md={6} lg={4} container justifyContent="center">
+          <Card sx={{ backgroundColor: "#1C172B", mb: 2, borderRadius: '50%', overflow: 'hidden' }}>
+            <CardMedia
+              component="img"
+              image={E404}
+              alt="Error 404"
+              sx={{ width: '100%', height: '120%', transform: 'scale(1.2)' }}
+            />
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={8} lg={6}>
+            <CardContent sx={{ padding: isMobile ? 2 : 4 }}>
+              <Typography
+                variant="h4"
+                component="div"
+                sx={{ fontWeight: "bold", color: "#ffffff", textAlign: 'center', fontFamily: "'Press Start 2P', cursive", mb: 2 }}
+              >
+                ERROR 404
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  color: "#ffffff",
+                  textAlign: "center",
+                  fontSize: "1.2rem",
+                  fontFamily: "'Press Start 2P', cursive"
+                }}
+              >
+                Lo sentimos, la página que estás buscando no existe. Por favor, verifica la URL o regresa a la página principal.
+              </Typography>
+            </CardContent>
+        </Grid>
       </Grid>
       <Footer />
     </>

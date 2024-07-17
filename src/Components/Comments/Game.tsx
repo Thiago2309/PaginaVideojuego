@@ -1,62 +1,57 @@
 import React from 'react';
-import { Card, CardContent, Grid, Typography, Button, Box, Chip } from '@mui/material';
-import Battlefield_banner from '../../assets/images/GameDetails/Banner/Battlefield_banner.jpg'; 
+import { Card, CardContent, Grid, Typography, Box, Chip } from '@mui/material';
 
-const Games: React.FC<{ handleBackClick: () => void }> = ({ handleBackClick }) => {
+interface GameProps {
+  game: {
+    nombre: string;
+    fecha_Lanzamiento: string;
+    genero: string[];
+    description: string;
+    foto_Url: string;
+    usuarioNombre: string;
+    rolNombre: string;
+  };
+  handleBackClick: () => void;
+}
+
+const Games: React.FC<GameProps> = ({ game, handleBackClick }) => {
   return (
-    <Card sx={{ backgroundColor: "#1C172B", width: "100%" }}>
-      <CardContent sx={{ padding: 4 }}>
+    <Card sx={{ backgroundColor: "#1C172B", height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ padding: 4, flexGrow: 1 }}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             <Typography variant="h4" component="div" sx={{ fontWeight: "bold", color: "#ffffff" }}>
-              Battlefield
+              {game.nombre}
             </Typography>
           </Grid>
-          {/* <Grid item>
-            <Button variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }} onClick={handleBackClick}>
-              Volver
-            </Button>
-          </Grid> */}
         </Grid>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, color: "#ffffff", textAlign: "left" }}>
-          Publicado el 01 de Enero, 2024 por Admin01
-        </Typography>
+        <CardContent sx={{ display: "flex", justifyContent: "space-between", color: "#ffffff", p: 0, marginTop: 1 }}>
+          <Typography variant="body2" sx={{ fontSize: 14 }}>
+            Fecha de lanzamiento: {game.fecha_Lanzamiento}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: 14 }}>
+            Publicado por: {game.rolNombre}
+          </Typography>
+        </CardContent>
         <Box sx={{ mt: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Chip
-              label="Acción"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-                mr: 1,
-              }}
-            />
-            <Chip
-              label="Disparos"
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#ffffff",
-                borderRadius: 3,
-              }}
-            />
+            {game.genero.map((genre, index) => (
+              <Chip
+                key={index}
+                label={genre}
+                sx={{
+                  backgroundColor: "#2C2839",
+                  color: "#ffffff",
+                  borderRadius: 3,
+                  mr: 1,
+                }}
+              />
+            ))}
           </Box>
         </Box>
         <Box sx={{ mt: 2, borderRadius: 3, overflow: "hidden" }}>
-          <img src={Battlefield_banner} alt="Banner Battlefield" style={{ width: "100%" }} />
+          <img src={game.foto_Url} alt={`foto_Url ${game.nombre}`} style={{ width: "100%" }} />
         </Box>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            mt: 2,
-            color: "#ffffff",
-            textAlign: "left",
-            fontSize: "1.2rem",
-          }}
-        >
-          Battlefield es una aclamada serie de videojuegos de disparos en primera persona desarrollada por DICE y publicada por Electronic Arts. Con un enfoque en batallas multijugador masivas, Battlefield se distingue por su énfasis en la cooperación entre jugadores y la intensidad de las batallas en entornos destructibles. En Battlefield, los jugadores se sumergen en escenarios de guerra moderna o histórica, desde las trincheras de la Primera Guerra Mundial hasta los campos de batalla futuristas. La serie se destaca por su enfoque en vehículos militares, mapas expansivos y la capacidad de alterar el terreno y los edificios mediante el uso de armamento pesado.
-        </Typography>
       </CardContent>
     </Card>
   );

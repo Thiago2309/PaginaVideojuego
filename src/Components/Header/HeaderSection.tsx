@@ -6,8 +6,15 @@ import Button from '@mui/material/Button';
 import img1 from '../../assets/images/controlL.png';
 import ContactSection from '../Contact/ContactSection';
 import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 const HeaderSectionLeft = () => {
+  const user = useSelector((state: RootState) => state.user); 
+  const isLoggedIn = !!user.id;
+  const isAdmin = user.fkRol === 1; // Verifica si el rol es administrador
+  console.log("El user logeado: ", user)
+  console.log("El fkrol es: ",user.fkRol)
   return (
     <Box sx={{ flexGrow: 1, padding: 4, color: 'white', position: 'relative', overflow: 'hidden' }}>
       <Box sx={{ width:'70%', position: 'absolute', top:'-10px', right:'0', display: {md:'none'} }}>
@@ -24,7 +31,7 @@ const HeaderSectionLeft = () => {
           <Box>
             <Typography variant="h3" gutterBottom sx={{ textAlign: 'left', mt: { xs: '80px', sm: '80px', md: 'none' } }}>
               ¡Bienvenidos al Epicentro 
-              de los Videojuegos!
+              de los Videojuegos, {user.usuarioNombre}!
             </Typography>
             <Typography variant="body1" gutterBottom sx={{ textAlign: 'left', justifyContent: { xs: 'none', sm: 'none', md: 'flex-start' } }}>
               Sumérgete en el universo de los videojuegos con las últimas noticias, reseñas y lanzamientos. 
@@ -33,12 +40,21 @@ const HeaderSectionLeft = () => {
             </Typography>
             <br />
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: { xs: 'center', sm: 'flex-start', md: 'flex-start' } }}>
-              <Button component={RouterLink} to="/register" variant="contained" style={{ backgroundColor: '#1AA197', color: 'white' }}>
-                Regístrate
-              </Button>
-              <Button component={RouterLink} to="/login" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
-                Inicio de sesion
-              </Button>
+              {!isLoggedIn && (
+                <>
+                  <Button component={RouterLink} to="/register" variant="contained" style={{ backgroundColor: '#1AA197', color: 'white' }}>
+                    Regístrate
+                  </Button>
+                  <Button component={RouterLink} to="/login" rel="noopener noreferrer" variant="contained" style={{ backgroundColor: '#7289DA', color: 'white' }}>
+                    Inicio de sesión
+                  </Button>
+                </>
+              )}
+              {isAdmin && ( 
+                <Button component={RouterLink} to="/adminpublicoption" variant="contained" sx={{ backgroundColor: "#E10AAB", color: "#ffffff" }}>
+                  Nuevo
+                </Button>
+              )}
             </Box>
             <Box sx={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               {ContactSection()}
