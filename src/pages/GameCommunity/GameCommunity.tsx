@@ -7,7 +7,6 @@ import FooterView from "../../layout/Footer/FooterView";
 import { useNavigate } from "react-router-dom";
 import GameCard from "../../Components/GameCommunity/GameCardCommunity";
 import Publications from "../../Components/GameCommunity/PublicationCommunity";
-import { communitygame, CommunityGame } from "../../Components/GameCommunity/dataCommunity";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -16,15 +15,13 @@ import {
   fetchPublicacionesStart,
   fetchPublicacionesSuccess,
   fetchPublicacionesFailure,
-  updateComentarios,
-  updateLikesDislikes,
   Publicacion,
 } from "../../store/reducers/PublicaionesReducer";
 
 const GameCommunity: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [noResults, setNoResults] = useState(false);
-  const [sort, setSort] = useState<string>("title-asc");
+  const [sort, setSort] = useState<string>("releaseDate-desc");
 
   const dispatch = useDispatch();
   const publicaciones = useSelector((state: RootState) => state.publicaciones.publicaciones);
@@ -37,32 +34,20 @@ const GameCommunity: React.FC = () => {
     navigate("/");
   };
 
+  const fetchPublicaciones = async () => {
+    try {
+      dispatch(fetchPublicacionesStart());
+      const response = await axios.get("https://localhost:7029/Publicaciones/ObtenerPublicaciones");
+      const publicacionData: Publicacion[] = response.data.result;
+      dispatch(fetchPublicacionesSuccess(publicacionData));
+    } catch (error: any) {
+      dispatch(fetchPublicacionesFailure(error.message));
+    }
+  };
+
   useEffect(() => {
-    const fetchPublicaciones = async () => {
-      try {
-        dispatch(fetchPublicacionesStart());
-        const response = await axios.get("https://localhost:7029/Publicaciones/ObtenerPublicaciones");
-        const publicacionData: Publicacion[] = response.data.result;
-        dispatch(fetchPublicacionesSuccess(publicacionData));
-      } catch (error: any) {
-        dispatch(fetchPublicacionesFailure(error.message));
-      }
-    };
-
     fetchPublicaciones();
-  }, [publicaciones]);
-
-  // const handleSearch = (searchTerm: string) => {
-  //   const results = communitygame.filter((communitygame) =>
-  //     communitygame.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   setFilteredCommunityGame(results);
-  //   setNoResults(results.length === 0);
-  // };
-
-  // useEffect(() => {
-  //   setFilteredCommunityGame(communitygame);
-  // }, [communitygame]);
+  }, []);
 
   const sortedCommunityGame = [...publicaciones].sort((a, b) => {
     const [key, order] = sort.split("-");
@@ -71,13 +56,11 @@ const GameCommunity: React.FC = () => {
     if (key === "title") {
       comparison = a.titulo.localeCompare(b.titulo);
     } else if (key === "releaseDate") {
-      comparison = new Date(a.fechaPublicacion).getTime() - new Date(b.fechaPublicacion).getTime();
-    } 
+      comparison = new Date(b.fechaPublicacion).getTime() - new Date(a.fechaPublicacion).getTime();
+    }
 
-    return order === "asc" ? comparison : -comparison;
+    return order === "desc" ? comparison : -comparison;
   });
-
-
 
   return (
     <Grid>
@@ -132,12 +115,12 @@ const GameCommunity: React.FC = () => {
           </Grid>
         </Grid>
 
-         <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Publications  />
+            <Publications onPublicationAdded={fetchPublicaciones} />
           </Grid>
         </Grid>
-        
+
         {noResults && (
           <Box
             display="flex"
