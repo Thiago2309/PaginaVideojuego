@@ -9,51 +9,75 @@ import GameCard from "../../Components/GameCommunity/GameCardCommunity";
 import Publications from "../../Components/GameCommunity/PublicationCommunity";
 import { communitygame, CommunityGame } from "../../Components/GameCommunity/dataCommunity";
 import noResultsImage from "../../assets/images/GameCatalog/noResultsImage.png";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { RootState } from "../../store/store";
+import {
+  fetchPublicacionesStart,
+  fetchPublicacionesSuccess,
+  fetchPublicacionesFailure,
+  updateComentarios,
+  updateLikesDislikes,
+  Publicacion,
+} from "../../store/reducers/PublicaionesReducer";
 
 const GameCommunity: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredCommunityGame, setFilteredCommunityGame] = useState<CommunityGame[]>(communitygame);
   const [noResults, setNoResults] = useState(false);
   const [sort, setSort] = useState<string>("title-asc");
 
+  const dispatch = useDispatch();
+  const publicaciones = useSelector((state: RootState) => state.publicaciones.publicaciones);
+  const loading = useSelector((state: RootState) => state.publicaciones.loading);
+  const error = useSelector((state: RootState) => state.publicaciones.error);
+  const [filteredCommunityGame, setFilteredCommunityGame] = useState<Publicacion[]>(publicaciones);
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     navigate("/");
   };
 
-  const handleSearch = (searchTerm: string) => {
-    const results = communitygame.filter((communitygame) =>
-      communitygame.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCommunityGame(results);
-    setNoResults(results.length === 0);
-  };
-
   useEffect(() => {
-    setFilteredCommunityGame(communitygame);
-  }, [communitygame]);
+    const fetchPublicaciones = async () => {
+      try {
+        dispatch(fetchPublicacionesStart());
+        const response = await axios.get("https://localhost:7029/Publicaciones/ObtenerPublicaciones");
+        const publicacionData: Publicacion[] = response.data.result;
+        dispatch(fetchPublicacionesSuccess(publicacionData));
+      } catch (error: any) {
+        dispatch(fetchPublicacionesFailure(error.message));
+      }
+    };
 
-  const sortedCommunityGame = filteredCommunityGame.sort((a, b) => {
+    fetchPublicaciones();
+  }, [publicaciones]);
+
+  // const handleSearch = (searchTerm: string) => {
+  //   const results = communitygame.filter((communitygame) =>
+  //     communitygame.title.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredCommunityGame(results);
+  //   setNoResults(results.length === 0);
+  // };
+
+  // useEffect(() => {
+  //   setFilteredCommunityGame(communitygame);
+  // }, [communitygame]);
+
+  const sortedCommunityGame = [...publicaciones].sort((a, b) => {
     const [key, order] = sort.split("-");
     let comparison = 0;
 
     if (key === "title") {
-      comparison = a.title.localeCompare(b.title);
+      comparison = a.titulo.localeCompare(b.titulo);
     } else if (key === "releaseDate") {
-      comparison = new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
-    } else if (key === "likes") {
-      comparison = a.likes - b.likes;
-    }
+      comparison = new Date(a.fechaPublicacion).getTime() - new Date(b.fechaPublicacion).getTime();
+    } 
 
     return order === "asc" ? comparison : -comparison;
   });
 
-  // Nueva función para manejar la adición de publicaciones
-  const handleAddPublication = (newPublication: CommunityGame) => {
-    communitygame.push(newPublication);
-    handleSearch(searchTerm); // Actualiza los resultados de búsqueda
-  };
+
 
   return (
     <Grid>
@@ -84,7 +108,7 @@ const GameCommunity: React.FC = () => {
             md={6}
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >
-            <Box sx={{ minWidth: "200px" }}>
+            {/* <Box sx={{ minWidth: "200px" }}>
               <SearchBar
                 communitygame={communitygame}
                 setFilteredCommunityGame={setFilteredCommunityGame}
@@ -92,7 +116,7 @@ const GameCommunity: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setNoResults={setNoResults}
               />
-            </Box>
+            </Box> */}
           </Grid>
           <Grid
             item
@@ -108,9 +132,9 @@ const GameCommunity: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Publications onAddPublication={handleAddPublication} />
+            <Publications  />
           </Grid>
         </Grid>
         
@@ -138,16 +162,16 @@ const GameCommunity: React.FC = () => {
         )}
         {!noResults && sortedCommunityGame.length > 0 && (
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            {sortedCommunityGame.map((communitygame) => (
+            {sortedCommunityGame.map((publicacion) => (
               <Grid
                 item
-                key={communitygame.id || communitygame.title}
+                key={publicacion.id || publicacion.titulo}
                 xs={12}
                 sm={12}
                 md={12}
                 lg={12}
               >
-                <GameCard communitygame={communitygame} />
+                <GameCard publicacion={publicacion} />
               </Grid>
             ))}
           </Grid>
