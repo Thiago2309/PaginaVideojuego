@@ -16,6 +16,8 @@ import AdminPublicOption from "../pages/Admin/AdminOpcion/AdminPublicNew";
 import AdminPublicOfferts from "../pages/Admin/AdminCrud/Offerts/OffertsViewCrud";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AuthProvider } from "../context/AuthContext";
+import Nosotros from "../Components/AboutUs/Nosotros";
+import Error404 from "../Components/HttpHandler/404";
 import NewsView from "../pages/News/NewsView";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../src/store/store';
@@ -39,6 +41,12 @@ const AppRoutes: React.FC = () => {
           <Route path="/gamecatalog" element={<GameCatalog />} />
           <Route path="/gameoffert" element={<GameOffert />} />
           <Route path="/gamecommunity" element={<GameCommunity />} />
+          <Route
+            path="/publicationdetails/:id"
+            element={<PublicationDetails />}
+          />
+          <Route path="/404" element={<Error404 />} />
+          <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/publicationdetails/:id" element={<PublicationDetails />} />
           
           {/* Rutas solo para administradores */}
