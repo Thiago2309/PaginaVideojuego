@@ -1,137 +1,79 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardMedia from "@mui/material/CardMedia";
-import { Skeleton } from "@mui/material";
-import { css, keyframes } from "@emotion/react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Slider from 'react-slick';
+import { Box, Card, CardMedia, Typography } from '@mui/material';
 
 interface Game {
   id: number;
-  name: string;
-  background_image: string;
-  rating: number;
+  descuento: number;
+  foto_Url: string;
 }
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const fadeAnimation = css`
-  animation: ${fadeIn} 8s ease-in-out infinite alternate;
-`;
-
-const GameCard: React.FC<{ game: Game }> = ({ game }) => (
-  <Card
-    sx={{
-      maxWidth: 345,
-      height: 450,
-      margin: "auto",
-      backgroundColor: "transparent",
-      color: "white",
-      boxShadow: "none",
-      borderRadius: "10px",
-      overflow: "hidden",
-      ...fadeAnimation,
-    }}
-  >
-    <CardActionArea
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-      }}
-    >
-      <Typography
-        gutterBottom
-        variant="h6"
-        component="div"
-        sx={{
-          width: "100%",
-          textAlign: "center",
-          color: "black",
-          padding: "8px 0",
-        }}
-      >
-        {game.name}
-      </Typography>
-      <CardMedia
-        component="img"
-        image={game.background_image}
-        alt={game.name}
-        sx={{
-          width: "100%",
-          height: 300,
-          objectFit: "cover",
-          transition: "transform 0.5s ease-in-out",
-          "&:hover": { transform: "scale(1.05)" },
-        }}
-      />
-    </CardActionArea>
-  </Card>
-);
-
-const NewGameSection: React.FC = () => {
+const GameOffers = () => {
   const [games, setGames] = useState<Game[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const apiKey = "f440cc6f53ef461793a6427f1abc6020";
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGames = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          `https://api.rawg.io/api/games?key=${apiKey}`
-        );
-        const shuffledGames = response.data.results
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 3);
-        setGames(shuffledGames);
+        const response = await fetch('https://localhost:7029/Ofertas/ObtenerOfertas');
+        const data = await response.json();
+        if (data.success) {
+          setGames(data.result.map((game: Game) => ({
+            id: game.id,
+            descuento: game.descuento,
+            foto_Url: game.foto_Url
+          })).slice(0, 10));
+        } else {
+          console.error('Failed to fetch games:', data.message);
+          setError('Failed to fetch games');
+        }
       } catch (error) {
-        console.error("Error fetching games:", error);
+        console.error('Error fetching games:', error);
+        setError('Error fetching games');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchGames();
-    const intervalId = setInterval(fetchGames, 8000);
-
-    return () => clearInterval(intervalId);
   }, []);
 
-  if (isLoading) {
-    return <Skeleton variant="rectangular" width="100%" height={200} />;
-  }
+  const handleGameClick = (gameId: number) => {
+    navigate(`/gameofferts/${gameId}`);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4
+  };
+
+  if (isLoading) return <Box>Loading...</Box>;
+  if (error) return <Box>Error: {error}</Box>;
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 4 }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{ textAlign: "center", color: "white", marginBottom: "2rem" }}
-      >
-        Ofertas Especiales
-      </Typography>
-      <Grid container spacing={2} justifyContent="center">
-        {games.map((game) => (
-          <Grid item xs={12} sm={6} md={4} key={game.id}>
-            <GameCard game={game} />
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <Slider {...settings}>
+      {games.map((game) => (
+        <Box key={game.id} onClick={() => handleGameClick(game.id)} sx={{ padding: 1 }}>
+          <Card sx={{background: "none", maxWidth: 345, maxHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: "white" }}>
+            <CardMedia
+              component="img"
+              image={game.foto_Url}
+              alt={`Game ${game.id}`}
+              sx={{ height: 160 }}
+            />
+              <p>{game.descuento + " %"}</p>
+          </Card>
+        </Box>
+      ))}
+    </Slider>
   );
 };
 
-export default NewGameSection;
+export default GameOffers;

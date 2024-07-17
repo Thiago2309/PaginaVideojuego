@@ -1,41 +1,27 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Slider from "react-slick";
-import { Box, Typography } from "@mui/material";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React, { useEffect, useState } from 'react';
+import Slider from 'react-slick'; 
+import Box from '@mui/material/Box'; 
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
 
 interface Game {
-  background_image: string;
-  name: string;
-}
-
-interface Image {
-  src: string;
-  alt: string;
+  id: number;
+  foto_Url: string;
+  nombre: string;
 }
 
 const SliderSection = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const apiKey = "f440cc6f53ef461793a6427f1abc6020";
-    const fetchGames = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.rawg.io/api/games?key=${apiKey}`
-        );
-        const fetchedImages = response.data.results.map((game: Game) => ({
-          src: game.background_image,
-          alt: game.name,
-        }));
-        setImages(fetchedImages);
-      } catch (error) {
-        console.error("Error al cargar las imágenes:", error);
-      }
-    };
-
-    fetchGames();
+    axios.get('https://localhost:7029/Videojuegos/ObtenerVideojuegos')
+      .then((response) => {
+        const shuffledGames = response.data.result.sort(() => 0.5 - Math.random());
+        const selectedGames = shuffledGames.slice(0, 10);
+        setGames(selectedGames);
+      })
+      .catch((error) => console.error('Error fetching games:', error));
   }, []);
 
   const settings = {
@@ -75,15 +61,18 @@ const SliderSection = () => {
     ],
   };
 
+  
+  const handleGameClick = (gameId: string) => {
+    navigate(`/gamedetails/${gameId}`);
+  };
+  
   return (
     <Box sx={{ padding: "23px" }}>
-      <Typography variant="h6" gutterBottom sx={{ textAlign: "left" }}>
-        Más Populares
-      </Typography>
       <Slider {...settings}>
-        {images.map((image, index) => (
+        {games.map((game) => (
           <Box
-            key={index}
+            key={game.id}
+            onClick={() => handleGameClick(game.id.toString())}
             sx={{
               padding: "0 8px",
               margin: "0 8px",
@@ -94,8 +83,8 @@ const SliderSection = () => {
             }}
           >
             <img
-              src={image.src}
-              alt={image.alt}
+              src={game.foto_Url}
+              alt={game.nombre}
               style={{
                 borderRadius: "8px",
                 width: "100%",
@@ -103,6 +92,7 @@ const SliderSection = () => {
                 objectFit: "cover",
               }}
             />
+            <p>{game.nombre}</p>
           </Box>
         ))}
       </Slider>
