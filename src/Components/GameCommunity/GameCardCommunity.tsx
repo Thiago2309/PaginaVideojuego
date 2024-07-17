@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -11,28 +11,43 @@ import {
   Chip,
   CardActions,
 } from "@mui/material";
-import { CommunityGame } from "./dataCommunity";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
-
+import { Publicacion, LikeDislike } from "../../store/reducers/PublicaionesReducer";
+import axios from "axios";
 const defaultUserIcon = "path/to/default/user/icon.png";
 
-const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
-  communitygame,
-}) => {
+const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
   const navigate = useNavigate();
-  const [likes, setLikes] = useState(communitygame.likes);
-  const [dislikes, setDislikes] = useState(communitygame.dislikes);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageAspectRatio, setImageAspectRatio] = useState(1);
+  console.log(publicacion)
+  console.log("ASDASD: ", publicacion.likesDislikes)
+// Likes
+  const initialLikes = Array.isArray(publicacion.likesDislikes)
+  ? publicacion.likesDislikes.filter((ld) => ld.like === "L").length
+  : 0;
+  const [likes, setLikes] = useState<number>(initialLikes);
+  const [liked, setLiked] = useState<boolean>(false);
+  console.log(initialLikes)
+  // Dislikes
+  const initialDislikes = Array.isArray(publicacion.likesDislikes)
+  ? publicacion.likesDislikes.filter((ld) => ld.like === "D").length
+  : 0;
+  const [dislikes, setDislikes] = useState<number>(initialDislikes);
+  const [disliked, setDisliked] = useState<boolean>(false);
 
-  const formattedDate = new Date(communitygame.releaseDate).toLocaleDateString(
+  // Comments
+  const initialComments = Array.isArray(publicacion.comentarios)
+  ? publicacion.comentarios.length
+  : 0;
+  const [commentsCount, setCommentsCount] = useState<number>(initialComments);
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState<number>(1);
+
+  const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString(
     "es-ES",
     {
       day: "2-digit",
@@ -41,39 +56,57 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
       timeZone: "UTC",
     }
   );
+  
+  useEffect(() => {
+    setLikes(initialLikes);
+    setDislikes(initialDislikes);
+    setCommentsCount(initialComments);
+  }, [publicacion, initialLikes, initialDislikes, initialComments]);
 
   const handleCardClick = () => {
-    navigate(`/publicationdetails/${communitygame.id}`);
+    navigate(`/publicationdetails/${publicacion.id}`);
   };
-  
 
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setDisliked(false);
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(`https://localhost:7029/LikesDislikes/like/${publicacion.id}`, { like: "L" });
+      const updatedLikesDislikes: LikeDislike[] = response.data;
+      const newLikes = updatedLikesDislikes.filter((ld) => ld.like === "L").length;
+      setLikes(newLikes);
+      setLiked(true);
 
-    setLikes((prev) => (liked ? prev - 1 : prev + 1));
-    if (disliked) {
-      setDislikes((prev) => prev - 1);
+      // Update dislikes count if necessary
+      if (disliked) {
+        setDisliked(false);
+        setDislikes(updatedLikesDislikes.filter((ld) => ld.like === "D").length);
+      }
+    } catch (error) {
+      console.error("Error liking publication:", error);
     }
   };
 
-  const handleDislike = () => {
-    setDisliked((prev) => !prev);
-    setLiked(false);
+  const handleDislike = async () => {
+    try {
+      const response = await axios.post(`https://localhost:7029/LikesDislikes/dislike/${publicacion.id}`, { like: "D" });
+      const updatedLikesDislikes: LikeDislike[] = response.data;
+      const newDislikes = updatedLikesDislikes.filter((ld) => ld.like === "D").length;
+      setDislikes(newDislikes);
+      setDisliked(true);
 
-    setDislikes((prev) => (disliked ? prev - 1 : prev + 1));
-    if (liked) {
-      setLikes((prev) => prev - 1);
+      // Update likes count if necessary
+      if (liked) {
+        setLiked(false);
+        setLikes(updatedLikesDislikes.filter((ld) => ld.like === "L").length);
+      }
+    } catch (error) {
+      console.error("Error disliking publication:", error);
     }
   };
 
-  const handleImageLoad = (
-    event: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageLoaded(true);
-    setImageAspectRatio(
-      event.currentTarget.naturalWidth / event.currentTarget.naturalHeight
-    );
+    setImageAspectRatio(event.currentTarget.naturalWidth / event.currentTarget.naturalHeight);
   };
 
   const isVerticalImage = imageLoaded && imageAspectRatio < 1;
@@ -110,9 +143,9 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 alt="User Icon"
                 sx={{ width: 30, height: 30, mr: 1 }}
               />
-              <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
-                Publicado por {communitygame.authors} el {formattedDate}
-              </Typography>
+              {/* <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
+                Publicado por {publicacion.authors} el {formattedDate}
+              </Typography> */}
             </Box>
             <Typography
               gutterBottom
@@ -126,7 +159,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 marginBottom: 1,
               }}
             >
-              {communitygame.title}
+              {publicacion.titulo}
             </Typography>
             <Typography
               variant="body2"
@@ -137,9 +170,9 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 fontSize: 18,
                 overflow: "hidden",
               }}
-              dangerouslySetInnerHTML={{ __html: communitygame.description }}
+              dangerouslySetInnerHTML={{ __html: publicacion.descripcion }}
             />
-            {communitygame.image && (
+            {publicacion.imagen && (
               <Box
                 sx={{
                   position: "relative",
@@ -159,7 +192,7 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                       left: 0,
                       width: "100%",
                       height: "100%",
-                      backgroundImage: `url(${communitygame.image})`,
+                      backgroundImage: `url(${publicacion.imagen})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       filter: "blur(20px)",
@@ -170,8 +203,8 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 )}
                 <CardMedia
                   component="img"
-                  image={communitygame.image}
-                  alt={communitygame.title}
+                  image={publicacion.imagen}
+                  alt={publicacion.titulo}
                   onLoad={handleImageLoad}
                   sx={{
                     maxWidth: "100%",
@@ -242,42 +275,26 @@ const GameCard: React.FC<{ communitygame: CommunityGame }> = ({
                 height: 40,
                 marginBottom: { xs: 1, sm: 0 },
                 marginRight: { xs: 0, sm: 1 },
-                "& .MuiChip-icon": {
-                  color: "white",
-                  marginLeft: "10px",
-                  paddingRight: "8px",
-                },
-                "& .MuiChip-label": {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "auto",
-                  paddingLeft: "8px",
-                  paddingRight: "10px",
-                },
+                "& .MuiChip-icon": { marginLeft: 0 },
               }}
             />
             <Chip
-              icon={<CommentIcon sx={{ color: "white" }} />}
-              label={`${communitygame.comment}`}
+              icon={
+                <IconButton sx={{ color: "white" }}>
+                  <CommentIcon />
+                </IconButton>
+              }
+              label={
+                <Typography variant="body2" sx={{ color: "#fff" }}>
+                  {publicacion.commentsCount}
+                </Typography>
+              }
               sx={{
                 backgroundColor: "#2C2839",
                 color: "#fff",
                 height: 40,
-                marginLeft: { xs: 0, sm: 1 },
-                "& .MuiChip-icon": {
-                  color: "white",
-                  marginLeft: "10px",
-                },
-                "& .MuiChip-label": {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "auto",
-                  paddingRight: "10px",
-                },
+                "& .MuiChip-icon": { marginLeft: 0 },
               }}
-              onClick={(e) => e.stopPropagation()}
             />
           </Box>
         </CardActions>
