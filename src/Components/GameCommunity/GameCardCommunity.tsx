@@ -21,6 +21,9 @@ import { Publicacion, LikeDislike } from "../../store/reducers/PublicaionesReduc
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
+import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 const defaultUserIcon = "path/to/default/user/icon.png";
 
 const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
@@ -35,7 +38,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
       try {
         const response = await axios.get(`https://localhost:7029/Usuarios/${publicacion.userId}`);
         const usuarioNombre = response.data.result.usuarioNombre;
-        console.log("Nombre completo del usuario:", usuarioNombre);
         setUserName(usuarioNombre);
       } catch (error) {
         console.error("Error fetching user name:", error);
@@ -45,13 +47,9 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
     fetchUserName();
   }, [publicacion.userId]);
 
-  const formattedDate = new Date(publicacion.fechaPublicacion).toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-
+  const publicationDate = parseISO(publicacion.fechaPublicacion);
+  const formattedDate = format(publicationDate, 'dd/MM/yyyy', { locale: es });
+  
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageLoaded(true);
     setImageAspectRatio(event.currentTarget.naturalWidth / event.currentTarget.naturalHeight);
@@ -91,8 +89,11 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                 sx={{ width: 30, height: 30, mr: 1 }}
               />
               <Typography variant="body2" sx={{ color: "#fff", fontSize: 14 }}>
-              Publicado por {userName} el {formattedDate}
-              </Typography> 
+                Publicado por {userName}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#fff", fontSize: 14, ml: 'auto' }}>
+                Fecha de publicacion {formattedDate}
+              </Typography>
             </Box>
             <Typography
               gutterBottom
@@ -131,23 +132,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
                   overflow: "hidden",
                 }}
               >
-                {/* {imageLoaded && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      backgroundImage: `url(${publicacion.imagen})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      filter: "blur(20px)",
-                      zIndex: 0,
-                      display: "block",
-                    }}
-                  />
-                )} */}
                 <CardMedia
                   component="img"
                   image={publicacion.imagen}
@@ -182,67 +166,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
             justifyContent={{ xs: "center", sm: "space-between" }}
             sx={{ width: { xs: "100%", sm: "auto" } }}
           >
-            {/* <Chip
-              icon={
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleLike();
-                  }}
-                  sx={{ color: liked ? "#E10AAB !important" : "white" }}
-                >
-                  {liked ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
-                </IconButton>
-              }
-              label={
-                <Box display="flex" alignItems="center">
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "#fff", marginRight: 1 }}
-                  >
-                    {likes}
-                  </Typography>
-                  <IconButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDislike();
-                    }}
-                    sx={{ color: disliked ? "#E10AAB" : "white" }}
-                  >
-                    {disliked ? <ThumbDownIcon /> : <ThumbDownOffAltIcon />}
-                  </IconButton>
-                  <Typography variant="body2" sx={{ color: "#fff" }}>
-                    {dislikes}
-                  </Typography>
-                </Box>
-              }
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#fff",
-                height: 40,
-                marginBottom: { xs: 1, sm: 0 },
-                marginRight: { xs: 0, sm: 1 },
-                "& .MuiChip-icon": { marginLeft: 0 },
-              }}
-            /> */}
-            {/* <Chip
-              icon={
-                <IconButton sx={{ color: "white" }}>
-                  <CommentIcon />
-                </IconButton>
-              }
-              label={
-                <Typography variant="body2" sx={{ color: "#fff" }}>
-                  {publicacion.commentsCount}
-                </Typography>
-              }
-              sx={{
-                backgroundColor: "#2C2839",
-                color: "#fff",
-                height: 40,
-                "& .MuiChip-icon": { marginLeft: 0 },
-              }}
-            /> */}
           </Box>
         </CardActions>
       </Card>
