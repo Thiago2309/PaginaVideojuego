@@ -110,7 +110,6 @@ const Community: React.FC = () => {
         });
     };
 
-
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
@@ -140,8 +139,8 @@ const Community: React.FC = () => {
             { field: 'id', headerName: 'Id', width: 80 },
             { field: 'nombre', headerName: 'Nombre', width: 160 },
             { field: 'descripcion', headerName: 'Descripción', width: 140 },
-            { field: 'calificacion', headerName: 'Cali', width: 90 },
-            { field: 'foto_url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
+            { field: 'calificacion', headerName: 'Calificación', width: 90 },
+            { field: 'foto_Url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
                 <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
             )},
             { field: 'genero', headerName: 'Género', width: 120 },
@@ -173,7 +172,6 @@ const Community: React.FC = () => {
                     sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row' }}
                     action={
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', p: 2 , m: 2 }}>
-
                             <TextField
                                 placeholder="Buscar..."
                                 value={searchTerm}

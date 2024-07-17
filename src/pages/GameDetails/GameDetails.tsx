@@ -1,18 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Grid, Box} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Grid, Box } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 import Navegador from "../../layout/Navegador/Navegador";
 import Games from "../../Components/Comments/Game";
 import GameApprobation from "../../Components/Comments/GameApprobation";
 import FooterView from "../../layout/Footer/FooterView";
-import { useParams } from "react-router-dom";
-import { fetchGamesStart, fetchGamesSuccess, fetchGamesFailure, Game } from "../../store/reducers/videojuegosReducer"; 
-import { useDispatch, useSelector } from "react-redux";
-import { User } from '../../store/reducers/userReducer';
 import axios from "axios";
-import { RootState } from "../../store/store";
-
-const BannerGame = require.context("../../assets/images", true);
+import { Game, fetchGamesFailure } from "../../store/reducers/videojuegosReducer";
+import { User } from '../../store/reducers/userReducer';
+import { useDispatch } from "react-redux";
+import imagen_default from "../../assets/images/banner_default.jpg"; // Importar la imagen por defecto
 
 const GameDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +24,6 @@ const GameDetails: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener datos del juego
         const gameResponse = await axios.get(`https://localhost:7029/Videojuegos/${id}`);
         const gameData = gameResponse.data.result;
         setGame(gameData);
@@ -35,16 +31,19 @@ const GameDetails: React.FC = () => {
           const userResponse = await axios.get(`https://localhost:7029/Usuarios/${gameData.userId}`);
           const userData = userResponse.data.result;
           setUser(userData);
-          // console.log("Los datos del usuario son: ", userData);
         }
       } catch (error) {
-        // console.error('Error fetching data:', error);
+        if (error instanceof Error) {
+          dispatch(fetchGamesFailure(error.message));
+        } else {
+          dispatch(fetchGamesFailure('Unknown error occurred'));
+        }
       }
     };
 
     fetchData();
-  }, [id]);
-  
+  }, [id, dispatch]);
+
   if (!game) {
     return <div>Loading...</div>; 
   }
@@ -55,13 +54,16 @@ const GameDetails: React.FC = () => {
     timeZone: "UTC",
   });
   
-  const imagePath = game.foto_Url;
+  const imagePath = game.foto_Url || imagen_default; // Usar imagen por defecto si no hay foto_Url
+
+  // Asegurarse de que 'plataforma' sea un array
+  const plataformasArray = Array.isArray(game.plataforma) ? game.plataforma : game.plataforma.split(", ");
 
   const selectedGame = {
     nombre: game.nombre,
     desarollador: game.desarrollador,
     calificacion: game.calificacion,
-    plataforma: game.plataforma,
+    plataforma: plataformasArray,
     fecha_Lanzamiento: formattedDate,
     genero: game.genero.split(","),
     description: game.descripcion,
@@ -75,12 +77,12 @@ const GameDetails: React.FC = () => {
       <Navegador />
       <Box sx={{ flexGrow: 1, p: 3, mx: { xs: 2, sm: 3, md: 5, lg: 4 } }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={12}>
             <Box sx={{ height: '100%' }}>
               <Games game={selectedGame} handleBackClick={handleBackClick} />
             </Box>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={12}>
             <Box sx={{ height: '100%' }}>
               <GameApprobation game={selectedGame} handleBackClick={handleBackClick} />
             </Box>

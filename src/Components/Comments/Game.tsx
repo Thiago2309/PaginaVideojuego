@@ -26,7 +26,7 @@ const Games: React.FC<GameProps> = ({ game, handleBackClick }) => {
           </Grid>
         </Grid>
         <CardContent sx={{ display: "flex", justifyContent: "space-between", color: "#ffffff", p: 0, marginTop: 1 }}>
-          <Typography variant="body2" sx={{ fontSize: 14 }}>
+          <Typography variant="body2" sx={{ fontSize: 14, textAlign: "left" }}>
             Fecha de lanzamiento: {game.fecha_Lanzamiento}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: 14 }}>
@@ -52,6 +52,20 @@ const Games: React.FC<GameProps> = ({ game, handleBackClick }) => {
         <Box sx={{ mt: 2, borderRadius: 3, overflow: "hidden" }}>
           <img src={game.foto_Url} alt={`foto_Url ${game.nombre}`} style={{ width: "100%" }} />
         </Box>
+        <Typography variant="h6" sx={{ color: "#ffffff", fontSize: 20 }}>
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                mt: 2,
+                color: "#ffffff",
+                textAlign: "left",
+                fontSize: "1.2rem",
+              }}
+            >
+              {game.description}
+            </Typography>
       </CardContent>
     </Card>
   );
