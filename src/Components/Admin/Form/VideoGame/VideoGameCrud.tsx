@@ -14,6 +14,7 @@ import {
     Typography,
     useMediaQuery,
     useTheme,
+    styled,
 } from '@mui/material';
 import Swal from 'sweetalert2'; 
 import Modal from "@mui/material/Modal";
@@ -24,7 +25,25 @@ import { VideoGame } from '../../../../Api/IVideoGame';
 
 const API_URL_GET = 'https://localhost:7029/Videojuegos/ObtenerVideojuegos';
 const API_URL_DELETE = 'https://localhost:7029/Videojuegos';
-
+const CustomTextField = styled(TextField)({
+    '& label': {
+        color: '#FFF',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: '#FFF',
+        },
+        '&:hover fieldset': {
+            borderColor: '#E10AAB',
+        },
+        '& input': {
+            color: '#FFF',
+        },
+    },
+    '& .MuiInputAdornment-root': {
+        color: '#FFF',
+    },
+});
 const Community: React.FC = () => {
     const [videojuegos, setVideojuegos] = useState<VideoGame[]>([]);
     const [filteredVideojuegos, setFilteredVideojuegos] = useState<VideoGame[]>([]);
@@ -139,11 +158,11 @@ const Community: React.FC = () => {
             { field: 'id', headerName: 'Id', width: 80 },
             { field: 'nombre', headerName: 'Nombre', width: 160 },
             { field: 'descripcion', headerName: 'Descripción', width: 140 },
-            { field: 'calificacion', headerName: 'Calificación', width: 90 },
-            { field: 'foto_Url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
-                <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
-            )},
-            { field: 'genero', headerName: 'Género', width: 120 },
+            // { field: 'calificacion', headerName: 'Calificación', width: 90 },
+            // { field: 'foto_Url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
+            //     <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
+            // )},
+            // { field: 'genero', headerName: 'Género', width: 120 },
             { field: 'plataforma', headerName: 'Plataforma', width: 150 },
             { field: 'fecha_Lanzamiento', headerName: 'Lanzamiento', width: 150, renderCell: (params: GridRenderCellParams) => (
                 new Date(params.value).toLocaleDateString()
@@ -166,13 +185,13 @@ const Community: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%', mx: 'auto', mt: 4 }}>
-            <Card sx={{ mt: 4 }}>
+            <Card sx={{ mt: 4, background: 'transparent'}}>
                 <CardHeader
                     title="Lista de Videojuegos"
-                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row' }}
+                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', color: '#FFF', flexDirection: isMobile ? 'column' : 'row' }}
                     action={
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', p: 2 , m: 2 }}>
-                            <TextField
+                            <CustomTextField
                                 placeholder="Buscar..."
                                 value={searchTerm}
                                 onChange={handleSearch}
@@ -213,25 +232,30 @@ const Community: React.FC = () => {
                         pageSizeOptions={[10, 25, 50]}
                         autoHeight
                         sx={{
-                            '& .MuiDataGrid-columnHeaders': {
+                            '& .MuiDataGrid-columnHeader': {
                                 backgroundColor: '#13072E',
-                                color: '#13072E',
+                                color: '#FFF',
                             },
-                            '& .MuiDataGrid-row': {
-                                backgroundColor: '#f5f5f5', // Color de fondo para las filas
+                            '& .MuiDataGrid-filler': {
+                                backgroundColor: '#13072E',
                             },
                             '& .MuiDataGrid-row:hover': {
-                                backgroundColor: '#a7b3fc', // Color de fondo al pasar el cursor
+                                backgroundColor: '#20163D',
                             },
                             '& .MuiDataGrid-cell': {
-                                color: '#000000',
+                                backgroundColor: 'transparent',
+                                color: '#FFF',
                             },
-                            '& .MuiDataGrid-row.Mui-selected': {
-                                backgroundColor: '#d1d9ff', // Color de fondo para la fila seleccionada
+                            '& .MuiDataGrid-footerContainer': {
+                                backgroundColor: '#13072E',
                             },
-                            '& .MuiDataGrid-row.Mui-selected:hover': {
-                                backgroundColor: '#bec9ff', // Color de fondo para la fila seleccionada al pasar el cursor
+                            '& .MuiDataGrid-selectedRowCount': {
+                                color: '#FFF',
+                                fontWeight: 'bold'
                             },
+                            '& .MuiToolbar-root': {
+                                color: '#FFF',
+                            }
                         }}
                     />
                 </CardContent>
