@@ -10,9 +10,7 @@ import {
 } from "@mui/material";
 import { Game } from "../../store/reducers/videojuegosReducer";
 import { useNavigate } from "react-router-dom";
-
-const BannerGame = require.context("../../assets/images", true);
-const placeholderImage = BannerGame(`./banner_default.jpg`);
+import imagen_default from "../../assets/images/banner_default.jpg"; // Importar la imagen por defecto
 
 const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   const navigate = useNavigate();
@@ -33,17 +31,7 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
     setImageError(true);
   };
 
-  let imagePath = "";
-  try {
-    imagePath = imageError ? placeholderImage : BannerGame(`./${game.foto_Url}`);
-  } catch (e) {
-    // console.error("Error loading image:", e);
-    imagePath = placeholderImage;
-  }
-
-  if (!game || !game.genero) {
-    return null; 
-  }
+  const imagePath = imageError ? imagen_default : game.foto_Url || imagen_default;
 
   return (
     <Card
@@ -62,7 +50,7 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
           width="100%"
           image={imagePath}
           alt={game.nombre}
-          onError={handleImageError}
+          onError={handleImageError} // Manejar errores de carga de imagen
         />
         <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
           <Typography
@@ -78,7 +66,7 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
               marginBottom: 0,
             }}
           >
-            {game.nombre} {/* Mostrar el nombre del juego */}
+            {game.nombre}
           </Typography>
           <Typography
             variant="body2"

@@ -14,6 +14,7 @@ import {
     Typography,
     useMediaQuery,
     useTheme,
+    styled,
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import Modal from "@mui/material/Modal";
@@ -24,7 +25,25 @@ import { Offerts } from '../../../../Api/IOfferts';
 
 const API_URL_GET = 'https://localhost:7029/Ofertas/ObtenerOfertas';
 const API_URL_DELETE = 'https://localhost:7029/Ofertas';
-
+const CustomTextField = styled(TextField)({
+    '& label': {
+        color: '#FFF',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: '#FFF',
+        },
+        '&:hover fieldset': {
+            borderColor: '#E10AAB',
+        },
+        '& input': {
+            color: '#FFF',
+        },
+    },
+    '& .MuiInputAdornment-root': {
+        color: '#FFF',
+    },
+});
 const OffertsCrud: React.FC = () => {
     const [ofertas, setOfertas] = useState<Offerts[]>([]);
     const [filteredOfertas, setFilteredOfertas] = useState<Offerts[]>([]);
@@ -136,18 +155,18 @@ const OffertsCrud: React.FC = () => {
         : [
             { field: 'id', headerName: 'Id', width: 80 },
             { field: 'nombre', headerName: 'Nombre', width: 160 },
-            { field: 'descripcion', headerName: 'Descripción', width: 140 },
-            { field: 'calificacion', headerName: 'Calificación', width: 90 },
-            { field: 'foto_Url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
-                <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
-            )},
-            { field: 'genero', headerName: 'Género', width: 120 },
+            // { field: 'descripcion', headerName: 'Descripción', width: 140 },
+            // { field: 'calificacion', headerName: 'Calificación', width: 90 },
+            // { field: 'foto_Url', headerName: 'Foto', width: 100, renderCell: (params: GridRenderCellParams) => (
+            //     <img src={params.value} alt={params.row.nombre} style={{ width: '50px' }} />
+            // )},
+            // { field: 'genero', headerName: 'Género', width: 120 },
             { field: 'plataforma', headerName: 'Plataforma', width: 150 },
             { field: 'fecha_Lanzamiento', headerName: 'Lanzamiento', width: 150, renderCell: (params: GridRenderCellParams) => (
                 new Date(params.value).toLocaleDateString()
             )},
-            { field: 'desarrollador', headerName: 'Desarrollador', width: 150 },
-            { field: 'editor', headerName: 'Editor', width: 150 },
+            // { field: 'desarrollador', headerName: 'Desarrollador', width: 150 },
+            // { field: 'editor', headerName: 'Editor', width: 150 },
             { field: 'precio', headerName: 'Precio', width: 120 },
             { field: 'descuento', headerName: 'Descuento', width: 120 },
             { field: 'link', headerName: 'Enlace', width: 150, renderCell: (params: GridRenderCellParams) => (
@@ -169,25 +188,26 @@ const OffertsCrud: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%', mx: 'auto', mt: 4 }}>
-            <Card sx={{ mt: 4 }}>
+            <Card sx={{ mt: 4, background:'transparent' }}>
                 <CardHeader
                     title="Lista de Ofertas"
-                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row' }}
+                    sx={{ display: 'flex', textAlign: 'left', justifyContent: 'space-between', alignItems: 'center', color: '#FFF', flexDirection: isMobile ? 'column' : 'row'}}
                     action={
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', p: 2 , m: 2 }}>
-                            <TextField
+                            <CustomTextField
                                 placeholder="Buscar..."
                                 value={searchTerm}
                                 onChange={handleSearch}
                                 size="small"
+
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position="start">
+                                        <InputAdornment position="start" sx={{color:'white'}}>
                                             <Search />
                                         </InputAdornment>
                                     ),
                                 }}
-                                sx={{ mr: isMobile ? 0 : 2, mb: isMobile ? 2 : 0 }}
+                                sx={{ mr: isMobile ? 0 : 2, mb: isMobile ? 2 : 0, borderColor:'white' }}
                             />
                             <Button
                                 variant="contained"
@@ -211,6 +231,32 @@ const OffertsCrud: React.FC = () => {
                                 paginationModel: {
                                     pageSize: 5
                                 }
+                            }
+                        }}
+                        sx={{
+                            '& .MuiDataGrid-columnHeader': {
+                                backgroundColor: '#13072E',
+                                color: '#FFF',
+                            },
+                            '& .MuiDataGrid-filler': {
+                                backgroundColor: '#13072E',
+                            },
+                            '& .MuiDataGrid-row:hover': {
+                                backgroundColor: '#20163D',
+                            },
+                            '& .MuiDataGrid-cell': {
+                                backgroundColor: 'transparent',
+                                color: '#FFF',
+                            },
+                            '& .MuiDataGrid-footerContainer': {
+                                backgroundColor: '#13072E',
+                            },
+                            '& .MuiDataGrid-selectedRowCount': {
+                                color: '#FFF',
+                                fontWeight: 'bold'
+                            },
+                            '& .MuiToolbar-root': {
+                                color: '#FFF',
                             }
                         }}
                         pageSizeOptions={[5, 10, 20]}
