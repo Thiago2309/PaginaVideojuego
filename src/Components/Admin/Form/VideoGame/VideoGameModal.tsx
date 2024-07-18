@@ -38,6 +38,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
   useEffect(() => {
     if (initialData) {
       setVideojuego({ ...initialData, userId: user.id ?? 0 });
+      setPreviewImage(initialData.foto_Url);  // Mostrar la imagen inicial si está disponible
     }
   }, [initialData, user.id]);
 
@@ -60,7 +61,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
   const handleEdit = useCallback(async () => {
     try {
       const response = await axios.put(`${API_URL_PUT}/${videojuego.id}`, videojuego);
-      const updatedVideojuego = response.data.result;
+      const updatedVideojuego = response.data;
       setVideojuegos(videojuegos.map(v => (v.id === videojuego.id ? updatedVideojuego : v)));
       setAlertMessage('¡Videojuego Editado exitosamente!');
       setAlertSeverity('success');
@@ -78,7 +79,7 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
     try {
       const { id, ...videojuegoSinId } = videojuego;
       const response = await axios.post(API_URL_POST, videojuegoSinId);
-      const newVideojuego = response.data.result;
+      const newVideojuego = response.data;
       setVideojuegos([...videojuegos, newVideojuego]);
       setAlertMessage('¡Videojuego Creado exitosamente!');
       setAlertSeverity('success');
@@ -89,7 +90,6 @@ const VideoGameModal: React.FC<VideoGameFormProps> = ({ initialData, onClose, se
       setAlertMessage('Error al crear el videojuego');
       setAlertSeverity('error');
       setAlertOpen(true);
-      setTimeout(onClose, 1200); // Cierra el modal después de 2 segundos
     }
   }, [videojuego, setVideojuegos, videojuegos, onClose]);
 

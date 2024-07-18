@@ -20,12 +20,12 @@ const images = [
         width: '40%',
         link: '/adminpublicOffert' // Ruta a la que debe redirigir
     },
-    {
-        src: img3,
-        title: 'Usuarios', // Cambia esto según tu necesidad
-        width: '40%',
-        link: '/404' // Ruta a la que debe redirigir
-    },
+    // {
+    //     src: img3,
+    //     title: 'Usuarios', // Cambia esto según tu necesidad
+    //     width: '40%',
+    //     link: '/404' // Ruta a la que debe redirigir
+    // },
 ];
 
 const Root = styled('div')(({ theme }) => ({
