@@ -1,73 +1,103 @@
-import React from 'react';
-import Slider from 'react-slick';
-import { Box, Typography } from '@mui/material';
-import img1 from '../../assets/images/img1.png';
-import img2 from '../../assets/images/img2.png';
-import img3 from '../../assets/images/img3.png';
-import img4 from '../../assets/images/img4.png';
-import img5 from '../../assets/images/img5.png';
+import React, { useEffect, useState } from 'react';
+import Slider from 'react-slick'; 
+import Box from '@mui/material/Box'; 
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
+
+interface Game {
+  id: number;
+  foto_Url: string;
+  nombre: string;
+}
 
 const SliderSection = () => {
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    initialSlide: 2
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    centerMode: true,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    };
+  const [games, setGames] = useState<Game[]>([]);
+  const navigate = useNavigate();
 
-    const images = [
-        { src: img1, alt: 'Image 1' },
-        { src: img2, alt: 'Image 2' },
-        { src: img3, alt: 'Image 3' },
-        { src: img4, alt: 'Image 4' },
-        { src: img5, alt: 'Image 5' }
-    ];
+  useEffect(() => {
+    axios.get('https://localhost:7029/Videojuegos/ObtenerVideojuegos')
+      .then((response) => {
+        const shuffledGames = response.data.result.sort(() => 0.5 - Math.random());
+        const selectedGames = shuffledGames.slice(0, 10);
+        setGames(selectedGames);
+      })
+      .catch((error) => console.error('Error fetching games:', error));
+  }, []);
 
-    return (
-        <Box sx={{ padding: '23px' }}>
-            <Typography variant="h6" gutterBottom sx={{ textAlign: 'left' }}>
-                Más Populares
-            </Typography>
-            <br />
-            <Slider {...settings}>
-                {images.map((image, index) => (
-                    <Box key={index} sx={{ padding: '0 8px', margin: '0 8px' }}>
-                        <img src={image.src} alt={image.alt} style={{ borderRadius: '8px' }} />
-                    </Box>
-                ))}
-            </Slider>
-        </Box>
-    );
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
+  
+  const handleGameClick = (gameId: string) => {
+    navigate(`/gamedetails/${gameId}`);
+  };
+  
+  return (
+    <Box sx={{ padding: "23px" }}>
+      <Slider {...settings}>
+        {games.map((game) => (
+          <Box
+            key={game.id}
+            onClick={() => handleGameClick(game.id.toString())}
+            sx={{
+              padding: "0 8px",
+              margin: "0 8px",
+              "&:hover": {
+                transform: "scale(1.05)",
+                transition: "transform 0.5s ease-in-out",
+              },
+            }}
+          >
+            <img
+              src={game.foto_Url}
+              alt={game.nombre}
+              style={{
+                borderRadius: "8px",
+                width: "100%",
+                height: "250px",
+                objectFit: "cover",
+              }}
+            />
+            <p>{game.nombre}</p>
+          </Box>
+        ))}
+      </Slider>
+    </Box>
+  );
 };
 
 export default SliderSection;

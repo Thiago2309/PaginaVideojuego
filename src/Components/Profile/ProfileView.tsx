@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, CardContent, Grid, Typography, Box, Button, Avatar, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import FIFA22Image from '../../assets/images/juego1.png'; // Actualiza las rutas de las imágenes
-import GTAImage from '../../assets/images/juego2.png'; // Actualiza las rutas de las imágenes
+import FIFA22Image from '../../assets/images/juego1.png';
+import GTAImage from '../../assets/images/juego2.png'; 
 
 const ProfileHeader = styled(Card)(({ theme }) => ({
   backgroundColor: '#1C172B',

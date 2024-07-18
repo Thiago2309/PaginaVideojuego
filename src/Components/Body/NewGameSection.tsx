@@ -1,83 +1,79 @@
-import React from 'react';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardMedia from '@mui/material/CardMedia';
-import img1 from '../../assets/images/juego1.png';
-import img2 from '../../assets/images/juego2.png';
-import img3 from '../../assets/images/img2.png';
-import img4 from '../../assets/images/img4.png';
-import FooterView from '../../layout/Footer/FooterView';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Slider from 'react-slick';
+import { Box, Card, CardMedia, Typography } from '@mui/material';
 
 interface Game {
-    image: string;
-    orders: number;
-    rating: number;
+  id: number;
+  descuento: number;
+  foto_Url: string;
 }
 
-const games: Game[] = [
-    {
-        image: img1,
-        orders: 175,
-        rating: 4.5,
-    },
-    {
-        image: img2,
-        orders: 175,
-        rating: 4.5,
-    },
-    {
-        image: img3,
-        orders: 175,
-        rating: 4.5,
-    },
-    {
-        image: img4,
-        orders: 175,
-        rating: 4.5,
-    },
-    // más juegos..
-];
+const GameOffers = () => {
+  const [games, setGames] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-const GameCard: React.FC<{ game: Game }> = ({ game }) => (
-    <Card sx={{ maxWidth: 150, margin: 'auto', backgroundColor: 'transparent', color: 'white', boxShadow: 'none' }}>
-        <CardActionArea
-            sx={{
-                borderRadius: '50%',
-                overflow: 'hidden',
-                border: '2px solid #fff',
-            }}
-        >
+  useEffect(() => {
+    const fetchGames = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('https://localhost:7029/Ofertas/ObtenerOfertas');
+        const data = await response.json();
+        if (data.success) {
+          setGames(data.result.map((game: Game) => ({
+            id: game.id,
+            descuento: game.descuento,
+            foto_Url: game.foto_Url
+          })).slice(0, 10));
+        } else {
+          console.error('Failed to fetch games:', data.message);
+          setError('Failed to fetch games');
+        }
+      } catch (error) {
+        console.error('Error fetching games:', error);
+        setError('Error fetching games');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGames();
+  }, []);
+
+  const handleGameClick = (gameId: number) => {
+    navigate(`/gameofferts/${gameId}`);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4
+  };
+
+  if (isLoading) return <Box>Loading...</Box>;
+  if (error) return <Box>Error: {error}</Box>;
+
+  return (
+    <Slider {...settings}>
+      {games.map((game) => (
+        <Box key={game.id} onClick={() => handleGameClick(game.id)} sx={{ padding: 1 }}>
+          <Card sx={{background: "none", maxWidth: 345, maxHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: "white" }}>
             <CardMedia
-                component="img"
-                height="150"
-                width="150"
-                image={game.image}
-                sx={{ borderRadius: '50%', objectFit: 'cover' }}
+              component="img"
+              image={game.foto_Url}
+              alt={`Game ${game.id}`}
+              sx={{ height: 160 }}
             />
-        </CardActionArea>
-    </Card>
-);
-
-const NewGameSection: React.FC = () => {
-    return (
-        <Box sx={{ flexGrow: 1, padding: 4 }}>
-            <Typography variant="h6" gutterBottom sx={{ textAlign: 'left', color: 'white' }}>
-                Ofertas Especiales
-            </Typography>
-            <br />
-            <Grid container spacing={2} justifyContent="center">
-                {games.map((game, index) => (
-                    <Grid item xs={4} sm={3} md={2} key={index}>
-                        <GameCard game={game} />
-                    </Grid>
-                ))}
-            </Grid>
+              <p>{game.descuento + " %"}</p>
+          </Card>
         </Box>
-
-    );
+      ))}
+    </Slider>
+  );
 };
 
-export default NewGameSection;
+export default GameOffers;

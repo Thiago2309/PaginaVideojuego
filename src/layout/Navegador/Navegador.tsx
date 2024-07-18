@@ -12,7 +12,8 @@ const pages = [
   { name: 'Juegos', path: '/gamecatalog' },
   { name: 'Ofertas', path: '/gameoffert' },
   { name: 'Comunidad', path: '/gamecommunity' },
-  { name: 'Noticias', path: '/newsgame' }
+  { name: 'Noticias', path: '/newsgame' },
+  { name: 'Nosotros', path: '/nosotros' }
 ];
 
 const settings = [
