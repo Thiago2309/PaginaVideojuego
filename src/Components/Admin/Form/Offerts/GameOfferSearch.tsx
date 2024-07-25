@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { TextField, Autocomplete, Button, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { searchDeals, getStores } from './../../services/apiCheapShark';
+import { searchDeals, getStores } from '../../../../services/apiCheapShark';
 import { Deal } from "./dataApiOffert";
 import debounce from 'lodash/debounce';
 

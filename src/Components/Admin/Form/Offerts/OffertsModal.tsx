@@ -5,8 +5,8 @@ import { Offerts, OffertsFormProps } from '../../../../Api/IOfferts';
 import { useSelector } from 'react-redux';
 import Modal from "@mui/material/Modal";
 import { RootState } from '../../../../store/store';
-import GameOfferSearch from '../../../GameCatalog/GameOfferSearch';
-import { Deal } from '../../../GameCatalog/dataApiOffert';
+import GameOfferSearch from './GameOfferSearch';
+import { Deal } from './dataApiOffert';
 import { searchGames, getGameDetails } from '../../../../services/apiRAWG';
 
 const API_URL_CREATE = 'https://localhost:7029/Ofertas/RegistroDeOferta';

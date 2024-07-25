@@ -27,7 +27,7 @@ const GameCommunity: React.FC = () => {
   const publicaciones = useSelector((state: RootState) => state.publicaciones.publicaciones);
   const loading = useSelector((state: RootState) => state.publicaciones.loading);
   const error = useSelector((state: RootState) => state.publicaciones.error);
-  const [filteredCommunityGame, setFilteredCommunityGame] = useState<Publicacion[]>(publicaciones);
+  const [filteredCommunityGame, setFilteredCommunityGame] = useState<Publicacion[]>([]);
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -47,9 +47,13 @@ const GameCommunity: React.FC = () => {
 
   useEffect(() => {
     fetchPublicaciones();
-  }, []);
+  }, [dispatch]);
 
-  const sortedCommunityGame = [...publicaciones].sort((a, b) => {
+  useEffect(() => {
+    setFilteredCommunityGame(publicaciones);
+  }, [publicaciones]);
+
+  const sortedCommunityGame = [...filteredCommunityGame].sort((a, b) => {
     const [key, order] = sort.split("-");
     let comparison = 0;
 
@@ -174,4 +178,4 @@ const GameCommunity: React.FC = () => {
   );
 };
 
-export default GameCommunity;
+export default React.memo(GameCommunity);

@@ -96,7 +96,7 @@ const Login = () => {
           }}
         >
           <Toolbar disableGutters>
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1 }}>
               <Link component={RouterLink} to="/" sx={{ display: 'block' }}>
                 <img src={Logo1} alt="logo" style={{ height: '40px', margin: '10px' }} />
               </Link>

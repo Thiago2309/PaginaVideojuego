@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import SearchBar from "../../Components/GameCatalog/SearchBar";
 import FilterOptions from "../../Components/GameCatalog/FilterOptions";
@@ -50,6 +50,14 @@ const GameCatalog: React.FC = () => {
     navigate("/");
   };
 
+  const handleSearchTermChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
+  const handleSortChange = useCallback((newSort: string) => {
+    setSort(newSort);
+  }, []);
+
   const searchedGames = filteredGames.filter(
     (game) => game.nombre && game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -99,7 +107,7 @@ const GameCatalog: React.FC = () => {
                 games={games}
                 setFilteredGames={setFilteredGames}
                 searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
+                setSearchTerm={handleSearchTermChange}
               />
             </Box>
             <Box sx={{ ml: 1, mt: { sm: 0 } }}>
@@ -125,7 +133,7 @@ const GameCatalog: React.FC = () => {
               justifyContent: { xs: "center", sm: "flex-end", md: "flex-end" },
             }}
           >
-            <SortOptions sort={sort} setSort={setSort} />
+            <SortOptions sort={sort} setSort={handleSortChange} />
           </Grid>
         </Grid>
         {sortedGames.length === 0 && (
@@ -161,7 +169,9 @@ const GameCatalog: React.FC = () => {
                 md={3}
                 lg={2}
               >
-                <GameCard game={game} />
+                <React.Suspense fallback={<div>Cargando...</div>}>
+                  <GameCard game={game} />
+                </React.Suspense>
               </Grid>
             ))}
           </Grid>
