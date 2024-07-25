@@ -4,7 +4,7 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
-import { GameOffert } from "./dataOfferts"; // Importa tu interfaz de Game aquí
+import { GameOffert } from "./dataOfferts";
 
 const filter = createFilterOptions<GameOffert>({
   stringify: (option) => option.nombre,
@@ -23,12 +23,12 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
 
   const handleSearch = () => {
     if (!inputValue) {
-      setFilteredGames(games); // Si no hay valor en el input, muestra todos los juegos
+      setFilteredGames(games);
     } else {
       const filteredGames = games.filter((game) =>
         game.nombre && game.nombre.toLowerCase().includes(inputValue.toLowerCase())
       );
-      setFilteredGames(filteredGames); // Filtra los juegos por el término de búsqueda
+      setFilteredGames(filteredGames);
     }
     setSearchTerm(inputValue);
   };
@@ -40,19 +40,17 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
   };
 
   return (
-    <Box
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
-          setValue(newValue as GameOffert); // Asigna el nuevo valor solo si es del tipo Game
+          setValue(newValue as GameOffert);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue);
           if (newInputValue === "") {
-            setValue(null); // Reinicia el valor si el input está vacío
+            setValue(null);
           }
         }}
         filterOptions={(options, params) => {
@@ -63,9 +61,8 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={games} // Usa tus juegos aquí
+        options={games}
         getOptionLabel={(option) => {
-          // Asegura que TypeScript entiende que `option` es del tipo `Game`
           if (typeof option === "string") {
             return option;
           }
@@ -86,12 +83,8 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
             size="small"
             onKeyDown={handleKeyDown}
             sx={{
-              "& .MuiInputLabel-root": {
-                color: "white",
-              },
-              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                color: "white",
-              },
+              "& .MuiInputLabel-root": { color: "white" },
+              "& .MuiInputLabel-outlined.MuiInputLabel-shrink": { color: "white" },
               "& .MuiOutlinedInput-root": {
                 borderRadius: "0px",
                 borderBottomLeftRadius: "4px",
@@ -107,10 +100,8 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#1e182e",
                 },
-                "& .MuiAutocomplete-endAdornment": {
-                  "& .MuiSvgIcon-root": {
-                    color: "white",
-                  },
+                "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
+                  color: "white",
                 },
               },
             }}
@@ -139,4 +130,4 @@ const SearchBarOff: React.FC<SearchBarProps> = ({ games, setFilteredGames, searc
   );
 };
 
-export default SearchBarOff;
+export default React.memo(SearchBarOff);

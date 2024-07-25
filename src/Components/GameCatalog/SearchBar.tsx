@@ -141,4 +141,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ games, setFilteredGames, searchTe
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

@@ -7,14 +7,17 @@ import {
   CardActionArea,
   Stack,
   Chip,
+  Box,
 } from "@mui/material";
 import { Game } from "../../store/reducers/videojuegosReducer";
 import { useNavigate } from "react-router-dom";
 import imagen_default from "../../assets/images/banner_default.jpg"; // Importar la imagen por defecto
+import { useInView } from "react-intersection-observer";
 
-const GameCard: React.FC<{ game: Game }> = ({ game }) => {
+const GameCard: React.FC<{ game: Game }> = React.memo(({ game }) => {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const formattedDate = new Date(game.fecha_Lanzamiento).toLocaleDateString("es-ES", {
     day: "2-digit",
@@ -34,74 +37,78 @@ const GameCard: React.FC<{ game: Game }> = ({ game }) => {
   const imagePath = imageError ? imagen_default : game.foto_Url || imagen_default;
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        backgroundColor: "transparent",
-        boxShadow: "none",
-        borderRadius: 0,
-        paddingBottom: 0,
-      }}
-    >
-      <CardActionArea onClick={handleCardClick}>
-        <CardMedia
-          component="img"
-          height="300"
-          width="100%"
-          image={imagePath}
-          alt={game.nombre}
-          onError={handleImageError} // Manejar errores de carga de imagen
-        />
-        <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{
-              color: "#fff",
-              fontWeight: "bold",
-              fontSize: 20,
-              textAlign: "left",
-              marginTop: 0.5,
-              marginBottom: 0,
-            }}
-          >
-            {game.nombre}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
-          >
-            Lanzamiento: {formattedDate}
-          </Typography>
-          <Stack
-            direction="row"
-            sx={{
-              flexWrap: "wrap",
-              gap: 1,
-              marginTop: 1,
-            }}
-          >
-            {game.genero.split(',').map((genero, index) => (
-              <Chip
-                key={index}
-                label={genero.trim()}
-                color="primary"
-                size="small"
+    <div ref={ref}>
+      {inView && (
+        <Card
+          sx={{
+            maxWidth: 345,
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            borderRadius: 0,
+            paddingBottom: 0,
+          }}
+        >
+          <CardActionArea onClick={handleCardClick}>
+            <CardMedia
+              component="img"
+              height="300"
+              width="100%"
+              image={imagePath}
+              alt={game.nombre}
+              onError={handleImageError} // Manejar errores de carga de imagen
+            />
+            <CardContent sx={{ backgroundColor: "transparent", padding: 0 }}>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
                 sx={{
                   color: "#fff",
                   fontWeight: "bold",
-                  fontSize: 11,
-                  backgroundColor: "#2C2839",
+                  fontSize: 20,
+                  textAlign: "left",
+                  marginTop: 0.5,
+                  marginBottom: 0,
                 }}
-              />
-            ))}
-          </Stack>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+              >
+                {game.nombre}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ color: "#fff", fontSize: 12, textAlign: "left" }}
+              >
+                Lanzamiento: {formattedDate}
+              </Typography>
+              <Stack
+                direction="row"
+                sx={{
+                  flexWrap: "wrap",
+                  gap: 1,
+                  marginTop: 1,
+                }}
+              >
+                {game.genero.split(',').map((genero, index) => (
+                  <Chip
+                    key={index}
+                    label={genero.trim()}
+                    color="primary"
+                    size="small"
+                    sx={{
+                      color: "#fff",
+                      fontWeight: "bold",
+                      fontSize: 11,
+                      backgroundColor: "#2C2839",
+                    }}
+                  />
+                ))}
+              </Stack>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      )}
+    </div>
   );
-};
+});
 
 export default GameCard;

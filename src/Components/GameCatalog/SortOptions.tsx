@@ -138,4 +138,4 @@ const SortOptions: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
   );
 };
 
-export default SortOptions;
+export default React.memo(SortOptions);

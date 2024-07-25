@@ -7,20 +7,11 @@ import {
   CardActionArea,
   Box,
   Avatar,
-  IconButton,
-  Chip,
   CardActions,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import CommentIcon from "@mui/icons-material/Comment";
-import { Publicacion, LikeDislike } from "../../store/reducers/PublicaionesReducer";
+import { Publicacion } from "../../store/reducers/PublicaionesReducer";
 import axios from "axios";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -31,7 +22,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number>(1);
   const [userName, setUserName] = useState<string>("");
-
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -54,8 +44,6 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
     setImageLoaded(true);
     setImageAspectRatio(event.currentTarget.naturalWidth / event.currentTarget.naturalHeight);
   };
-
-  const isVerticalImage = imageLoaded && imageAspectRatio < 1;
 
   return (
     <Box display="flex" justifyContent="center" width="100%">
@@ -173,4 +161,4 @@ const GameCard: React.FC<{ publicacion: Publicacion }> = ({ publicacion }) => {
   );
 };
 
-export default GameCard;
+export default React.memo(GameCard);

@@ -14,7 +14,6 @@ import {
   developersOptions,
   categoriesOptions,
   platformsOptions,
-  // rangesOptions,
   priceOptions,
   discountOptions,
 } from "./helpersOfferts";
@@ -30,10 +29,10 @@ interface FilterOptionsProps {
   setSelectedPlatforms: (platforms: string[]) => void;
   selectedRanges: string[];
   setSelectedRanges: (ranges: string[]) => void;
-  selectedPrice: { value: string, label: string }[];
-  setSelectedPrice: (price: { value: string, label: string }[]) => void;
-  selectedDiscount: { value: string, label: string }[];
-  setSelectedDiscount: (discount: { value: string, label: string }[]) => void;
+  selectedPrice: { value: string; label: string }[];
+  setSelectedPrice: (price: { value: string; label: string }[]) => void;
+  selectedDiscount: { value: string; label: string }[];
+  setSelectedDiscount: (discount: { value: string; label: string }[]) => void;
 }
 
 const style = {
@@ -70,11 +69,10 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  // Estados temporales para los filtros
+  // Temporary states for filters
   const [tempDevelopers, setTempDevelopers] = useState<string[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   const [tempPlatforms, setTempPlatforms] = useState<string[]>([]);
-  // const [tempRanges, setTempRanges] = useState<string[]>([]);
   const [tempPrice, setTempPrice] = useState<
     { value: string; label: string }[]
   >([]);
@@ -86,26 +84,27 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     const filteredGames = allGames.filter((game) => {
       const matchDevelopers =
         selectedDevelopers.length === 0 ||
-        selectedDevelopers.includes(game.desarrollador);
+        selectedDevelopers.some((developer) =>
+          game.desarrollador
+            .split(",")
+            .map((d) => d.trim())
+            .includes(developer)
+        );
       const matchCategories =
         selectedCategories.length === 0 ||
-        selectedCategories.every((category) =>
-          game.genero.includes(category)
-        );
+        selectedCategories.every((category) => game.genero.includes(category));
       const matchPlatforms =
         selectedPlatforms.length === 0 ||
         selectedPlatforms.every((platform) =>
           game.plataforma.includes(platform)
         );
-      // const matchRanges =
-      //   selectedRanges.length === 0 || selectedRanges.includes(game.rango); // Ajusta si es necesario
       const matchPrice =
         selectedPrice.length === 0 ||
         selectedPrice.some((priceRange) => {
           if (priceRange.value === "1001-") {
             return game.precio >= 1001;
           } else {
-            const [min, max] = priceRange.value.split('-').map(Number);
+            const [min, max] = priceRange.value.split("-").map(Number);
             return game.precio >= min && game.precio <= max + 0.99;
           }
         });
@@ -120,7 +119,6 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
         matchDevelopers &&
         matchCategories &&
         matchPlatforms &&
-        // matchRanges &&
         matchPrice &&
         matchDiscount
       );
@@ -130,7 +128,6 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     selectedDevelopers,
     selectedCategories,
     selectedPlatforms,
-    // selectedRanges,
     selectedPrice,
     selectedDiscount,
     setFilteredGames,
@@ -141,7 +138,6 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     setTempDevelopers(selectedDevelopers);
     setTempCategories(selectedCategories);
     setTempPlatforms(selectedPlatforms);
-    // setTempRanges(selectedRanges);
     setTempPrice(selectedPrice);
     setTempDiscount(selectedDiscount);
     setOpen(true);
@@ -154,10 +150,17 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
     setSelectedDevelopers(tempDevelopers);
     setSelectedCategories(tempCategories);
     setSelectedPlatforms(tempPlatforms);
-    // setSelectedRanges(tempRanges);
     setSelectedPrice(tempPrice);
     setSelectedDiscount(tempDiscount);
     handleClose();
+  };
+
+  const handleClearFilters = () => {
+    setTempDevelopers([]);
+    setTempCategories([]);
+    setTempPlatforms([]);
+    setTempPrice([]);
+    setTempDiscount([]);
   };
 
   return (
@@ -252,7 +255,7 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Categorias"
+                      label="Categorías"
                       variant="outlined"
                       size="small"
                       sx={{
@@ -306,7 +309,8 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
                         "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white" },
+                          color: "white",
+                        },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -319,7 +323,8 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                             borderColor: "white",
                           },
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white" },
+                            color: "white",
+                          },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -337,16 +342,16 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                   }}
                 />
               </Grid>
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={rangesOptions}
-                  getOptionLabel={(option) => option.title}
+                  options={priceOptions}
+                  getOptionLabel={(option) => option.label}
                   filterSelectedOptions
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Rangos"
+                      label="Rango de Precios"
                       variant="outlined"
                       size="small"
                       sx={{
@@ -368,65 +373,6 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
                             color: "white",
                           },
-                        },
-                      }}
-                    />
-                  )}
-                  onChange={(event, newValue) =>
-                    setTempRanges(newValue.map((item) => item.title))
-                  }
-                  value={rangesOptions.filter((option) =>
-                    tempRanges.includes(option.title)
-                  )}
-                  renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        {...getTagProps({ index })}
-                        key={option.title}
-                        style={{
-                          backgroundColor: option.color,
-                          color: "white",
-                        }}
-                        label={option.title}
-                      />
-                    ))
-                  }
-                  sx={{
-                    width: "100%",
-                    "& .MuiChip-root": { color: "white" },
-                    "& .MuiOutlinedInput-root": { borderRadius: "4px" },
-                  }}
-                />
-              </Grid> */}
-              <Grid item xs={12}>
-                <Autocomplete
-                  multiple
-                  options={priceOptions}
-                  getOptionLabel={(option) => option.label} 
-                  filterSelectedOptions
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Rango de Precios"
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        "& .MuiInputLabel-root": { color: "white" },
-                        "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white" },
-                        "& .MuiOutlinedInput-root": {
-                          color: "white",
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#A59898",
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
-                          },
-                          "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white" },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -459,7 +405,8 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                       sx={{
                         "& .MuiInputLabel-root": { color: "white" },
                         "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-                          color: "white" },
+                          color: "white",
+                        },
                         "& .MuiOutlinedInput-root": {
                           color: "white",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -472,7 +419,8 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
                             borderColor: "white",
                           },
                           "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-                            color: "white" },
+                            color: "white",
+                          },
                           "& .MuiChip-deleteIcon": { color: "white" },
                         },
                       }}
@@ -500,6 +448,14 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
           >
             <Button
               type="button"
+              onClick={handleClearFilters}
+              variant="contained"
+              color="secondary"
+            >
+              Borrar Filtros
+            </Button>
+            <Button
+              type="button"
               onClick={handleClose}
               variant="contained"
               color="error"
@@ -516,4 +472,4 @@ const FilterOptionsOff: React.FC<FilterOptionsProps> = ({
   );
 };
 
-export default FilterOptionsOff;
+export default React.memo(FilterOptionsOff);

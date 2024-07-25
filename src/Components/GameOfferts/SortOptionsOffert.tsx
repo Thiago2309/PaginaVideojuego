@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
+import { Box, FormControl, Select, MenuItem, SelectChangeEvent, Typography } from "@mui/material";
 
 interface SortOptionsProps {
   sort: string;
@@ -14,7 +7,6 @@ interface SortOptionsProps {
 }
 
 const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
-  
   return (
     <Box display="flex" alignItems="center" sx={{ maxWidth: "100%" }}>
       <Typography
@@ -179,4 +171,4 @@ const SortOptionsOff: React.FC<SortOptionsProps> = ({ sort, setSort }) => {
   );
 };
 
-export default SortOptionsOff;
+export default React.memo(SortOptionsOff);

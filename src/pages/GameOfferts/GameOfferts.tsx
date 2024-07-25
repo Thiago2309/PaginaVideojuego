@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import SearchBarOff from "../../Components/GameOfferts/SearchBarOff";
 import FilterOptionsOff from "../../Components/GameOfferts/FilterOptionsOffert";
@@ -40,7 +40,7 @@ const GameOfferts: React.FC = () => {
       const data = await getOfertas();
       const dataWithLikes = data.map((game: GameOffert) => ({
         ...game,
-        likes: Math.floor(Math.random() * 1000), // Asigna un valor estático o aleatorio a likes
+        likes: Math.floor(Math.random() * 1000),
       }));
       setAllGames(dataWithLikes);
       setFilteredGames(dataWithLikes);
@@ -53,9 +53,16 @@ const GameOfferts: React.FC = () => {
     navigate("/");
   };
 
+  const handleSearchTermChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
+  const handleSortChange = useCallback((newSort: string) => {
+    setSort(newSort);
+  }, []);
+
   const searchedGames = filteredGames.filter(
-    (game) =>
-      game.nombre && game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    (game) => game.nombre && game.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedGames = searchedGames.sort((a, b) => {
@@ -65,22 +72,21 @@ const GameOfferts: React.FC = () => {
     if (key === "title") {
       comparison = a.nombre.localeCompare(b.nombre);
     } else if (key === "releaseDate") {
-      comparison =
-        new Date(a.fecha_Lanzamiento).getTime() - new Date(b.fecha_Lanzamiento).getTime();
+      comparison = new Date(a.fecha_Lanzamiento).getTime() - new Date(b.fecha_Lanzamiento).getTime();
     } else if (key === "discount") {
       comparison = a.descuento - b.descuento;
     } else if (key === "price") {
       comparison = a.precio - b.precio;
     } else if (key === "likes") {
-      comparison = (a.likes || 0) - (b.likes || 0); // Usar un valor por defecto para likes
+      comparison = (a.likes || 0) - (b.likes || 0);
     }
 
     return order === "asc" ? comparison : -comparison;
   });
 
-  const handleFilteredGames = (games: GameOffert[]) => {
+  const handleFilteredGames = useCallback((games: GameOffert[]) => {
     setFilteredGames(games);
-  };
+  }, []);
 
   return (
     <Grid>
@@ -112,11 +118,11 @@ const GameOfferts: React.FC = () => {
                 games={allGames}
                 setFilteredGames={setFilteredGames}
                 searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
+                setSearchTerm={handleSearchTermChange}
               />
             </Box>
             <Box sx={{ ml: 1, mt: { sm: 0 } }}>
-            <FilterOptionsOff
+              <FilterOptionsOff
                 setFilteredGames={handleFilteredGames}
                 allGames={allGames}
                 selectedDevelopers={selectedDevelopers}
@@ -144,7 +150,7 @@ const GameOfferts: React.FC = () => {
               justifyContent: { xs: "center", sm: "flex-end", md: "flex-end" },
             }}
           >
-            <SortOptionsOff sort={sort} setSort={setSort} />
+            <SortOptionsOff sort={sort} setSort={handleSortChange} />
           </Grid>
         </Grid>
         {sortedGames.length === 0 && (
@@ -180,7 +186,9 @@ const GameOfferts: React.FC = () => {
                 md={3}
                 lg={2}
               >
-                <GameCardOff game={game} />
+                <React.Suspense fallback={<div>Cargando...</div>}>
+                  <GameCardOff game={game} />
+                </React.Suspense>
               </Grid>
             ))}
           </Grid>

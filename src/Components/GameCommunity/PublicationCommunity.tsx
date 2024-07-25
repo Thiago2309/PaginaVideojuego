@@ -280,4 +280,4 @@ const Publications: React.FC<PublicationsProps> = ({ onPublicationAdded }) => {
   );
 };
 
-export default Publications;
+export default React.memo(Publications);

@@ -88,6 +88,12 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     handleClose();
   };
 
+  const handleClearFilters = () => {
+    setTempDevelopers([]);
+    setTempCategories([]);
+    setTempPlatforms([]);
+  };
+
   return (
     <React.Fragment>
       <Button
@@ -248,6 +254,14 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
           >
             <Button
               type="button"
+              onClick={handleClearFilters}
+              variant="contained"
+              color="secondary"
+            >
+              Borrar Filtros
+            </Button>
+            <Button
+              type="button"
               onClick={handleClose}
               variant="contained"
               color="error"
@@ -264,4 +278,4 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
   );
 };
 
-export default FilterOptions;
+export default React.memo(FilterOptions);

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { TextField, Button, Box, Card, CardContent, MenuItem, Select, InputLabel, FormControl, CircularProgress, Checkbox, FormControlLabel } from "@mui/material";
-import SearchBar from "./GameOfferSearch";
-import { Deal, SavedDeal } from "./dataApiOffert";
+import SearchBar from "../Admin/Form/Offerts/GameOfferSearch";
+import { Deal, SavedDeal } from "../Admin/Form/Offerts/dataApiOffert";
 import { getGameDetails, searchGames, getGameScreenshots } from "./../../services/apiRAWG";
 import { Game, Screenshot } from "../Admin/Form/VideoGame/dataApi";
 
